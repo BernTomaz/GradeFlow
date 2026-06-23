@@ -4,9 +4,9 @@ Sistema web para criação de avaliações, cadastro de gabaritos estruturados, 
 
 ## Objetivo
 
-O GradeFlow tem como objetivo auxiliar professores, avaliadores e instituições no processo de correção de atividades, provas e trabalhos.
+O GradeFlow tem como objetivo apoiar professores, avaliadores e instituições no processo de correção de atividades, provas e trabalhos.
 
-A proposta principal é permitir que o usuário cadastre avaliações com questões estruturadas, configure gabaritos por tipo de questão e utilize um motor de correção automática para calcular notas de forma mais consistente e auditável.
+A proposta do projeto é permitir o cadastro de avaliações com questões estruturadas, configuração de gabaritos por tipo de questão e uso de um motor de correção automática para calcular notas de forma mais consistente, rastreável e auditável.
 
 ## Funcionalidades Planejadas
 
@@ -18,8 +18,8 @@ A proposta principal é permitir que o usuário cadastre avaliações com quest�
 - Inserção manual de respostas de alunos
 - Correção automática por tipo de questão
 - Cálculo da nota final
-- Revisão manual de respostas
 - Feedback por questão
+- Revisão manual de respostas
 
 ### Tipos de questão iniciais
 
@@ -32,7 +32,7 @@ A proposta principal é permitir que o usuário cadastre avaliações com quest�
 
 ### Backend
 
-- .NET 8
+- .NET 10
 - ASP.NET Core Web API
 - C#
 - Entity Framework Core

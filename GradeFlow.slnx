@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GradeFlow.Api/GradeFlow.Api.csproj" />
+    <Project Path="src/GradeFlow.Application/GradeFlow.Application.csproj" />
+    <Project Path="src/GradeFlow.Domain/GradeFlow.Domain.csproj" />
+    <Project Path="src/GradeFlow.Infrastructure/GradeFlow.Infrastructure.csproj" />
+  </Folder>
+</Solution>

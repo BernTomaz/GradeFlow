@@ -50,12 +50,12 @@ Testes:
 
 ## Ordem Recomendada
 
-1. `docs/etapas/01-etapa-estrutura-backend.txt`
-2. `docs/etapas/02-etapa-modelagem-dominio.txt`
-3. `docs/etapas/03-etapa-banco-efcore.txt`
-4. `docs/etapas/04-etapa-crud-avaliacoes-questoes.txt`
-5. `docs/etapas/05-etapa-submissao-respostas.txt`
-6. `docs/etapas/06-etapa-motor-correcao.txt`
-7. `docs/etapas/09-etapa-testes.txt`
-8. `docs/etapas/07-etapa-frontend-angular.txt`
-9. `docs/etapas/08-etapa-revisao-manual-auditoria.txt`
+1. `docs/etapas/01-etapa-estrutura-backend.md`
+2. `docs/etapas/02-etapa-modelagem-dominio.md`
+3. `docs/etapas/03-etapa-banco-efcore.md`
+4. `docs/etapas/04-etapa-crud-avaliacoes-questoes.md`
+5. `docs/etapas/05-etapa-submissao-respostas.md`
+6. `docs/etapas/06-etapa-motor-correcao.md`
+7. `docs/etapas/09-etapa-testes.md`
+8. `docs/etapas/07-etapa-frontend-angular.md`
+9. `docs/etapas/08-etapa-revisao-manual-auditoria.md`

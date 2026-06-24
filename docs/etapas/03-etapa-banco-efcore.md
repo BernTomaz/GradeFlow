@@ -5,12 +5,12 @@ Persistir as entidades principais no banco de dados.
 
 Tecnologias
 - Entity Framework Core
-- SQL Server ou PostgreSQL
+- SQL Server
 - Migrations
 
 Banco recomendado
 Se voce usa Visual Studio e quer menos atrito, comece com SQL Server.
-Se quiser algo mais portavel e comum em deploy, PostgreSQL tambem e excelente.
+Se quiser padronizar o projeto, mantenha SQL Server do inicio ao fim.
 
 Tarefas
 - Instalar pacotes do EF Core
@@ -33,12 +33,6 @@ Pacotes comuns para SQL Server
 - Microsoft.EntityFrameworkCore.SqlServer
 - Microsoft.EntityFrameworkCore.Design
 
-Pacotes comuns para PostgreSQL
-- Microsoft.EntityFrameworkCore
-- Npgsql.EntityFrameworkCore.PostgreSQL
-- Microsoft.EntityFrameworkCore.Design
-
 Ponto de atencao
 Nao deixe connection string real exposta no GitHub.
 Use appsettings.Development.json local ou user secrets.
-

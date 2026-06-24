@@ -1,7 +1,7 @@
 GradeFlow - Etapa 10 - Login e Permissoes
 
 Objetivo
-Controlar acesso ao sistema por usuario e perfil.
+Controlar acesso ao sistema por usuario e perfil depois que o MVP estiver funcionando.
 
 Quando implementar
 Depois que o MVP de correcao estiver funcionando.
@@ -56,4 +56,3 @@ Ponto de atencao
 Nunca salve senha pura.
 Nunca confie apenas na permissao do frontend.
 Permissao real precisa ser validada no backend.
-

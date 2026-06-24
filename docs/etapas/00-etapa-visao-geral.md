@@ -24,7 +24,7 @@ Frontend:
 - HttpClient
 
 Banco de dados:
-- SQL Server ou PostgreSQL
+- SQL Server
 
 Testes:
 - xUnit
@@ -38,6 +38,7 @@ Arquitetura planejada:
 - Domain para entidades e regras centrais
 
 Ordem recomendada
+Segue a ordem oficial de `docs/etapas/`.
 1. MVP backend
 2. Motor de correcao
 3. Frontend simples
@@ -50,4 +51,3 @@ Ordem recomendada
 Ponto de atencao
 Nao comece por IA, OCR, dashboard ou login complexo.
 Primeiro faca o sistema corrigir uma avaliacao simples de ponta a ponta.
-

@@ -48,4 +48,3 @@ Respostas discursivas precisam continuar revisaveis por professor.
 Ponto de atencao
 Nao coloque esses recursos no MVP.
 Eles sao bons, mas podem destruir o foco se entrarem cedo demais.
-

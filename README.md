@@ -46,7 +46,7 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ### Banco de Dados
 
-- SQL Server ou PostgreSQL
+- SQL Server
 
 ### Testes
 
@@ -55,7 +55,7 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ## Arquitetura Planejada
 
-O projeto será organizado seguindo uma separação simples de responsabilidades:
+O projeto será organizado seguindo uma separação simples de responsabilidades. A implementação segue a ordem definida em `docs/etapas/`, mantendo a sequência oficial do projeto.
 
 ```txt
 src/

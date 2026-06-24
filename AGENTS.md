@@ -33,7 +33,7 @@ Frontend:
 - HttpClient
 
 Banco:
-- SQL Server inicialmente
+- SQL Server
 
 Testes:
 - xUnit
@@ -49,6 +49,8 @@ Testes:
 - Sempre que possível, rode build e testes após alterações.
 
 ## Ordem Recomendada
+
+A referência oficial de execução segue a ordem dos arquivos em `docs/etapas/`.
 
 1. `docs/etapas/01-etapa-estrutura-backend.md`
 2. `docs/etapas/02-etapa-modelagem-dominio.md`

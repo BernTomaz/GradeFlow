@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+    <ProjectReference Include="..\GradeFlow.Application\GradeFlow.Application.csproj" />
+    <ProjectReference Include="..\GradeFlow.Infrastructure\GradeFlow.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GradeFlow.Application\GradeFlow.Application.csproj" />
-    <ProjectReference Include="..\GradeFlow.Infrastructure\GradeFlow.Infrastructure.csproj" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
 </Project>

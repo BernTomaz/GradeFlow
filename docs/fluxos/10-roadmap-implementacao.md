@@ -89,7 +89,7 @@ Frontend:
 - HttpClient
 
 Banco:
-- SQL Server ou PostgreSQL
+- SQL Server
 
 Testes:
 - xUnit
@@ -113,4 +113,3 @@ Arquitetura:
 Decisao mais importante
 Construa primeiro o motor de correcao.
 Todo o resto deve girar em torno dele.
-

@@ -29,8 +29,7 @@ Frontend:
 - Angular Reactive Forms
 
 Banco de dados:
-- SQL Server, se o desenvolvimento for mais integrado ao Visual Studio
-- PostgreSQL, se quiser uma alternativa forte e gratuita
+- SQL Server
 
 ORM:
 - Entity Framework Core
@@ -79,4 +78,3 @@ GradeFlow.Infrastructure:
 Prioridade real do MVP
 Nao comece por IA, OCR, dashboard ou login complexo.
 Comece pelo fluxo manual completo e pelo motor de correcao.
-

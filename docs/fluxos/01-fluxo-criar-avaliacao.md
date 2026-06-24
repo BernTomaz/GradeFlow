@@ -66,7 +66,7 @@ Backend:
 
 Banco:
 - Entity Framework Core
-- SQL Server ou PostgreSQL
+- SQL Server
 - Migration para tabela Assignments
 
 Frontend:
@@ -84,4 +84,3 @@ Validacoes
 Regra importante
 A avaliacao ainda nao precisa ter login no MVP.
 Primeiro valide se o fluxo de criacao funciona.
-

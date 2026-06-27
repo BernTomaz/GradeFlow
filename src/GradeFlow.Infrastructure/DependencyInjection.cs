@@ -1,4 +1,6 @@
+using GradeFlow.Application.Repositories;
 using GradeFlow.Infrastructure.Data;
+using GradeFlow.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,9 @@ public static class DependencyInjection
             services.AddDbContext<GradeFlowDbContext>(options =>
                 options.UseSqlServer(connectionString));
         }
+
+        services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
 
         return services;
     }

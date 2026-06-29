@@ -79,7 +79,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
         {
             entity.ToTable("StudentAnswers");
             entity.HasKey(x => x.Id);
-            entity.Property(x => x.Answer).HasMaxLength(4000);
+            entity.Property(x => x.Answer).IsRequired().HasMaxLength(4000);
             entity.Property(x => x.ScoreAwarded).HasPrecision(18, 2);
             entity.Property(x => x.IsCorrect).IsRequired();
             entity.Property(x => x.Feedback).HasMaxLength(2000);

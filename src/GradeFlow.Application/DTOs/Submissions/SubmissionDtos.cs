@@ -37,3 +37,17 @@ public sealed record StudentAnswerResponse(
     bool IsCorrect,
     string? Feedback,
     bool NeedsReview);
+
+public sealed record CorrectionResponse(
+    Guid SubmissionId,
+    decimal FinalScore,
+    decimal MaxScore,
+    IReadOnlyCollection<StudentAnswerCorrectionResponse> Results);
+
+public sealed record StudentAnswerCorrectionResponse(
+    Guid QuestionId,
+    string Answer,
+    bool IsCorrect,
+    decimal ScoreAwarded,
+    string? Feedback,
+    bool NeedsReview);

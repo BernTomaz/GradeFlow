@@ -7,7 +7,9 @@ namespace GradeFlow.Api.Controllers;
 
 [ApiController]
 [Route("api")]
-public sealed class SubmissionsController(ISubmissionService submissionService) : ControllerBase
+public sealed class SubmissionsController(
+    ISubmissionService submissionService,
+    ICorrectionService correctionService) : ControllerBase
 {
     [HttpGet("assignments/{assignmentId:guid}/submissions")]
     public async Task<ActionResult<IReadOnlyCollection<SubmissionResponse>>> GetByAssignmentId(
@@ -33,6 +35,21 @@ public sealed class SubmissionsController(ISubmissionService submissionService) 
             return created is null
                 ? NotFound()
                 : CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [HttpPost("submissions/{submissionId:guid}/correct")]
+    public async Task<ActionResult<CorrectionResponse>> Correct(Guid submissionId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await correctionService.CorrectAsync(submissionId, cancellationToken) is { } correction
+                ? Ok(correction)
+                : NotFound();
         }
         catch (ValidationException exception)
         {

@@ -34,6 +34,17 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
             .Include(x => x.StudentAnswers)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public async Task<Submission?> GetForCorrectionAsync(Guid id, CancellationToken cancellationToken = default)
+        => await dbContext.Submissions
+            .Include(x => x.Assignment)
+                .ThenInclude(x => x!.Questions)
+            .Include(x => x.StudentAnswers)
+                .ThenInclude(x => x.Question)
+                    .ThenInclude(x => x!.AnswerKey)
+            .Include(x => x.StudentAnswers)
+                .ThenInclude(x => x.CorrectionResult)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
     public void Add(Submission submission) => dbContext.Submissions.Add(submission);
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)

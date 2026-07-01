@@ -55,7 +55,7 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ## Arquitetura Planejada
 
-O projeto será organizado seguindo uma separação simples de responsabilidades. A implementação segue a ordem definida em `docs/etapas/`, mantendo a sequência oficial do projeto.
+O projeto é organizado seguindo uma separação simples de responsabilidades. A implementação segue a ordem definida em `docs/etapas/`, mantendo a sequência oficial do projeto.
 
 ```txt
 src/
@@ -63,3 +63,40 @@ src/
   GradeFlow.Application/
   GradeFlow.Domain/
   GradeFlow.Infrastructure/
+  GradeFlow.Web/
+```
+
+## Como Rodar Localmente
+
+### Backend
+
+No Visual Studio, selecione o perfil `http` do projeto `GradeFlow.Api`.
+
+Ou rode pelo terminal:
+
+```powershell
+dotnet run --project src\GradeFlow.Api --launch-profile http
+```
+
+A API deve ficar disponível em:
+
+```txt
+http://localhost:5271
+```
+
+### Frontend
+
+Em outro terminal:
+
+```powershell
+cd src\GradeFlow.Web
+npm start
+```
+
+Abra:
+
+```txt
+http://127.0.0.1:4200
+```
+
+O frontend usa `proxy.conf.json` para encaminhar chamadas `/api` para `http://localhost:5271`.

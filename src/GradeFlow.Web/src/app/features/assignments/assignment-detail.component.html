@@ -1,0 +1,52 @@
+@if (vm$ | async; as vm) {
+  <section class="page-header">
+    <div>
+      <h1>{{ vm.assignment.title }}</h1>
+      <p>{{ vm.assignment.subject || 'Sem disciplina' }}</p>
+    </div>
+    <div class="actions">
+      <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="button">
+        Nova questão
+      </a>
+      <a [routerLink]="['/assignments', vm.assignment.id, 'submissions', 'new']" class="button primary">
+        Nova submissão
+      </a>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <div>
+      <h2>Questões</h2>
+      <div class="list compact">
+        @for (question of vm.questions; track question.id) {
+          <article class="card">
+            <div>
+              <strong>{{ question.order }}. {{ question.text }}</strong>
+              <p>{{ typeLabel(question.type) }} - {{ question.points }} pts</p>
+            </div>
+            <small>Gabarito: {{ question.answerKey?.correctAnswer }}</small>
+          </article>
+        } @empty {
+          <p class="empty">Nenhuma questão cadastrada.</p>
+        }
+      </div>
+    </div>
+
+    <div>
+      <h2>Submissões</h2>
+      <div class="list compact">
+        @for (submission of vm.submissions; track submission.id) {
+          <article class="card">
+            <div>
+              <strong>{{ submission.studentName }}</strong>
+              <p>{{ submission.submittedAt | date: 'short' }}</p>
+            </div>
+            <a [routerLink]="['/submissions', submission.id]" class="button">Abrir</a>
+          </article>
+        } @empty {
+          <p class="empty">Nenhuma submissão cadastrada.</p>
+        }
+      </div>
+    </div>
+  </section>
+}

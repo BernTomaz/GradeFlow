@@ -1,0 +1,23 @@
+<section class="page-header">
+  <div>
+    <h1>Nova avaliação</h1>
+    <p>Informe os dados básicos para iniciar o gabarito.</p>
+  </div>
+  <a routerLink="/assignments" class="button">Voltar</a>
+</section>
+
+<form [formGroup]="form" (ngSubmit)="save()" class="form">
+  <label>
+    Título
+    <input formControlName="title" maxlength="200" />
+  </label>
+  <label>
+    Disciplina
+    <input formControlName="subject" maxlength="200" />
+  </label>
+  <label>
+    Descrição
+    <textarea formControlName="description" rows="4" maxlength="2000"></textarea>
+  </label>
+  <button class="button primary" type="submit" [disabled]="form.invalid">Salvar</button>
+</form>

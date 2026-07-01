@@ -1,0 +1,25 @@
+<section class="page-header">
+  <div>
+    <h1>Avaliações</h1>
+    <p>Crie uma avaliação, cadastre questões e acompanhe submissões.</p>
+  </div>
+  <a routerLink="/assignments/new" class="button primary">Nova avaliação</a>
+</section>
+
+<div class="list">
+  @for (assignment of assignments$ | async; track assignment.id) {
+    <article class="card">
+      <div>
+        <h2>{{ assignment.title }}</h2>
+        <p>{{ assignment.subject || 'Sem disciplina' }}</p>
+        <small>{{ assignment.createdAt | date: 'short' }}</small>
+      </div>
+      <div class="actions">
+        <strong>{{ assignment.totalPoints }} pts</strong>
+        <a [routerLink]="['/assignments', assignment.id]" class="button">Abrir</a>
+      </div>
+    </article>
+  } @empty {
+    <p class="empty">Nenhuma avaliação cadastrada.</p>
+  }
+</div>

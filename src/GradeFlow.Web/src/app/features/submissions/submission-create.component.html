@@ -1,0 +1,35 @@
+<section class="page-header">
+  <div>
+    <h1>Nova submissão</h1>
+    <p>Informe as respostas do aluno manualmente.</p>
+  </div>
+  <a [routerLink]="['/assignments', assignmentId]" class="button">Voltar</a>
+</section>
+
+<form [formGroup]="form" (ngSubmit)="save()" class="form">
+  <div class="grid two">
+    <label>
+      Nome do aluno
+      <input formControlName="studentName" maxlength="200" />
+    </label>
+    <label>
+      Email
+      <input formControlName="studentEmail" type="email" maxlength="320" />
+    </label>
+  </div>
+
+  <div formArrayName="answers" class="list compact">
+    @for (answer of answers.controls; track answer; let i = $index) {
+      <label [formGroupName]="i" class="answer-row">
+        <span>{{ questions[i].order }}. {{ questions[i].text }}</span>
+        <input formControlName="answer" maxlength="4000" />
+      </label>
+    } @empty {
+      <p class="empty">Cadastre questões antes de criar uma submissão.</p>
+    }
+  </div>
+
+  <button class="button primary" type="submit" [disabled]="form.invalid || answers.length === 0">
+    Salvar submissão
+  </button>
+</form>

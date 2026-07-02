@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy, inject } from '@angular/core';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,28 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {}
+export class App implements OnDestroy {
+  private readonly router = inject(Router);
+  private readonly events: Subscription;
+  private loadingTimer: ReturnType<typeof setTimeout> | null = null;
+  protected loading = false;
+
+  constructor() {
+    this.events = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        if (this.loadingTimer) clearTimeout(this.loadingTimer);
+        this.loading = true;
+        return;
+      }
+
+      if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+        this.loadingTimer = setTimeout(() => (this.loading = false), 800);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.events.unsubscribe();
+    if (this.loadingTimer) clearTimeout(this.loadingTimer);
+  }
+}

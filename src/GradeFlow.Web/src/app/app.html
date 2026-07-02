@@ -1,11 +1,21 @@
 <header class="topbar">
-  <a routerLink="/assignments" class="brand">GradeFlow</a>
+  <a routerLink="/" class="brand">GradeFlow</a>
   <nav>
     <a routerLink="/assignments">Avaliações</a>
     <a routerLink="/assignments/new">Nova avaliação</a>
   </nav>
 </header>
 
+@if (loading) {
+  <div class="route-loading" role="status" aria-label="Carregando">
+    <span></span>
+  </div>
+}
+
 <main class="shell">
   <router-outlet />
 </main>
+
+<footer class="footer">
+  Developed by Bernardo Tomaz
+</footer>

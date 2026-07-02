@@ -14,6 +14,7 @@ export class AssignmentCreateComponent {
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly router = inject(Router);
   protected readonly assignmentId = this.route.snapshot.paramMap.get('id');
+  protected loading = !!this.assignmentId;
   protected readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(200)]],
     subject: [''],
@@ -29,6 +30,7 @@ export class AssignmentCreateComponent {
         subject: assignment.subject ?? '',
         description: assignment.description ?? ''
       });
+      this.loading = false;
     });
   }
 

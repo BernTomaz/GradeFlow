@@ -52,7 +52,7 @@
           <article class="card">
             <div>
               <strong>{{ submission.studentName }}</strong>
-              <p>{{ submission.submittedAt | date: 'short' }}</p>
+              <p>{{ submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
             </div>
             <div class="actions">
               <a [routerLink]="['/submissions', submission.id]" class="button">Abrir</a>
@@ -68,4 +68,7 @@
       </div>
     </div>
   </section>
+} @else {
+  <p class="loading"></p>
 }
+

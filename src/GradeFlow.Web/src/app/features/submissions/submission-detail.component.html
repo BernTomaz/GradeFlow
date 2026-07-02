@@ -2,7 +2,7 @@
   <section class="page-header">
     <div>
       <h1>{{ submission.studentName }}</h1>
-      <p>{{ submission.submittedAt | date: 'short' }} - Nota {{ submission.finalScore }}</p>
+      <p>{{ submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }} - Nota {{ submission.finalScore }}</p>
     </div>
     <div class="actions">
       <a [routerLink]="['/assignments', submission.assignmentId]" class="button">Voltar</a>
@@ -27,4 +27,7 @@
       </article>
     }
   </div>
+} @else {
+  <p class="loading"></p>
 }
+

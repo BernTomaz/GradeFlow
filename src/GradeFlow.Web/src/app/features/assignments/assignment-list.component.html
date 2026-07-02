@@ -7,21 +7,26 @@
 </section>
 
 <div class="list">
-  @for (assignment of assignments$ | async; track assignment.id) {
-    <article class="card">
-      <div>
-        <h2>{{ assignment.title }}</h2>
-        <p>{{ assignment.subject || 'Sem disciplina' }}</p>
-        <small>{{ assignment.createdAt | date: 'short' }}</small>
-      </div>
-      <div class="actions">
-        <strong>{{ assignment.totalPoints }} pts</strong>
-        <a [routerLink]="['/assignments', assignment.id]" class="button">Abrir</a>
-        <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
-        <button class="button danger" type="button" (click)="delete(assignment.id)">Excluir</button>
-      </div>
-    </article>
-  } @empty {
-    <p class="empty">Nenhuma avaliação cadastrada.</p>
+  @if (assignments$ | async; as assignments) {
+    @for (assignment of assignments; track assignment.id) {
+      <article class="card">
+        <div>
+          <h2>{{ assignment.title }}</h2>
+          <p>{{ assignment.subject || 'Sem disciplina' }}</p>
+          <small>{{ assignment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+        <div class="actions">
+          <strong>{{ assignment.totalPoints }} pts</strong>
+          <a [routerLink]="['/assignments', assignment.id]" class="button">Abrir</a>
+          <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
+          <button class="button danger" type="button" (click)="delete(assignment.id)">Excluir</button>
+        </div>
+      </article>
+    } @empty {
+      <p class="empty">Nenhuma avaliação cadastrada.</p>
+    }
+  } @else {
+    <p class="loading"></p>
   }
 </div>
+

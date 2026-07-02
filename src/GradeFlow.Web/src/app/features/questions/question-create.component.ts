@@ -18,6 +18,7 @@ export class QuestionCreateComponent {
   protected readonly questionTypeOptions = questionTypeOptions;
   protected assignmentId = this.route.snapshot.paramMap.get('assignmentId');
   protected readonly questionId = this.route.snapshot.paramMap.get('questionId');
+  protected loading = !!this.questionId;
   protected readonly form = this.fb.nonNullable.group({
     text: ['', [Validators.required, Validators.maxLength(4000)]],
     type: [QuestionType.MultipleChoice, Validators.required],
@@ -46,6 +47,7 @@ export class QuestionCreateComponent {
         feedbackCorrect: question.answerKey?.feedbackCorrect ?? '',
         feedbackIncorrect: question.answerKey?.feedbackIncorrect ?? ''
       });
+      this.loading = false;
     });
   }
 

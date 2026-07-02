@@ -1,59 +1,66 @@
-<section class="page-header">
+<section class="page-header form-shell">
   <div>
     <h1>{{ questionId ? 'Editar questão' : 'Nova questão' }}</h1>
     <p>Cadastre a questão e o gabarito estruturado.</p>
   </div>
-  <a [routerLink]="['/assignments', assignmentId]" class="button">Voltar</a>
 </section>
 
-<form [formGroup]="form" (ngSubmit)="save()" class="form">
-  <label>
-    Enunciado
-    <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
-  </label>
-  <div class="grid two">
+@if (loading) {
+  <p class="loading form-shell"></p>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
     <label>
-      Tipo
-      <select formControlName="type">
-        @for (option of questionTypeOptions; track option.value) {
-          <option [ngValue]="option.value">{{ option.label }}</option>
-        }
-      </select>
+      Enunciado
+      <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
+    </label>
+    <div class="grid two">
+      <label>
+        Tipo
+        <select formControlName="type">
+          @for (option of questionTypeOptions; track option.value) {
+            <option [ngValue]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Pontos
+        <input type="number" formControlName="points" min="0.01" step="0.01" />
+      </label>
+    </div>
+    <label>
+      Ordem
+      <input type="number" formControlName="order" min="1" />
     </label>
     <label>
-      Pontos
-      <input type="number" formControlName="points" min="0.01" step="0.01" />
+      Resposta correta
+      <input formControlName="correctAnswer" maxlength="2000" />
     </label>
-  </div>
-  <label>
-    Ordem
-    <input type="number" formControlName="order" min="1" />
-  </label>
-  <label>
-    Resposta correta
-    <input formControlName="correctAnswer" maxlength="2000" />
-  </label>
-  @if (form.controls.type.value === QuestionType.Numeric) {
-    <label>
-      Tolerancia
-      <input type="number" formControlName="tolerance" min="0" step="0.01" />
-    </label>
-  }
-  @if (form.controls.type.value === QuestionType.ShortText) {
-    <label>
-      Respostas aceitas
-      <input formControlName="acceptedAnswers" placeholder="Separe por virgula" />
-    </label>
-  }
-  <div class="grid two">
-    <label>
-      Feedback correto
-      <input formControlName="feedbackCorrect" maxlength="2000" />
-    </label>
-    <label>
-      Feedback incorreto
-      <input formControlName="feedbackIncorrect" maxlength="2000" />
-    </label>
-  </div>
-  <button class="button primary" type="submit" [disabled]="form.invalid">Salvar questão</button>
-</form>
+    @if (form.controls.type.value === QuestionType.Numeric) {
+      <label>
+        Tolerancia
+        <input type="number" formControlName="tolerance" min="0" step="0.01" />
+      </label>
+    }
+    @if (form.controls.type.value === QuestionType.ShortText) {
+      <label>
+        Respostas aceitas
+        <input formControlName="acceptedAnswers" placeholder="Separe por virgula" />
+      </label>
+    }
+    <div class="grid two">
+      <label>
+        Feedback correto
+        <input formControlName="feedbackCorrect" maxlength="2000" />
+      </label>
+      <label>
+        Feedback incorreto
+        <input formControlName="feedbackIncorrect" maxlength="2000" />
+      </label>
+    </div>
+    <div class="actions form-actions">
+      <a [routerLink]="['/assignments', assignmentId]" class="button">Voltar</a>
+      <button class="button primary" type="submit" [disabled]="form.invalid">Salvar questão</button>
+    </div>
+  </form>
+}
+

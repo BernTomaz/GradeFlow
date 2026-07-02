@@ -19,6 +19,7 @@ export class SubmissionCreateComponent {
   protected assignmentId = this.route.snapshot.paramMap.get('assignmentId');
   protected readonly submissionId = this.route.snapshot.paramMap.get('id');
   protected errorMessage: string | null = null;
+  protected loading = !!this.submissionId || !!this.assignmentId;
   protected saving = false;
   protected questions: QuestionResponse[] = [];
   protected readonly form = this.fb.nonNullable.group({
@@ -62,6 +63,7 @@ export class SubmissionCreateComponent {
           })
         );
       });
+      this.loading = false;
     });
   }
 

@@ -1,41 +1,48 @@
-<section class="page-header">
+<section class="page-header form-shell">
   <div>
     <h1>{{ submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
     <p>Informe as respostas do aluno manualmente.</p>
   </div>
-  <a [routerLink]="assignmentId ? ['/assignments', assignmentId] : ['/assignments']" class="button">
-    Voltar
-  </a>
 </section>
 
-<form [formGroup]="form" (ngSubmit)="save()" class="form">
-  @if (errorMessage) {
-    <p class="error">{{ errorMessage }}</p>
-  }
-
-  <div class="grid two">
-    <label>
-      Nome do aluno
-      <input formControlName="studentName" maxlength="200" />
-    </label>
-    <label>
-      Email
-      <input formControlName="studentEmail" type="email" maxlength="320" />
-    </label>
-  </div>
-
-  <div formArrayName="answers" class="list compact">
-    @for (answer of answers.controls; track answer; let i = $index) {
-      <label [formGroupName]="i" class="answer-row">
-        <span>{{ questions[i].order }}. {{ questions[i].text }}</span>
-        <input formControlName="answer" maxlength="4000" />
-      </label>
-    } @empty {
-      <p class="empty">Cadastre questões antes de criar uma submissão.</p>
+@if (loading) {
+  <p class="loading form-shell"></p>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
     }
-  </div>
 
-  <button class="button primary" type="submit" [disabled]="saving || form.invalid || answers.length === 0">
-    Salvar submissão
-  </button>
-</form>
+    <div class="grid two">
+      <label>
+        Nome do aluno
+        <input formControlName="studentName" maxlength="200" />
+      </label>
+      <label>
+        Email
+        <input formControlName="studentEmail" type="email" maxlength="320" />
+      </label>
+    </div>
+
+    <div formArrayName="answers" class="list compact">
+      @for (answer of answers.controls; track answer; let i = $index) {
+        <label [formGroupName]="i" class="answer-row">
+          <span>{{ questions[i].order }}. {{ questions[i].text }}</span>
+          <input formControlName="answer" maxlength="4000" />
+        </label>
+      } @empty {
+        <p class="empty">Cadastre questões antes de criar uma submissão.</p>
+      }
+    </div>
+
+    <div class="actions form-actions">
+      <a [routerLink]="assignmentId ? ['/assignments', assignmentId] : ['/assignments']" class="button">
+        Voltar
+      </a>
+      <button class="button primary" type="submit" [disabled]="saving || form.invalid || answers.length === 0">
+        Salvar submissão
+      </button>
+    </div>
+  </form>
+}
+

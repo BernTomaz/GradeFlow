@@ -42,6 +42,26 @@ public sealed class SubmissionsController(
         }
     }
 
+    [HttpPut("submissions/{id:guid}")]
+    public async Task<IActionResult> Update(
+        Guid id,
+        CreateSubmissionRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await submissionService.UpdateAsync(id, request, cancellationToken) ? NoContent() : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [HttpDelete("submissions/{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        => await submissionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();
+
     [HttpPost("submissions/{submissionId:guid}/correct")]
     public async Task<ActionResult<CorrectionResponse>> Correct(Guid submissionId, CancellationToken cancellationToken)
     {

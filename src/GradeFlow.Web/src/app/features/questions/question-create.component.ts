@@ -16,7 +16,8 @@ export class QuestionCreateComponent {
   private readonly questionApi = inject(QuestionApiService);
   protected readonly QuestionType = QuestionType;
   protected readonly questionTypeOptions = questionTypeOptions;
-  protected readonly assignmentId = this.route.snapshot.paramMap.get('id')!;
+  protected assignmentId = this.route.snapshot.paramMap.get('assignmentId');
+  protected readonly questionId = this.route.snapshot.paramMap.get('questionId');
   protected readonly form = this.fb.nonNullable.group({
     text: ['', [Validators.required, Validators.maxLength(4000)]],
     type: [QuestionType.MultipleChoice, Validators.required],
@@ -29,24 +30,52 @@ export class QuestionCreateComponent {
     feedbackIncorrect: ['']
   });
 
+  constructor() {
+    if (!this.questionId) return;
+
+    this.questionApi.getById(this.questionId).subscribe((question) => {
+      this.assignmentId = question.assignmentId;
+      this.form.patchValue({
+        text: question.text,
+        type: question.type,
+        points: question.points,
+        order: question.order,
+        correctAnswer: question.answerKey?.correctAnswer ?? '',
+        acceptedAnswers: question.answerKey?.acceptedAnswers?.join(', ') ?? '',
+        tolerance: question.answerKey?.tolerance ?? 0,
+        feedbackCorrect: question.answerKey?.feedbackCorrect ?? '',
+        feedbackIncorrect: question.answerKey?.feedbackIncorrect ?? ''
+      });
+    });
+  }
+
   save() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.assignmentId) return;
 
     const value = this.form.getRawValue();
+    const request = {
+      text: value.text,
+      type: value.type,
+      points: Number(value.points),
+      order: Number(value.order),
+      answerKey: {
+        correctAnswer: value.correctAnswer,
+        acceptedAnswers: splitCsv(value.acceptedAnswers),
+        tolerance: value.type === QuestionType.Numeric ? Number(value.tolerance || 0) : null,
+        feedbackCorrect: value.feedbackCorrect || null,
+        feedbackIncorrect: value.feedbackIncorrect || null
+      }
+    };
+
+    if (this.questionId) {
+      this.questionApi.update(this.questionId, request).subscribe(() => {
+        this.router.navigate(['/assignments', this.assignmentId]);
+      });
+      return;
+    }
+
     this.questionApi
-      .create(this.assignmentId, {
-        text: value.text,
-        type: value.type,
-        points: Number(value.points),
-        order: Number(value.order),
-        answerKey: {
-          correctAnswer: value.correctAnswer,
-          acceptedAnswers: splitCsv(value.acceptedAnswers),
-          tolerance: value.type === QuestionType.Numeric ? Number(value.tolerance || 0) : null,
-          feedbackCorrect: value.feedbackCorrect || null,
-          feedbackIncorrect: value.feedbackIncorrect || null
-        }
-      })
+      .create(this.assignmentId, request)
       .subscribe(() => this.router.navigate(['/assignments', this.assignmentId]));
   }
 }

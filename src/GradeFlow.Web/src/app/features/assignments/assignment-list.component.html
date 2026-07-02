@@ -17,6 +17,8 @@
       <div class="actions">
         <strong>{{ assignment.totalPoints }} pts</strong>
         <a [routerLink]="['/assignments', assignment.id]" class="button">Abrir</a>
+        <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
+        <button class="button danger" type="button" (click)="delete(assignment.id)">Excluir</button>
       </div>
     </article>
   } @empty {

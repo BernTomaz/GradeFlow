@@ -31,7 +31,7 @@ public sealed class CorrectionService(
             var strategy = strategies.FirstOrDefault(x => x.QuestionType == answer.Question.Type)
                 ?? throw new ValidationException($"No correction strategy for question type {answer.Question.Type}.");
 
-            Apply(answer, strategy.Correct(answer.Question, answer.Question.AnswerKey, answer));
+            Apply(answer, strategy.Correct(answer.Question, answer.Question.AnswerKey, answer), submissionRepository);
         }
 
         submission.FinalScore = submission.StudentAnswers.Sum(x => x.ScoreAwarded);
@@ -42,18 +42,25 @@ public sealed class CorrectionService(
         return Map(submission);
     }
 
-    private static void Apply(StudentAnswer answer, CorrectionOutcome outcome)
+    private static void Apply(
+        StudentAnswer answer,
+        CorrectionOutcome outcome,
+        ISubmissionRepository submissionRepository)
     {
         answer.IsCorrect = outcome.IsCorrect;
         answer.ScoreAwarded = outcome.ScoreAwarded;
         answer.Feedback = outcome.Feedback;
         answer.NeedsReview = outcome.NeedsReview;
 
-        answer.CorrectionResult ??= new CorrectionResult
+        if (answer.CorrectionResult is null)
         {
-            Id = Guid.NewGuid(),
-            StudentAnswerId = answer.Id
-        };
+            answer.CorrectionResult = new CorrectionResult
+            {
+                Id = Guid.NewGuid(),
+                StudentAnswerId = answer.Id
+            };
+            submissionRepository.AddCorrectionResult(answer.CorrectionResult);
+        }
 
         answer.CorrectionResult.IsCorrect = outcome.IsCorrect;
         answer.CorrectionResult.ScoreAwarded = outcome.ScoreAwarded;

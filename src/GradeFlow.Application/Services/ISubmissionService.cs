@@ -7,4 +7,6 @@ public interface ISubmissionService
     Task<IReadOnlyCollection<SubmissionResponse>?> GetByAssignmentIdAsync(Guid assignmentId, CancellationToken cancellationToken = default);
     Task<SubmissionResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<SubmissionResponse?> CreateAsync(Guid assignmentId, CreateSubmissionRequest request, CancellationToken cancellationToken = default);
+    Task<bool> UpdateAsync(Guid id, CreateSubmissionRequest request, CancellationToken cancellationToken = default);
+    Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

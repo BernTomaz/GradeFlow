@@ -11,9 +11,12 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'assignments' },
   { path: 'assignments', component: AssignmentListComponent },
   { path: 'assignments/new', component: AssignmentCreateComponent },
+  { path: 'assignments/:id/edit', component: AssignmentCreateComponent },
   { path: 'assignments/:id', component: AssignmentDetailComponent },
-  { path: 'assignments/:id/questions/new', component: QuestionCreateComponent },
-  { path: 'assignments/:id/submissions/new', component: SubmissionCreateComponent },
+  { path: 'assignments/:assignmentId/questions/new', component: QuestionCreateComponent },
+  { path: 'assignments/:assignmentId/questions/:questionId/edit', component: QuestionCreateComponent },
+  { path: 'assignments/:assignmentId/submissions/new', component: SubmissionCreateComponent },
   { path: 'submissions/:id', component: SubmissionDetailComponent },
+  { path: 'submissions/:id/edit', component: SubmissionCreateComponent },
   { path: 'submissions/:id/correction', component: CorrectionResultComponent }
 ];

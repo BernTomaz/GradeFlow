@@ -58,6 +58,66 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         return Map(submission);
     }
 
+    public async Task<bool> UpdateAsync(
+        Guid id,
+        CreateSubmissionRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
+        if (submission is null) return false;
+
+        var questions = await submissionRepository.GetAssignmentQuestionsAsync(submission.AssignmentId, cancellationToken);
+        Validate(request, questions);
+
+        submission.StudentName = request.StudentName.Trim();
+        submission.StudentEmail = string.IsNullOrWhiteSpace(request.StudentEmail) ? null : request.StudentEmail.Trim();
+        submission.Status = SubmissionStatus.Pending;
+        submission.FinalScore = 0;
+        submission.CorrectedAt = null;
+        submission.ReviewedAt = null;
+
+        var submittedQuestionIds = request.Answers.Select(answer => answer.QuestionId).ToHashSet();
+        var removedAnswers = submission.StudentAnswers
+            .Where(answer => !submittedQuestionIds.Contains(answer.QuestionId))
+            .ToList();
+        submissionRepository.RemoveAnswers(removedAnswers);
+
+        foreach (var requestAnswer in request.Answers)
+        {
+            var answer = submission.StudentAnswers.FirstOrDefault(x => x.QuestionId == requestAnswer.QuestionId);
+            if (answer is null)
+            {
+                submission.StudentAnswers.Add(new StudentAnswer
+                {
+                    Id = Guid.NewGuid(),
+                    SubmissionId = submission.Id,
+                    QuestionId = requestAnswer.QuestionId,
+                    Answer = requestAnswer.Answer.Trim()
+                });
+                continue;
+            }
+
+            answer.Answer = requestAnswer.Answer.Trim();
+            answer.ScoreAwarded = 0;
+            answer.IsCorrect = false;
+            answer.Feedback = null;
+            answer.NeedsReview = false;
+        }
+
+        await submissionRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
+        if (submission is null) return false;
+
+        submissionRepository.Remove(submission);
+        await submissionRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     private static void Validate(CreateSubmissionRequest request, IReadOnlyCollection<Question> questions)
     {
         if (string.IsNullOrWhiteSpace(request.StudentName))

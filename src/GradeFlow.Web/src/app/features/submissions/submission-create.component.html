@@ -1,12 +1,18 @@
 <section class="page-header">
   <div>
-    <h1>Nova submissão</h1>
+    <h1>{{ submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
     <p>Informe as respostas do aluno manualmente.</p>
   </div>
-  <a [routerLink]="['/assignments', assignmentId]" class="button">Voltar</a>
+  <a [routerLink]="assignmentId ? ['/assignments', assignmentId] : ['/assignments']" class="button">
+    Voltar
+  </a>
 </section>
 
 <form [formGroup]="form" (ngSubmit)="save()" class="form">
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
   <div class="grid two">
     <label>
       Nome do aluno
@@ -29,7 +35,7 @@
     }
   </div>
 
-  <button class="button primary" type="submit" [disabled]="form.invalid || answers.length === 0">
+  <button class="button primary" type="submit" [disabled]="saving || form.invalid || answers.length === 0">
     Salvar submissão
   </button>
 </form>

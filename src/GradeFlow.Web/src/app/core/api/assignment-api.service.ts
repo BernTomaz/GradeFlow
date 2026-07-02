@@ -19,4 +19,12 @@ export class AssignmentApiService {
   create(request: SaveAssignmentRequest) {
     return this.http.post<AssignmentResponse>(this.baseUrl, request);
   }
+
+  update(id: string, request: SaveAssignmentRequest) {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, request);
+  }
+
+  delete(id: string) {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
 }

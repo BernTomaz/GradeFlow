@@ -32,4 +32,16 @@ export class AssignmentDetailComponent {
   typeLabel(type: number) {
     return questionTypeOptions.find((option) => option.value === type)?.label ?? 'Tipo desconhecido';
   }
+
+  deleteQuestion(id: string) {
+    if (!confirm('Excluir esta questão?')) return;
+
+    this.questionApi.delete(id).subscribe(() => location.reload());
+  }
+
+  deleteSubmission(id: string) {
+    if (!confirm('Excluir esta submissão?')) return;
+
+    this.submissionApi.delete(id).subscribe(() => location.reload());
+  }
 }

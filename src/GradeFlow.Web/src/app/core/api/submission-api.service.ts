@@ -17,4 +17,12 @@ export class SubmissionApiService {
   create(assignmentId: string, request: CreateSubmissionRequest) {
     return this.http.post<SubmissionResponse>(`/api/assignments/${assignmentId}/submissions`, request);
   }
+
+  update(id: string, request: CreateSubmissionRequest) {
+    return this.http.put<void>(`/api/submissions/${id}`, request);
+  }
+
+  delete(id: string) {
+    return this.http.delete<void>(`/api/submissions/${id}`);
+  }
 }

@@ -5,8 +5,12 @@
       <p>{{ submission.submittedAt | date: 'short' }} - Nota {{ submission.finalScore }}</p>
     </div>
     <div class="actions">
-      <a [routerLink]="['/assignments', submission.assignmentId]" class="button">Avaliação</a>
+      <a [routerLink]="['/assignments', submission.assignmentId]" class="button">Voltar</a>
+      <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
       <button class="button primary" type="button" (click)="correct(submission.id)">Corrigir</button>
+      <button class="button danger" type="button" (click)="delete(submission.id, submission.assignmentId)">
+        Excluir
+      </button>
     </div>
   </section>
 
@@ -17,7 +21,9 @@
           <strong>{{ answer.answer }}</strong>
           <p>{{ answer.feedback || 'Ainda sem feedback' }}</p>
         </div>
-        <span>{{ answer.scoreAwarded }} pts</span>
+        <span class="result" [class.correct]="answer.isCorrect" [class.incorrect]="!answer.isCorrect">
+          {{ answer.isCorrect ? 'Correta' : 'Incorreta' }} - {{ answer.scoreAwarded }} pts
+        </span>
       </article>
     }
   </div>

@@ -25,4 +25,12 @@ export class SubmissionDetailComponent {
       this.router.navigate(['/submissions', submissionId, 'correction']);
     });
   }
+
+  delete(submissionId: string, assignmentId: string) {
+    if (!confirm('Excluir esta submissão?')) return;
+
+    this.submissionApi.delete(submissionId).subscribe(() => {
+      this.router.navigate(['/assignments', assignmentId]);
+    });
+  }
 }

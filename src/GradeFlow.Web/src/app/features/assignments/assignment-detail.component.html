@@ -5,6 +5,8 @@
       <p>{{ vm.assignment.subject || 'Sem disciplina' }}</p>
     </div>
     <div class="actions">
+      <a routerLink="/assignments" class="button">Voltar</a>
+      <a [routerLink]="['/assignments', vm.assignment.id, 'edit']" class="button">Editar</a>
       <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="button">
         Nova questão
       </a>
@@ -24,7 +26,18 @@
               <strong>{{ question.order }}. {{ question.text }}</strong>
               <p>{{ typeLabel(question.type) }} - {{ question.points }} pts</p>
             </div>
-            <small>Gabarito: {{ question.answerKey?.correctAnswer }}</small>
+            <div class="actions">
+              <small>Gabarito: {{ question.answerKey?.correctAnswer }}</small>
+              <a
+                [routerLink]="['/assignments', vm.assignment.id, 'questions', question.id, 'edit']"
+                class="button"
+              >
+                Editar
+              </a>
+              <button class="button danger" type="button" (click)="deleteQuestion(question.id)">
+                Excluir
+              </button>
+            </div>
           </article>
         } @empty {
           <p class="empty">Nenhuma questão cadastrada.</p>
@@ -41,7 +54,13 @@
               <strong>{{ submission.studentName }}</strong>
               <p>{{ submission.submittedAt | date: 'short' }}</p>
             </div>
-            <a [routerLink]="['/submissions', submission.id]" class="button">Abrir</a>
+            <div class="actions">
+              <a [routerLink]="['/submissions', submission.id]" class="button">Abrir</a>
+              <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
+              <button class="button danger" type="button" (click)="deleteSubmission(submission.id)">
+                Excluir
+              </button>
+            </div>
           </article>
         } @empty {
           <p class="empty">Nenhuma submissão cadastrada.</p>

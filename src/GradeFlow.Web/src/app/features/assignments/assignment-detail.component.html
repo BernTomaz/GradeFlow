@@ -22,10 +22,12 @@
       <div class="list compact">
         @for (question of vm.questions; track question.id) {
           <article class="card">
-            <div>
-              <strong>{{ question.order }}. {{ question.text }}</strong>
-              <p>{{ typeLabel(question.type) }} - {{ question.points }} pts</p>
-            </div>
+            <a
+              [routerLink]="['/assignments', vm.assignment.id, 'questions', question.id, 'edit']"
+              class="card-link"
+            >
+              <strong>{{ question.order }}. {{ questionTitle(question.text) }}</strong>
+            </a>
             <div class="actions">
               <small>Gabarito: {{ question.answerKey?.correctAnswer }}</small>
               <a
@@ -50,12 +52,11 @@
       <div class="list compact">
         @for (submission of vm.submissions; track submission.id) {
           <article class="card">
-            <div>
+            <a [routerLink]="['/submissions', submission.id]" class="card-link">
               <strong>{{ submission.studentName }}</strong>
               <p>{{ submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
-            </div>
+            </a>
             <div class="actions">
-              <a [routerLink]="['/submissions', submission.id]" class="button">Abrir</a>
               <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
               <button class="button danger" type="button" (click)="deleteSubmission(submission.id)">
                 Excluir

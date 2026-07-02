@@ -36,8 +36,6 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public async Task<Submission?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Submissions
-            .Include(x => x.StudentAnswers)
-                .ThenInclude(x => x.CorrectionResult)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<Submission?> GetForCorrectionAsync(Guid id, CancellationToken cancellationToken = default)
@@ -55,7 +53,17 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public void Remove(Submission submission) => dbContext.Submissions.Remove(submission);
 
-    public void RemoveAnswers(IEnumerable<StudentAnswer> answers) => dbContext.StudentAnswers.RemoveRange(answers);
+    public async Task ReplaceAnswersAsync(
+        Guid submissionId,
+        IEnumerable<StudentAnswer> answers,
+        CancellationToken cancellationToken = default)
+    {
+        await dbContext.StudentAnswers
+            .Where(x => x.SubmissionId == submissionId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        dbContext.StudentAnswers.AddRange(answers);
+    }
 
     public void AddCorrectionResult(CorrectionResult correctionResult)
         => dbContext.CorrectionResults.Add(correctionResult);

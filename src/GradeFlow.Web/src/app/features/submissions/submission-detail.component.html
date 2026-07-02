@@ -1,30 +1,38 @@
-@if (submission$ | async; as submission) {
+@if (vm$ | async; as vm) {
   <section class="page-header">
     <div>
-      <h1>{{ submission.studentName }}</h1>
-      <p>{{ submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }} - Nota {{ submission.finalScore }}</p>
+      <h1>{{ vm.submission.studentName }}</h1>
+      <p>{{ vm.submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }} - Nota {{ vm.submission.finalScore }}</p>
     </div>
     <div class="actions">
-      <a [routerLink]="['/assignments', submission.assignmentId]" class="button">Voltar</a>
-      <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
-      <button class="button primary" type="button" (click)="correct(submission.id)">Corrigir</button>
-      <button class="button danger" type="button" (click)="delete(submission.id, submission.assignmentId)">
+      <a [routerLink]="['/assignments', vm.submission.assignmentId]" class="button">Voltar</a>
+      <a [routerLink]="['/submissions', vm.submission.id, 'edit']" class="button">Editar</a>
+      <button class="button primary" type="button" (click)="correct(vm.submission.id)">Corrigir</button>
+      <button class="button danger" type="button" (click)="delete(vm.submission.id, vm.submission.assignmentId)">
         Excluir
       </button>
     </div>
   </section>
 
   <div class="list">
-    @for (answer of submission.answers; track answer.id) {
-      <article class="card">
+    @for (item of vm.questions; track item.question.id) {
+      <a [routerLink]="['/submissions', vm.submission.id, 'edit']" class="card answer-card-link">
         <div>
-          <strong>{{ answer.answer }}</strong>
-          <p>{{ answer.feedback || 'Ainda sem feedback' }}</p>
+          <strong>{{ item.question.order }}. {{ questionTitle(item.question.text) }}</strong>
+          <p>{{ item.answer?.answer || 'Não respondida' }}</p>
         </div>
-        <span class="result" [class.correct]="answer.isCorrect" [class.incorrect]="!answer.isCorrect">
-          {{ answer.isCorrect ? 'Correta' : 'Incorreta' }} - {{ answer.scoreAwarded }} pts
+        <span
+          class="result"
+          [class.correct]="item.answer?.isCorrect"
+          [class.incorrect]="!item.answer || !item.answer.isCorrect"
+        >
+          @if (item.answer) {
+            {{ item.answer.isCorrect ? 'Correta' : 'Incorreta' }} - {{ item.answer.scoreAwarded }} pts
+          } @else {
+            Pendente
+          }
         </span>
-      </article>
+      </a>
     }
   </div>
 } @else {

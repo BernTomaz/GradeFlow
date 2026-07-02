@@ -33,6 +33,10 @@ export class AssignmentDetailComponent {
     return questionTypeOptions.find((option) => option.value === type)?.label ?? 'Tipo desconhecido';
   }
 
+  questionTitle(text: string) {
+    return text.split('\n')[0];
+  }
+
   deleteQuestion(id: string) {
     if (!confirm('Excluir esta questão?')) return;
 

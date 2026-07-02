@@ -15,7 +15,7 @@
 
     <div class="grid two">
       <label>
-        Nome do aluno
+        Nome completo
         <input formControlName="studentName" maxlength="200" />
       </label>
       <label>
@@ -27,8 +27,28 @@
     <div formArrayName="answers" class="list compact">
       @for (answer of answers.controls; track answer; let i = $index) {
         <label [formGroupName]="i" class="answer-row">
-          <span>{{ questions[i].order }}. {{ questions[i].text }}</span>
-          <input formControlName="answer" maxlength="4000" />
+          <span>{{ questions[i].order }}. {{ questionTitle(questions[i]) }}</span>
+          @if (questions[i].type === QuestionType.MultipleChoice) {
+            <div class="choice-list">
+              @for (option of multipleChoiceOptions(questions[i]); track option.value) {
+                <label>
+                  <input type="radio" formControlName="answer" [value]="option.value" />
+                  <span>{{ option.value }}) {{ option.text }}</span>
+                </label>
+              }
+            </div>
+          } @else if (questions[i].type === QuestionType.TrueFalse) {
+            <div class="choice-list">
+              @for (option of trueFalseOptions; track option.value) {
+                <label>
+                  <input type="radio" formControlName="answer" [value]="option.value" />
+                  <span>{{ option.text }}</span>
+                </label>
+              }
+            </div>
+          } @else {
+            <input formControlName="answer" maxlength="4000" />
+          }
         </label>
       } @empty {
         <p class="empty">Cadastre questões antes de criar uma submissão.</p>

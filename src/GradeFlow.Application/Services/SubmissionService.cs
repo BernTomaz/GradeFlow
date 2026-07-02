@@ -76,33 +76,16 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         submission.CorrectedAt = null;
         submission.ReviewedAt = null;
 
-        var submittedQuestionIds = request.Answers.Select(answer => answer.QuestionId).ToHashSet();
-        var removedAnswers = submission.StudentAnswers
-            .Where(answer => !submittedQuestionIds.Contains(answer.QuestionId))
-            .ToList();
-        submissionRepository.RemoveAnswers(removedAnswers);
-
-        foreach (var requestAnswer in request.Answers)
-        {
-            var answer = submission.StudentAnswers.FirstOrDefault(x => x.QuestionId == requestAnswer.QuestionId);
-            if (answer is null)
+        await submissionRepository.ReplaceAnswersAsync(
+            submission.Id,
+            request.Answers.Select(answer => new StudentAnswer
             {
-                submission.StudentAnswers.Add(new StudentAnswer
-                {
-                    Id = Guid.NewGuid(),
-                    SubmissionId = submission.Id,
-                    QuestionId = requestAnswer.QuestionId,
-                    Answer = requestAnswer.Answer.Trim()
-                });
-                continue;
-            }
-
-            answer.Answer = requestAnswer.Answer.Trim();
-            answer.ScoreAwarded = 0;
-            answer.IsCorrect = false;
-            answer.Feedback = null;
-            answer.NeedsReview = false;
-        }
+                Id = Guid.NewGuid(),
+                SubmissionId = submission.Id,
+                QuestionId = answer.QuestionId,
+                Answer = answer.Answer.Trim()
+            }),
+            cancellationToken);
 
         await submissionRepository.SaveChangesAsync(cancellationToken);
         return true;

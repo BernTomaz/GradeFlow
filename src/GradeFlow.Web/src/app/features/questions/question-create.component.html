@@ -9,10 +9,6 @@
   <p class="loading form-shell"></p>
 } @else {
   <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
-    <label>
-      Enunciado
-      <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
-    </label>
     <div class="grid two">
       <label>
         Tipo
@@ -27,24 +23,83 @@
         <input type="number" formControlName="points" min="0.01" step="0.01" />
       </label>
     </div>
+    @if (form.controls.type.value === QuestionType.MultipleChoice) {
+      <label>
+        Pergunta
+        <textarea formControlName="text" rows="3" maxlength="4000"></textarea>
+      </label>
+      <div class="grid two">
+        <label>
+          Alternativa A
+          <input formControlName="optionA" maxlength="1000" />
+        </label>
+        <label>
+          Alternativa B
+          <input formControlName="optionB" maxlength="1000" />
+        </label>
+        <label>
+          Alternativa C
+          <input formControlName="optionC" maxlength="1000" />
+        </label>
+        <label>
+          Alternativa D
+          <input formControlName="optionD" maxlength="1000" />
+        </label>
+      </div>
+    } @else if (form.controls.type.value === QuestionType.TrueFalse) {
+      <label>
+        Afirmação
+        <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
+      </label>
+    } @else if (form.controls.type.value === QuestionType.Numeric) {
+      <label>
+        Problema
+        <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
+      </label>
+    } @else {
+      <label>
+        Pergunta
+        <textarea formControlName="text" rows="4" maxlength="4000"></textarea>
+      </label>
+    }
     <label>
       Ordem
       <input type="number" formControlName="order" min="1" />
     </label>
-    <label>
-      Resposta correta
-      <input formControlName="correctAnswer" maxlength="2000" />
-    </label>
-    @if (form.controls.type.value === QuestionType.Numeric) {
+    @if (form.controls.type.value === QuestionType.TrueFalse) {
+      <label>
+        Resposta correta
+        <select formControlName="correctAnswer">
+          <option value="true">Verdadeiro</option>
+          <option value="false">Falso</option>
+        </select>
+      </label>
+    } @else if (form.controls.type.value === QuestionType.Numeric) {
+      <label>
+        Resposta numérica correta
+        <input type="number" formControlName="correctAnswer" step="0.01" />
+      </label>
       <label>
         Tolerancia
         <input type="number" formControlName="tolerance" min="0" step="0.01" />
       </label>
-    }
-    @if (form.controls.type.value === QuestionType.ShortText) {
+    } @else if (form.controls.type.value === QuestionType.ShortText) {
+      <label>
+        Resposta principal
+        <input formControlName="correctAnswer" maxlength="2000" />
+      </label>
       <label>
         Respostas aceitas
         <input formControlName="acceptedAnswers" placeholder="Separe por virgula" />
+      </label>
+    } @else {
+      <label>
+        Alternativa correta
+        <select formControlName="correctAnswer">
+          @for (option of multipleChoiceOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
       </label>
     }
     <div class="grid two">

@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
-import { QuestionResponse } from '../../core/models/question.models';
+import { QuestionResponse, QuestionType } from '../../core/models/question.models';
 
 @Component({
   selector: 'app-submission-create',
@@ -19,6 +19,11 @@ export class SubmissionCreateComponent {
   protected assignmentId = this.route.snapshot.paramMap.get('assignmentId');
   protected readonly submissionId = this.route.snapshot.paramMap.get('id');
   protected errorMessage: string | null = null;
+  protected readonly QuestionType = QuestionType;
+  protected readonly trueFalseOptions = [
+    { value: 'true', text: 'Verdadeiro' },
+    { value: 'false', text: 'Falso' }
+  ];
   protected loading = !!this.submissionId || !!this.assignmentId;
   protected saving = false;
   protected questions: QuestionResponse[] = [];
@@ -105,5 +110,18 @@ export class SubmissionCreateComponent {
   private handleError(error: { error?: { error?: string }; message?: string }) {
     this.saving = false;
     this.errorMessage = error.error?.error ?? error.message ?? 'Não foi possível salvar a submissão.';
+  }
+
+  questionTitle(question: QuestionResponse) {
+    return question.text.split('\n')[0];
+  }
+
+  multipleChoiceOptions(question: QuestionResponse) {
+    return ['A', 'B', 'C', 'D']
+      .map((option) => {
+        const text = question.text.split('\n').find((line) => line.startsWith(`${option}) `))?.slice(3);
+        return text ? { value: option, text } : null;
+      })
+      .filter((option): option is { value: string; text: string } => option !== null);
   }
 }

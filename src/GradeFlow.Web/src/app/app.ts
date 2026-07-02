@@ -23,7 +23,7 @@ export class App implements OnDestroy {
       }
 
       if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
-        this.loadingTimer = setTimeout(() => (this.loading = false), 800);
+        this.loadingTimer = setTimeout(() => (this.loading = false), 200);
       }
     });
   }

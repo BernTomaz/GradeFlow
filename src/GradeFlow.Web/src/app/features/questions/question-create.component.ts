@@ -19,7 +19,9 @@ export class QuestionCreateComponent {
   protected readonly multipleChoiceOptions = ['A', 'B', 'C', 'D'];
   protected assignmentId = this.route.snapshot.paramMap.get('assignmentId');
   protected readonly questionId = this.route.snapshot.paramMap.get('questionId');
+  protected readonly readonly = !!this.questionId && !this.route.snapshot.url.some((segment) => segment.path === 'edit');
   protected loading = !!this.questionId;
+  protected errorMessage: string | null = null;
   protected readonly form = this.fb.nonNullable.group({
     text: ['', [Validators.required, Validators.maxLength(4000)]],
     optionA: [''],
@@ -27,7 +29,7 @@ export class QuestionCreateComponent {
     optionC: [''],
     optionD: [''],
     type: [QuestionType.MultipleChoice, Validators.required],
-    points: [1, [Validators.required, Validators.min(0.01)]],
+    points: [1, [Validators.required, Validators.min(0.01), Validators.max(10)]],
     order: [1, [Validators.required, Validators.min(1)]],
     correctAnswer: ['', [Validators.required, Validators.maxLength(2000)]],
     acceptedAnswers: [''],
@@ -62,11 +64,13 @@ export class QuestionCreateComponent {
         feedbackCorrect: question.answerKey?.feedbackCorrect ?? '',
         feedbackIncorrect: question.answerKey?.feedbackIncorrect ?? ''
       });
+      if (this.readonly) this.form.disable();
       this.loading = false;
     });
   }
 
   save() {
+    this.errorMessage = null;
     if (this.form.invalid || !this.assignmentId) return;
 
     const value = this.form.getRawValue();
@@ -85,15 +89,23 @@ export class QuestionCreateComponent {
     };
 
     if (this.questionId) {
-      this.questionApi.update(this.questionId, request).subscribe(() => {
-        this.router.navigate(['/assignments', this.assignmentId]);
+      this.questionApi.update(this.questionId, request).subscribe({
+        next: () => this.router.navigate(['/assignments', this.assignmentId]),
+        error: (error) => this.handleError(error)
       });
       return;
     }
 
     this.questionApi
       .create(this.assignmentId, request)
-      .subscribe(() => this.router.navigate(['/assignments', this.assignmentId]));
+      .subscribe({
+        next: () => this.router.navigate(['/assignments', this.assignmentId]),
+        error: (error) => this.handleError(error)
+      });
+  }
+
+  private handleError(error: { error?: { error?: string }; message?: string }) {
+    this.errorMessage = error.error?.error ?? error.message ?? 'Não foi possível salvar a questão.';
   }
 }
 

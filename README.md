@@ -70,18 +70,18 @@ src/
 
 ### Backend
 
-No Visual Studio, selecione o perfil `http` do projeto `GradeFlow.Api`.
+No Visual Studio, selecione o perfil `https` do projeto `GradeFlow.Api`.
 
 Ou rode pelo terminal:
 
 ```powershell
-dotnet run --project src\GradeFlow.Api --launch-profile http
+dotnet run --project src\GradeFlow.Api --launch-profile https
 ```
 
 A API deve ficar disponível em:
 
 ```txt
-http://localhost:5271
+https://localhost:7013
 ```
 
 ### Frontend
@@ -96,7 +96,7 @@ npm start
 Abra:
 
 ```txt
-http://127.0.0.1:4200
+http://localhost:4200
 ```
 
-O frontend usa `proxy.conf.json` para encaminhar chamadas `/api` para `http://localhost:5271`.
+O frontend usa `proxy.conf.json` para encaminhar chamadas `/api` para `https://localhost:7013`.

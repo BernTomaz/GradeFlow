@@ -21,7 +21,7 @@ public sealed record CreateQuestionRequest(
     [MaxLength(4000)]
     string Text,
     QuestionType Type,
-    [Range(0.01, double.MaxValue)]
+    [Range(0.01, 10)]
     decimal Points,
     [Range(1, int.MaxValue)]
     int Order,
@@ -33,7 +33,7 @@ public sealed record UpdateQuestionRequest(
     [MaxLength(4000)]
     string Text,
     QuestionType Type,
-    [Range(0.01, double.MaxValue)]
+    [Range(0.01, 10)]
     decimal Points,
     [Range(1, int.MaxValue)]
     int Order,

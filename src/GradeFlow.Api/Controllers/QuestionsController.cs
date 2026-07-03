@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using GradeFlow.Application.DTOs.Questions;
 using GradeFlow.Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,18 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
 
     [HttpPost("assignments/{assignmentId:guid}/questions")]
     public async Task<ActionResult<QuestionResponse>> Create(Guid assignmentId, CreateQuestionRequest request, CancellationToken cancellationToken)
-        => await questionService.CreateAsync(assignmentId, request, cancellationToken) is { } question
-            ? CreatedAtAction(nameof(GetById), new { id = question.Id }, question)
-            : NotFound();
+    {
+        try
+        {
+            return await questionService.CreateAsync(assignmentId, request, cancellationToken) is { } question
+                ? CreatedAtAction(nameof(GetById), new { id = question.Id }, question)
+                : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
 
     [HttpGet("questions/{id:guid}")]
     public async Task<ActionResult<QuestionResponse>> GetById(Guid id, CancellationToken cancellationToken)
@@ -24,7 +34,16 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
 
     [HttpPut("questions/{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateQuestionRequest request, CancellationToken cancellationToken)
-        => await questionService.UpdateAsync(id, request, cancellationToken) ? NoContent() : NotFound();
+    {
+        try
+        {
+            return await questionService.UpdateAsync(id, request, cancellationToken) ? NoContent() : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
 
     [HttpDelete("questions/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)

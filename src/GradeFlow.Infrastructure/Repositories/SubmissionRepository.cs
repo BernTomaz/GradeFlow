@@ -36,6 +36,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public async Task<Submission?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Submissions
+            .Include(x => x.StudentAnswers)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<Submission?> GetForCorrectionAsync(Guid id, CancellationToken cancellationToken = default)
@@ -49,21 +50,46 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
                 .ThenInclude(x => x.CorrectionResult)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public async Task<StudentAnswer?> GetAnswerAsync(
+        Guid submissionId,
+        Guid questionId,
+        CancellationToken cancellationToken = default)
+        => await dbContext.StudentAnswers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.SubmissionId == submissionId && x.QuestionId == questionId, cancellationToken);
+
+    public async Task<int> UpdateAnswerAsync(Guid answerId, string answer, CancellationToken cancellationToken = default)
+        => await dbContext.StudentAnswers
+            .Where(x => x.Id == answerId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.Answer, answer)
+                .SetProperty(x => x.ScoreAwarded, 0)
+                .SetProperty(x => x.IsCorrect, false)
+                .SetProperty(x => x.Feedback, (string?)null)
+                .SetProperty(x => x.NeedsReview, false),
+                cancellationToken);
+
+    public async Task RefreshSubmissionAfterAnswerUpdateAsync(Guid submissionId, CancellationToken cancellationToken = default)
+    {
+        var finalScore = await dbContext.StudentAnswers
+            .Where(x => x.SubmissionId == submissionId)
+            .SumAsync(x => x.ScoreAwarded, cancellationToken);
+
+        await dbContext.Submissions
+            .Where(x => x.Id == submissionId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.Status, GradeFlow.Domain.Enums.SubmissionStatus.Pending)
+                .SetProperty(x => x.FinalScore, finalScore)
+                .SetProperty(x => x.CorrectedAt, (DateTime?)null)
+                .SetProperty(x => x.ReviewedAt, (DateTime?)null),
+                cancellationToken);
+    }
+
     public void Add(Submission submission) => dbContext.Submissions.Add(submission);
 
+    public void AddAnswer(StudentAnswer answer) => dbContext.StudentAnswers.Add(answer);
+
     public void Remove(Submission submission) => dbContext.Submissions.Remove(submission);
-
-    public async Task ReplaceAnswersAsync(
-        Guid submissionId,
-        IEnumerable<StudentAnswer> answers,
-        CancellationToken cancellationToken = default)
-    {
-        await dbContext.StudentAnswers
-            .Where(x => x.SubmissionId == submissionId)
-            .ExecuteDeleteAsync(cancellationToken);
-
-        dbContext.StudentAnswers.AddRange(answers);
-    }
 
     public void AddCorrectionResult(CorrectionResult correctionResult)
         => dbContext.CorrectionResults.Add(correctionResult);

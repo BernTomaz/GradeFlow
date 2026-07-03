@@ -12,11 +12,18 @@ import { AssignmentApiService } from '../../core/api/assignment-api.service';
 export class AssignmentListComponent {
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly reload$ = new BehaviorSubject<void>(undefined);
+  protected pendingDeleteId: string | null = null;
   protected readonly assignments$ = this.reload$.pipe(switchMap(() => this.assignmentApi.getAll()));
 
-  delete(id: string) {
-    if (!confirm('Excluir esta avaliação?')) return;
+  askDelete(id: string) {
+    this.pendingDeleteId = id;
+  }
 
+  delete() {
+    const id = this.pendingDeleteId;
+    if (!id) return;
+
+    this.pendingDeleteId = null;
     this.assignmentApi.delete(id).subscribe(() => this.reload$.next());
   }
 }

@@ -7,23 +7,22 @@
     <div class="actions">
       <a routerLink="/assignments" class="button">Voltar</a>
       <a [routerLink]="['/assignments', vm.assignment.id, 'edit']" class="button">Editar</a>
-      <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="button">
-        Nova questão
-      </a>
-      <a [routerLink]="['/assignments', vm.assignment.id, 'submissions', 'new']" class="button primary">
-        Nova submissão
-      </a>
     </div>
   </section>
 
   <section class="grid two">
     <div>
-      <h2>Questões</h2>
+      <div class="section-title">
+        <h2>Questões</h2>
+        <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="button">
+          Nova questão
+        </a>
+      </div>
       <div class="list compact">
         @for (question of vm.questions; track question.id) {
           <article class="card">
             <a
-              [routerLink]="['/assignments', vm.assignment.id, 'questions', question.id, 'edit']"
+              [routerLink]="['/questions', question.id]"
               class="card-link"
             >
               <strong>{{ question.order }}. {{ questionTitle(question.text) }}</strong>
@@ -36,7 +35,7 @@
               >
                 Editar
               </a>
-              <button class="button danger" type="button" (click)="deleteQuestion(question.id)">
+              <button class="button danger" type="button" (click)="askDeleteQuestion(question.id)">
                 Excluir
               </button>
             </div>
@@ -48,7 +47,12 @@
     </div>
 
     <div>
-      <h2>Submissões</h2>
+      <div class="section-title">
+        <h2>Submissões</h2>
+        <a [routerLink]="['/assignments', vm.assignment.id, 'submissions', 'new']" class="button primary">
+          Nova submissão
+        </a>
+      </div>
       <div class="list compact">
         @for (submission of vm.submissions; track submission.id) {
           <article class="card">
@@ -58,7 +62,7 @@
             </a>
             <div class="actions">
               <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
-              <button class="button danger" type="button" (click)="deleteSubmission(submission.id)">
+              <button class="button danger" type="button" (click)="askDeleteSubmission(submission.id)">
                 Excluir
               </button>
             </div>
@@ -71,5 +75,19 @@
   </section>
 } @else {
   <p class="loading"></p>
+}
+
+@if (pendingDelete) {
+  <div class="modal-backdrop">
+    <div class="confirm-modal">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="pendingDelete = null">×</button>
+      <strong>Atenção</strong>
+      <p>Tem certeza que deseja excluir {{ pendingDelete.type === 'question' ? 'esta questão' : 'esta submissão' }}?</p>
+      <div class="actions">
+        <button class="button" type="button" (click)="pendingDelete = null">Cancelar</button>
+        <button class="button danger" type="button" (click)="deletePending()">Excluir</button>
+      </div>
+    </div>
+  </div>
 }
 

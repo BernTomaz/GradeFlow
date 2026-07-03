@@ -15,8 +15,11 @@ export const routes: Routes = [
   { path: 'assignments/:id', component: AssignmentDetailComponent },
   { path: 'assignments/:assignmentId/questions/new', component: QuestionCreateComponent },
   { path: 'assignments/:assignmentId/questions/:questionId/edit', component: QuestionCreateComponent },
+  { path: 'questions/:questionId', component: QuestionCreateComponent },
   { path: 'assignments/:assignmentId/submissions/new', component: SubmissionCreateComponent },
   { path: 'submissions/:id', component: SubmissionDetailComponent },
   { path: 'submissions/:id/edit', component: SubmissionCreateComponent },
+  { path: 'submissions/:id/answers/:answerId/edit', component: SubmissionCreateComponent },
+  { path: 'submissions/:id/questions/:questionId/answer', component: SubmissionCreateComponent },
   { path: 'submissions/:id/correction', component: CorrectionResultComponent }
 ];

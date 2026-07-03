@@ -8,7 +8,7 @@
       <a [routerLink]="['/assignments', vm.submission.assignmentId]" class="button">Voltar</a>
       <a [routerLink]="['/submissions', vm.submission.id, 'edit']" class="button">Editar</a>
       <button class="button primary" type="button" (click)="correct(vm.submission.id)">Corrigir</button>
-      <button class="button danger" type="button" (click)="delete(vm.submission.id, vm.submission.assignmentId)">
+      <button class="button danger" type="button" (click)="askDelete(vm.submission.id, vm.submission.assignmentId)">
         Excluir
       </button>
     </div>
@@ -16,7 +16,14 @@
 
   <div class="list">
     @for (item of vm.questions; track item.question.id) {
-      <a [routerLink]="['/submissions', vm.submission.id, 'edit']" class="card answer-card-link">
+      <a
+        [routerLink]="
+          item.answer
+            ? ['/submissions', vm.submission.id, 'answers', item.answer.id, 'edit']
+            : ['/submissions', vm.submission.id, 'questions', item.question.id, 'answer']
+        "
+        class="card answer-card-link"
+      >
         <div>
           <strong>{{ item.question.order }}. {{ questionTitle(item.question.text) }}</strong>
           <p>{{ item.answer?.answer || 'Não respondida' }}</p>
@@ -24,9 +31,12 @@
         <span
           class="result"
           [class.correct]="item.answer?.isCorrect"
-          [class.incorrect]="!item.answer || !item.answer.isCorrect"
+          [class.pending]="item.answer && !item.answer.feedback"
+          [class.incorrect]="!item.answer || (!item.answer.isCorrect && item.answer.feedback)"
         >
-          @if (item.answer) {
+          @if (item.answer && !item.answer.feedback) {
+            Pendente de correção
+          } @else if (item.answer) {
             {{ item.answer.isCorrect ? 'Correta' : 'Incorreta' }} - {{ item.answer.scoreAwarded }} pts
           } @else {
             Pendente
@@ -37,5 +47,19 @@
   </div>
 } @else {
   <p class="loading"></p>
+}
+
+@if (pendingDelete) {
+  <div class="modal-backdrop">
+    <div class="confirm-modal">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="pendingDelete = null">×</button>
+      <strong>Atenção</strong>
+      <p>Tem certeza que deseja excluir esta submissão?</p>
+      <div class="actions">
+        <button class="button" type="button" (click)="pendingDelete = null">Cancelar</button>
+        <button class="button danger" type="button" (click)="delete()">Excluir</button>
+      </div>
+    </div>
+  </div>
 }
 

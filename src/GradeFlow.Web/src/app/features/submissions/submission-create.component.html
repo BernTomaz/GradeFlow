@@ -1,6 +1,6 @@
 <section class="page-header form-shell">
   <div>
-    <h1>{{ submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
+    <h1>{{ answerId || questionId ? 'Responder questão' : submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
     <p>Informe as respostas do aluno manualmente.</p>
   </div>
 </section>
@@ -13,16 +13,18 @@
       <p class="error">{{ errorMessage }}</p>
     }
 
-    <div class="grid two">
-      <label>
-        Nome completo
-        <input formControlName="studentName" maxlength="200" />
-      </label>
-      <label>
-        Email
-        <input formControlName="studentEmail" type="email" maxlength="320" />
-      </label>
-    </div>
+    @if (!answerId && !questionId) {
+      <div class="grid two">
+        <label>
+          Nome completo
+          <input formControlName="studentName" maxlength="200" />
+        </label>
+        <label>
+          Email
+          <input formControlName="studentEmail" type="email" maxlength="320" />
+        </label>
+      </div>
+    }
 
     <div formArrayName="answers" class="list compact">
       @for (answer of answers.controls; track answer; let i = $index) {
@@ -60,8 +62,13 @@
         Voltar
       </a>
       <button class="button primary" type="submit" [disabled]="saving || form.invalid || answers.length === 0">
-        Salvar submissão
+        {{ answerId || questionId ? 'Salvar resposta' : 'Salvar submissão' }}
       </button>
+      @if (submissionId && (answerId || questionId)) {
+        <button class="button primary" type="button" [disabled]="saving || form.invalid" (click)="correctQuestion()">
+          Corrigir
+        </button>
+      }
     </div>
   </form>
 }

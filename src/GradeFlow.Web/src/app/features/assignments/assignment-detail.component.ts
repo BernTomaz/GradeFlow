@@ -18,6 +18,7 @@ export class AssignmentDetailComponent {
   private readonly questionApi = inject(QuestionApiService);
   private readonly submissionApi = inject(SubmissionApiService);
   private readonly assignmentId$ = this.route.paramMap.pipe(map((params) => params.get('id')!));
+  protected pendingDelete: { type: 'question' | 'submission'; id: string } | null = null;
 
   protected readonly vm$ = this.assignmentId$.pipe(
     switchMap((id) =>
@@ -37,15 +38,22 @@ export class AssignmentDetailComponent {
     return text.split('\n')[0];
   }
 
-  deleteQuestion(id: string) {
-    if (!confirm('Excluir esta questão?')) return;
-
-    this.questionApi.delete(id).subscribe(() => location.reload());
+  askDeleteQuestion(id: string) {
+    this.pendingDelete = { type: 'question', id };
   }
 
-  deleteSubmission(id: string) {
-    if (!confirm('Excluir esta submissão?')) return;
+  askDeleteSubmission(id: string) {
+    this.pendingDelete = { type: 'submission', id };
+  }
 
-    this.submissionApi.delete(id).subscribe(() => location.reload());
+  deletePending() {
+    if (!this.pendingDelete) return;
+
+    const pendingDelete = this.pendingDelete;
+    this.pendingDelete = null;
+    const request = pendingDelete.type === 'question'
+      ? this.questionApi.delete(pendingDelete.id)
+      : this.submissionApi.delete(pendingDelete.id);
+    request.subscribe(() => location.reload());
   }
 }

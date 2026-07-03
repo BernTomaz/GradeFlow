@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using GradeFlow.Application.DTOs.Questions;
 using GradeFlow.Application.Repositories;
@@ -19,6 +20,7 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
     public async Task<QuestionResponse?> CreateAsync(Guid assignmentId, CreateQuestionRequest request, CancellationToken cancellationToken = default)
     {
         if (!await questionRepository.AssignmentExistsAsync(assignmentId, cancellationToken)) return null;
+        await ValidateAsync(assignmentId, request.Points, request.Order, null, cancellationToken);
 
         var question = new Question
         {
@@ -49,6 +51,7 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
     {
         var question = await questionRepository.GetForUpdateAsync(id, cancellationToken);
         if (question is null) return false;
+        await ValidateAsync(question.AssignmentId, request.Points, request.Order, question.Id, cancellationToken);
 
         question.Text = request.Text.Trim();
         question.Type = request.Type;
@@ -106,4 +109,19 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
 
     private static IReadOnlyCollection<string>? FromJson(string? json)
         => string.IsNullOrWhiteSpace(json) ? null : JsonSerializer.Deserialize<string[]>(json);
+
+    private async Task ValidateAsync(
+        Guid assignmentId,
+        decimal points,
+        int order,
+        Guid? questionId,
+        CancellationToken cancellationToken)
+    {
+        if (points > 10) throw new ValidationException("O máximo de pontos é 10.");
+
+        if (await questionRepository.OrderExistsAsync(assignmentId, order, questionId, cancellationToken))
+        {
+            throw new ValidationException("Ordem já está sendo usada.");
+        }
+    }
 }

@@ -58,6 +58,25 @@ public sealed class SubmissionsController(
         }
     }
 
+    [HttpPut("submissions/{submissionId:guid}/questions/{questionId:guid}/answer")]
+    public async Task<IActionResult> UpdateAnswer(
+        Guid submissionId,
+        Guid questionId,
+        UpdateStudentAnswerRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await submissionService.UpdateAnswerAsync(submissionId, questionId, request, cancellationToken)
+                ? NoContent()
+                : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
     [HttpDelete("submissions/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         => await submissionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();
@@ -68,6 +87,24 @@ public sealed class SubmissionsController(
         try
         {
             return await correctionService.CorrectAsync(submissionId, cancellationToken) is { } correction
+                ? Ok(correction)
+                : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [HttpPost("submissions/{submissionId:guid}/questions/{questionId:guid}/correct")]
+    public async Task<ActionResult<CorrectionResponse>> CorrectQuestion(
+        Guid submissionId,
+        Guid questionId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await correctionService.CorrectQuestionAsync(submissionId, questionId, cancellationToken) is { } correction
                 ? Ok(correction)
                 : NotFound();
         }

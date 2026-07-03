@@ -9,4 +9,8 @@ export class CorrectionApiService {
   correct(submissionId: string) {
     return this.http.post<CorrectionResponse>(`/api/submissions/${submissionId}/correct`, {});
   }
+
+  correctQuestion(submissionId: string, questionId: string) {
+    return this.http.post<CorrectionResponse>(`/api/submissions/${submissionId}/questions/${questionId}/correct`, {});
+  }
 }

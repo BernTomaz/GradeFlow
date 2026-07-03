@@ -1,6 +1,6 @@
 <section class="page-header form-shell">
   <div>
-    <h1>{{ questionId ? 'Editar questão' : 'Nova questão' }}</h1>
+    <h1>{{ readonly ? 'Consultar questão' : questionId ? 'Editar questão' : 'Nova questão' }}</h1>
     <p>Cadastre a questão e o gabarito estruturado.</p>
   </div>
 </section>
@@ -9,6 +9,16 @@
   <p class="loading form-shell"></p>
 } @else {
   <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
+    @if (errorMessage) {
+      <div class="modal-backdrop">
+        <div class="alert-modal">
+          <button class="modal-close" type="button" aria-label="Fechar" (click)="errorMessage = null">×</button>
+          <strong>Atenção</strong>
+          <p>{{ errorMessage }}</p>
+        </div>
+      </div>
+    }
+
     <div class="grid two">
       <label>
         Tipo
@@ -20,7 +30,7 @@
       </label>
       <label>
         Pontos
-        <input type="number" formControlName="points" min="0.01" step="0.01" />
+        <input type="number" formControlName="points" min="0.01" max="10" step="0.01" />
       </label>
     </div>
     @if (form.controls.type.value === QuestionType.MultipleChoice) {
@@ -114,7 +124,13 @@
     </div>
     <div class="actions form-actions">
       <a [routerLink]="['/assignments', assignmentId]" class="button">Voltar</a>
-      <button class="button primary" type="submit" [disabled]="form.invalid">Salvar questão</button>
+      @if (readonly) {
+        <a [routerLink]="['/assignments', assignmentId, 'questions', questionId, 'edit']" class="button primary">
+          Editar
+        </a>
+      } @else {
+        <button class="button primary" type="submit" [disabled]="form.invalid">Salvar questão</button>
+      }
     </div>
   </form>
 }

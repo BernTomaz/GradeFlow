@@ -29,6 +29,17 @@ public sealed class QuestionRepository(GradeFlowDbContext dbContext) : IQuestion
             .Include(x => x.AnswerKey)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public async Task<bool> OrderExistsAsync(
+        Guid assignmentId,
+        int order,
+        Guid? exceptQuestionId = null,
+        CancellationToken cancellationToken = default)
+        => await dbContext.Questions.AnyAsync(
+            x => x.AssignmentId == assignmentId
+                && x.Order == order
+                && (exceptQuestionId == null || x.Id != exceptQuestionId),
+            cancellationToken);
+
     public void Add(Question question) => dbContext.Questions.Add(question);
 
     public void Remove(Question question) => dbContext.Questions.Remove(question);

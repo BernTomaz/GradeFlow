@@ -18,14 +18,32 @@
         <div class="actions">
           <strong>{{ assignment.totalPoints }} pts</strong>
           <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
-          <button class="button danger" type="button" (click)="delete(assignment.id)">Excluir</button>
+          <button class="button danger" type="button" (click)="askDelete(assignment.id)">Excluir</button>
         </div>
       </article>
     } @empty {
       <p class="empty">Nenhuma avaliação cadastrada.</p>
     }
+    <a routerLink="/assignments/new" class="card add-card">
+      <span>+</span>
+      Nova avaliação
+    </a>
   } @else {
     <p class="loading"></p>
   }
 </div>
+
+@if (pendingDeleteId) {
+  <div class="modal-backdrop">
+    <div class="confirm-modal">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="pendingDeleteId = null">×</button>
+      <strong>Atenção</strong>
+      <p>Tem certeza que deseja excluir esta avaliação?</p>
+      <div class="actions">
+        <button class="button" type="button" (click)="pendingDeleteId = null">Cancelar</button>
+        <button class="button danger" type="button" (click)="delete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+}
 

@@ -19,6 +19,11 @@ public sealed record CreateStudentAnswerRequest(
     [MaxLength(4000)]
     string Answer);
 
+public sealed record UpdateStudentAnswerRequest(
+    [Required]
+    [MaxLength(4000)]
+    string Answer);
+
 public sealed record SubmissionResponse(
     Guid Id,
     Guid AssignmentId,

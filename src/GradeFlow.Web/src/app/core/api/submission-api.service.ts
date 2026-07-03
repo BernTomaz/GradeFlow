@@ -22,6 +22,10 @@ export class SubmissionApiService {
     return this.http.put<void>(`/api/submissions/${id}`, request);
   }
 
+  updateAnswer(submissionId: string, questionId: string, answer: string) {
+    return this.http.put<void>(`/api/submissions/${submissionId}/questions/${questionId}/answer`, { answer });
+  }
+
   delete(id: string) {
     return this.http.delete<void>(`/api/submissions/${id}`);
   }

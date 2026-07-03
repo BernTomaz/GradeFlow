@@ -72,22 +72,76 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         submission.StudentName = request.StudentName.Trim();
         submission.StudentEmail = string.IsNullOrWhiteSpace(request.StudentEmail) ? null : request.StudentEmail.Trim();
         submission.Status = SubmissionStatus.Pending;
-        submission.FinalScore = 0;
         submission.CorrectedAt = null;
         submission.ReviewedAt = null;
 
-        await submissionRepository.ReplaceAnswersAsync(
-            submission.Id,
-            request.Answers.Select(answer => new StudentAnswer
+        foreach (var answer in request.Answers)
+        {
+            var answerText = answer.Answer.Trim();
+            var existingAnswer = submission.StudentAnswers.FirstOrDefault(x => x.QuestionId == answer.QuestionId);
+            if (existingAnswer is null)
+            {
+                submission.StudentAnswers.Add(new StudentAnswer
+                {
+                    Id = Guid.NewGuid(),
+                    SubmissionId = submission.Id,
+                    QuestionId = answer.QuestionId,
+                    Answer = answerText
+                });
+                continue;
+            }
+
+            if (existingAnswer.Answer == answerText) continue;
+
+            existingAnswer.Answer = answerText;
+            existingAnswer.ScoreAwarded = 0;
+            existingAnswer.IsCorrect = false;
+            existingAnswer.Feedback = null;
+            existingAnswer.NeedsReview = false;
+        }
+
+        submission.FinalScore = submission.StudentAnswers.Sum(answer => answer.ScoreAwarded);
+        await submissionRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    public async Task<bool> UpdateAnswerAsync(
+        Guid submissionId,
+        Guid questionId,
+        UpdateStudentAnswerRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var submission = await submissionRepository.GetByIdAsync(submissionId, cancellationToken);
+        if (submission is null) return false;
+
+        var questions = await submissionRepository.GetAssignmentQuestionsAsync(submission.AssignmentId, cancellationToken);
+        var question = questions.FirstOrDefault(x => x.Id == questionId);
+        if (question is null) return false;
+
+        ValidateAnswer(request.Answer, question);
+
+        var answerText = request.Answer.Trim();
+        var existingAnswer = await submissionRepository.GetAnswerAsync(submissionId, questionId, cancellationToken);
+        if (existingAnswer is null)
+        {
+            submissionRepository.AddAnswer(new StudentAnswer
             {
                 Id = Guid.NewGuid(),
-                SubmissionId = submission.Id,
-                QuestionId = answer.QuestionId,
-                Answer = answer.Answer.Trim()
-            }),
-            cancellationToken);
+                SubmissionId = submissionId,
+                QuestionId = questionId,
+                Answer = answerText
+            });
+            await submissionRepository.SaveChangesAsync(cancellationToken);
+            await submissionRepository.RefreshSubmissionAfterAnswerUpdateAsync(submissionId, cancellationToken);
+            return true;
+        }
 
-        await submissionRepository.SaveChangesAsync(cancellationToken);
+        if (existingAnswer.Answer != answerText)
+        {
+            await submissionRepository.UpdateAnswerAsync(existingAnswer.Id, answerText, cancellationToken);
+            await submissionRepository.RefreshSubmissionAfterAnswerUpdateAsync(submissionId, cancellationToken);
+        }
+
         return true;
     }
 
@@ -131,11 +185,21 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
                 throw new ValidationException("Answer is required.");
             }
 
-            if (question.Type == QuestionType.Numeric
-                && !decimal.TryParse(answer.Answer, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
-            {
-                throw new ValidationException("Numeric answers must be valid numbers.");
-            }
+            ValidateAnswer(answer.Answer, question);
+        }
+    }
+
+    private static void ValidateAnswer(string answer, Question question)
+    {
+        if (string.IsNullOrWhiteSpace(answer))
+        {
+            throw new ValidationException("Answer is required.");
+        }
+
+        if (question.Type == QuestionType.Numeric
+            && !decimal.TryParse(answer, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
+        {
+            throw new ValidationException("Numeric answers must be valid numbers.");
         }
     }
 

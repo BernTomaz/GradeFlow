@@ -18,6 +18,7 @@ export class SubmissionDetailComponent {
   private readonly questionApi = inject(QuestionApiService);
   private readonly correctionApi = inject(CorrectionApiService);
   private readonly submissionId$ = this.route.paramMap.pipe(map((params) => params.get('id')!));
+  protected pendingDelete: { submissionId: string; assignmentId: string } | null = null;
   protected readonly vm$ = this.submissionId$.pipe(
     switchMap((id) => this.submissionApi.getById(id)),
     switchMap((submission) =>
@@ -43,11 +44,17 @@ export class SubmissionDetailComponent {
     });
   }
 
-  delete(submissionId: string, assignmentId: string) {
-    if (!confirm('Excluir esta submissão?')) return;
+  askDelete(submissionId: string, assignmentId: string) {
+    this.pendingDelete = { submissionId, assignmentId };
+  }
 
-    this.submissionApi.delete(submissionId).subscribe(() => {
-      this.router.navigate(['/assignments', assignmentId]);
+  delete() {
+    if (!this.pendingDelete) return;
+
+    const pendingDelete = this.pendingDelete;
+    this.pendingDelete = null;
+    this.submissionApi.delete(pendingDelete.submissionId).subscribe(() => {
+      this.router.navigate(['/assignments', pendingDelete.assignmentId]);
     });
   }
 }

@@ -77,6 +77,24 @@ public sealed class SubmissionsController(
         }
     }
 
+    [HttpPut("submissions/{id:guid}/student")]
+    public async Task<IActionResult> UpdateStudentInfo(
+        Guid id,
+        UpdateStudentInfoRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await submissionService.UpdateStudentInfoAsync(id, request, cancellationToken)
+                ? NoContent()
+                : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
     [HttpDelete("submissions/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         => await submissionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();

@@ -14,9 +14,6 @@
     <div>
       <div class="section-title">
         <h2>Questões</h2>
-        <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="button">
-          Nova questão
-        </a>
       </div>
       <div class="list compact">
         @for (question of vm.questions; track question.id) {
@@ -43,22 +40,25 @@
         } @empty {
           <p class="empty">Nenhuma questão cadastrada.</p>
         }
+        <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="card add-card">
+          <span>+</span>
+          Nova questão
+        </a>
       </div>
     </div>
 
     <div>
       <div class="section-title">
         <h2>Submissões</h2>
-        <a [routerLink]="['/assignments', vm.assignment.id, 'submissions', 'new']" class="button primary">
-          Nova submissão
-        </a>
       </div>
       <div class="list compact">
         @for (submission of vm.submissions; track submission.id) {
           <article class="card">
             <a [routerLink]="['/submissions', submission.id]" class="card-link">
-              <strong>{{ submission.studentName }}</strong>
-              <p>{{ submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+              <span class="card-title-row">
+                <strong>{{ submission.studentName }}</strong>
+                <small>{{ submission.submittedAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+              </span>
             </a>
             <div class="actions">
               <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
@@ -70,6 +70,10 @@
         } @empty {
           <p class="empty">Nenhuma submissão cadastrada.</p>
         }
+        <a [routerLink]="['/assignments', vm.assignment.id, 'submissions', 'new']" class="card add-card">
+          <span>+</span>
+          Nova submissão
+        </a>
       </div>
     </div>
   </section>

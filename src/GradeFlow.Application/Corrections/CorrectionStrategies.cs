@@ -58,8 +58,8 @@ public sealed class NumericCorrectionStrategy : ICorrectionStrategy
 
     public CorrectionOutcome Correct(Question question, AnswerKey answerKey, StudentAnswer studentAnswer)
     {
-        if (!decimal.TryParse(studentAnswer.Answer, NumberStyles.Number, CultureInfo.InvariantCulture, out var studentValue)
-            || !decimal.TryParse(answerKey.CorrectAnswer, NumberStyles.Number, CultureInfo.InvariantCulture, out var correctValue))
+        if (!NumberParser.TryParse(studentAnswer.Answer, out var studentValue)
+            || !NumberParser.TryParse(answerKey.CorrectAnswer, out var correctValue))
         {
             return new CorrectionOutcome(false, 0, answerKey.FeedbackIncorrect ?? "Resposta numerica invalida.", true);
         }

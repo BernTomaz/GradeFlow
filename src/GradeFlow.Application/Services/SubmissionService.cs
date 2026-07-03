@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+using GradeFlow.Application.Corrections;
 using GradeFlow.Application.DTOs.Submissions;
 using GradeFlow.Application.Repositories;
 using GradeFlow.Domain.Entities;
@@ -74,33 +74,19 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         submission.Status = SubmissionStatus.Pending;
         submission.CorrectedAt = null;
         submission.ReviewedAt = null;
+        submission.FinalScore = 0;
 
-        foreach (var answer in request.Answers)
-        {
-            var answerText = answer.Answer.Trim();
-            var existingAnswer = submission.StudentAnswers.FirstOrDefault(x => x.QuestionId == answer.QuestionId);
-            if (existingAnswer is null)
+        await submissionRepository.ReplaceAnswersAsync(
+            submission.Id,
+            request.Answers.Select(answer => new StudentAnswer
             {
-                submission.StudentAnswers.Add(new StudentAnswer
-                {
-                    Id = Guid.NewGuid(),
-                    SubmissionId = submission.Id,
-                    QuestionId = answer.QuestionId,
-                    Answer = answerText
-                });
-                continue;
-            }
+                Id = Guid.NewGuid(),
+                SubmissionId = submission.Id,
+                QuestionId = answer.QuestionId,
+                Answer = answer.Answer.Trim()
+            }),
+            cancellationToken);
 
-            if (existingAnswer.Answer == answerText) continue;
-
-            existingAnswer.Answer = answerText;
-            existingAnswer.ScoreAwarded = 0;
-            existingAnswer.IsCorrect = false;
-            existingAnswer.Feedback = null;
-            existingAnswer.NeedsReview = false;
-        }
-
-        submission.FinalScore = submission.StudentAnswers.Sum(answer => answer.ScoreAwarded);
         await submissionRepository.SaveChangesAsync(cancellationToken);
         return true;
     }
@@ -145,6 +131,26 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         return true;
     }
 
+    public async Task<bool> UpdateStudentInfoAsync(
+        Guid id,
+        UpdateStudentInfoRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.StudentName))
+        {
+            throw new ValidationException("StudentName is required.");
+        }
+
+        var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
+        if (submission is null) return false;
+
+        submission.StudentName = request.StudentName.Trim();
+        submission.StudentEmail = string.IsNullOrWhiteSpace(request.StudentEmail) ? null : request.StudentEmail.Trim();
+
+        await submissionRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
@@ -173,6 +179,11 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         }
 
         var questionsById = questions.ToDictionary(x => x.Id);
+        if (!questionsById.Keys.Order().SequenceEqual(request.Answers.Select(x => x.QuestionId).Order()))
+        {
+            throw new ValidationException("Every assignment question must be answered.");
+        }
+
         foreach (var answer in request.Answers)
         {
             if (!questionsById.TryGetValue(answer.QuestionId, out var question))
@@ -197,7 +208,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         }
 
         if (question.Type == QuestionType.Numeric
-            && !decimal.TryParse(answer, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
+            && !NumberParser.TryParse(answer, out _))
         {
             throw new ValidationException("Numeric answers must be valid numbers.");
         }

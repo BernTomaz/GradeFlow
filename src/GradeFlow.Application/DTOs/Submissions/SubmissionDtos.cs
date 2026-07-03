@@ -24,6 +24,14 @@ public sealed record UpdateStudentAnswerRequest(
     [MaxLength(4000)]
     string Answer);
 
+public sealed record UpdateStudentInfoRequest(
+    [Required]
+    [MaxLength(200)]
+    string StudentName,
+    [EmailAddress]
+    [MaxLength(320)]
+    string? StudentEmail);
+
 public sealed record SubmissionResponse(
     Guid Id,
     Guid AssignmentId,

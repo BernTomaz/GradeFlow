@@ -1,15 +1,16 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, map, startWith, Subject, switchMap } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
-import { questionTypeOptions } from '../../core/models/question.models';
+import { LocalDatePipe } from '../../shared/local-date.pipe';
+import { questionTitle } from '../../shared/question-text';
 
 @Component({
   selector: 'app-assignment-detail',
-  imports: [AsyncPipe, DatePipe, RouterLink],
+  imports: [AsyncPipe, DatePipe, LocalDatePipe, RouterLink],
   templateUrl: './assignment-detail.component.html'
 })
 export class AssignmentDetailComponent {
@@ -18,25 +19,25 @@ export class AssignmentDetailComponent {
   private readonly questionApi = inject(QuestionApiService);
   private readonly submissionApi = inject(SubmissionApiService);
   private readonly assignmentId$ = this.route.paramMap.pipe(map((params) => params.get('id')!));
+  private readonly refresh$ = new Subject<void>();
   protected pendingDelete: { type: 'question' | 'submission'; id: string } | null = null;
 
   protected readonly vm$ = this.assignmentId$.pipe(
     switchMap((id) =>
-      combineLatest({
-        assignment: this.assignmentApi.getById(id),
-        questions: this.questionApi.getByAssignmentId(id),
-        submissions: this.submissionApi.getByAssignmentId(id)
-      })
+      this.refresh$.pipe(
+        startWith(undefined),
+        switchMap(() =>
+          combineLatest({
+            assignment: this.assignmentApi.getById(id),
+            questions: this.questionApi.getByAssignmentId(id),
+            submissions: this.submissionApi.getByAssignmentId(id)
+          })
+        )
+      )
     )
   );
 
-  typeLabel(type: number) {
-    return questionTypeOptions.find((option) => option.value === type)?.label ?? 'Tipo desconhecido';
-  }
-
-  questionTitle(text: string) {
-    return text.split('\n')[0];
-  }
+  protected readonly questionTitle = questionTitle;
 
   askDeleteQuestion(id: string) {
     this.pendingDelete = { type: 'question', id };
@@ -54,6 +55,6 @@ export class AssignmentDetailComponent {
     const request = pendingDelete.type === 'question'
       ? this.questionApi.delete(pendingDelete.id)
       : this.submissionApi.delete(pendingDelete.id);
-    request.subscribe(() => location.reload());
+    request.subscribe(() => this.refresh$.next());
   }
 }

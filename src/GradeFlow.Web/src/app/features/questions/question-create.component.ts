@@ -3,6 +3,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { QuestionType, questionTypeOptions } from '../../core/models/question.models';
+import { apiErrorMessage } from '../../shared/api-error';
+import { buildQuestionText, parseQuestionText } from '../../shared/question-text';
 
 @Component({
   selector: 'app-question-create',
@@ -105,7 +107,7 @@ export class QuestionCreateComponent {
   }
 
   private handleError(error: { error?: { error?: string }; message?: string }) {
-    this.errorMessage = error.error?.error ?? error.message ?? 'Não foi possível salvar a questão.';
+    this.errorMessage = apiErrorMessage(error, 'Não foi possível salvar a questão.');
   }
 }
 
@@ -121,33 +123,4 @@ function normalizeCorrectAnswer(type: QuestionType, value: string) {
   if (normalized === 'verdadeiro' || normalized === 'v') return 'true';
   if (normalized === 'falso' || normalized === 'f') return 'false';
   return normalized;
-}
-
-function buildQuestionText(type: QuestionType, text: string, optionA: string, optionB: string, optionC: string, optionD: string) {
-  if (type !== QuestionType.MultipleChoice) return text;
-
-  return [
-    text,
-    `A) ${optionA}`,
-    `B) ${optionB}`,
-    `C) ${optionC}`,
-    `D) ${optionD}`
-  ].filter((line) => !line.endsWith(') ')).join('\n');
-}
-
-function parseQuestionText(type: QuestionType, text: string) {
-  if (type !== QuestionType.MultipleChoice) return { text };
-
-  const lines = text.split('\n');
-  return {
-    text: lines[0] ?? '',
-    optionA: readOption(lines, 'A'),
-    optionB: readOption(lines, 'B'),
-    optionC: readOption(lines, 'C'),
-    optionD: readOption(lines, 'D')
-  };
-}
-
-function readOption(lines: string[], option: string) {
-  return lines.find((line) => line.startsWith(`${option}) `))?.slice(3) ?? '';
 }

@@ -6,6 +6,8 @@ import { CorrectionApiService } from '../../core/api/correction-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
 import { QuestionResponse, QuestionType } from '../../core/models/question.models';
 import { CreateStudentAnswerRequest } from '../../core/models/submission.models';
+import { apiErrorMessage } from '../../shared/api-error';
+import { multipleChoiceOptions, questionTitle } from '../../shared/question-text';
 
 @Component({
   selector: 'app-submission-create',
@@ -23,6 +25,7 @@ export class SubmissionCreateComponent {
   protected readonly submissionId = this.route.snapshot.paramMap.get('id');
   protected readonly answerId = this.route.snapshot.paramMap.get('answerId');
   protected readonly questionId = this.route.snapshot.paramMap.get('questionId');
+  protected readonly studentInfoOnly = this.route.snapshot.queryParamMap.get('info') === 'student';
   protected errorMessage: string | null = null;
   protected readonly QuestionType = QuestionType;
   protected readonly trueFalseOptions = [
@@ -55,6 +58,11 @@ export class SubmissionCreateComponent {
           studentName: submission.studentName,
           studentEmail: submission.studentEmail ?? ''
         });
+        if (this.studentInfoOnly) {
+          this.loading = false;
+          return;
+        }
+
         const selectedAnswer = this.answerId
           ? submission.answers.find((answer) => answer.id === this.answerId)
           : null;
@@ -93,6 +101,11 @@ export class SubmissionCreateComponent {
   }
 
   save() {
+    if (this.studentInfoOnly) {
+      this.saveStudentInfo();
+      return;
+    }
+
     if (this.submissionId && (this.answerId || this.questionId)) {
       this.saveCurrentAnswer(() => this.router.navigate(['/submissions', this.submissionId]));
       return;
@@ -142,7 +155,7 @@ export class SubmissionCreateComponent {
     const request = {
       studentName: value.studentName,
       studentEmail: value.studentEmail || null,
-      answers: this.answerId || this.questionId ? this.mergeAnswer(formAnswers) : formAnswers
+      answers: this.studentInfoOnly ? this.originalAnswers : this.answerId || this.questionId ? this.mergeAnswer(formAnswers) : formAnswers
     };
     this.saving = true;
 
@@ -160,9 +173,28 @@ export class SubmissionCreateComponent {
     });
   }
 
+  private saveStudentInfo() {
+    this.errorMessage = null;
+
+    if (this.form.controls.studentName.invalid || !this.submissionId) {
+      this.errorMessage = 'Preencha os campos obrigatórios.';
+      return;
+    }
+
+    const value = this.form.getRawValue();
+    this.saving = true;
+    this.submissionApi.updateStudentInfo(this.submissionId, {
+      studentName: value.studentName,
+      studentEmail: value.studentEmail || null
+    }).subscribe({
+      next: () => this.router.navigate(['/submissions', this.submissionId]),
+      error: (error) => this.handleError(error)
+    });
+  }
+
   private handleError(error: { error?: { error?: string }; message?: string }) {
     this.saving = false;
-    this.errorMessage = error.error?.error ?? error.message ?? 'Não foi possível salvar a submissão.';
+    this.errorMessage = apiErrorMessage(error, 'Não foi possível salvar a submissão.');
   }
 
   private mergeAnswer(formAnswers: CreateStudentAnswerRequest[]) {
@@ -173,15 +205,10 @@ export class SubmissionCreateComponent {
   }
 
   questionTitle(question: QuestionResponse) {
-    return question.text.split('\n')[0];
+    return questionTitle(question.text);
   }
 
   multipleChoiceOptions(question: QuestionResponse) {
-    return ['A', 'B', 'C', 'D']
-      .map((option) => {
-        const text = question.text.split('\n').find((line) => line.startsWith(`${option}) `))?.slice(3);
-        return text ? { value: option, text } : null;
-      })
-      .filter((option): option is { value: string; text: string } => option !== null);
+    return multipleChoiceOptions(question.text);
   }
 }

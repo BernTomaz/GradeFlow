@@ -13,7 +13,7 @@
         <a [routerLink]="['/assignments', assignment.id]" class="card-link">
           <h2>{{ assignment.title }}</h2>
           <p>{{ assignment.subject || 'Sem disciplina' }}</p>
-          <small>{{ assignment.createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+          <small>{{ assignment.createdAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</small>
         </a>
         <div class="actions">
           <strong>{{ assignment.totalPoints }} pts</strong>

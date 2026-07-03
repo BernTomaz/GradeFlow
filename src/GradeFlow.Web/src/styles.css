@@ -11,6 +11,7 @@ body {
   background-attachment: fixed;
   color: #102033;
   font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 app-root {
@@ -33,6 +34,7 @@ textarea {
 input,
 select,
 textarea {
+  min-width: 0;
   width: 100%;
   border: 1px solid #c9d6e2;
   border-radius: 8px;
@@ -137,6 +139,7 @@ small {
 
 .topbar nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
@@ -176,9 +179,16 @@ small {
 .page-header,
 .card {
   display: flex;
+  min-width: 0;
   gap: 16px;
   align-items: center;
   justify-content: space-between;
+}
+
+.page-header > div,
+.card > div,
+.card-link {
+  min-width: 0;
 }
 
 .page-header {
@@ -234,6 +244,7 @@ small {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
 }
@@ -253,16 +264,39 @@ small {
 }
 
 .list.compact .card {
-  min-height: 86px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  min-height: 112px;
 }
 
 .list.compact .card-link {
   display: grid;
   gap: 4px;
+  align-content: start;
 }
 
 .list.compact .card-link p {
   margin: 0;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-title-row small {
+  flex: 0 0 auto;
+}
+
+.list.compact .card .actions {
+  align-self: end;
+  justify-content: flex-end;
+}
+
+.list.compact .card .actions small {
+  margin-right: auto;
 }
 
 .form {
@@ -305,6 +339,14 @@ small {
   transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
+.card strong,
+.card p,
+.card small,
+.page-header h1,
+.page-header p {
+  overflow-wrap: break-word;
+}
+
 .card:hover {
   border-color: rgba(25, 103, 210, 0.28);
   box-shadow: 0 14px 34px rgba(21, 39, 64, 0.10);
@@ -323,6 +365,10 @@ small {
 }
 
 .answer-card-link {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
   color: inherit;
   text-decoration: none;
 }
@@ -512,14 +558,140 @@ small {
 }
 
 @media (max-width: 720px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  .topbar {
+    min-height: 0;
+    padding: 14px 18px;
+  }
+
   .topbar,
   .page-header,
-  .card {
+  .answer-card-link {
     align-items: stretch;
     flex-direction: column;
   }
 
+  .topbar nav {
+    gap: 10px 14px;
+  }
+
+  .shell {
+    width: min(100% - 20px, 1120px);
+    margin: 20px auto;
+  }
+
   .grid.two {
     grid-template-columns: 1fr;
+  }
+
+  .actions,
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .button {
+    flex: 0 1 auto;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card:not(.add-card) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .card:not(.add-card) .actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .card:not(.add-card) .actions .button {
+    flex: 0 0 auto;
+    min-width: 88px;
+  }
+
+  .list.compact .card {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .list.compact .card .actions {
+    width: 100%;
+  }
+
+  .list.compact .card .actions .button {
+    flex: 0 0 auto;
+  }
+
+  .list.compact .add-card {
+    display: flex;
+    min-height: 78px;
+  }
+
+  .result {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 460px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .brand {
+    font-size: 20px;
+  }
+
+  .brand span {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .topbar nav,
+  .topbar nav a {
+    min-height: 42px;
+  }
+
+  .button {
+    min-height: 40px;
+  }
+
+  .card:not(.add-card) .actions .button {
+    min-width: 82px;
+    padding: 0 12px;
+  }
+
+  .list.compact .card-link strong {
+    display: block;
+    white-space: normal;
+  }
+
+  .add-card {
+    min-height: 72px;
+  }
+
+  .topbar nav a {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .modal-backdrop {
+    padding: 14px;
+  }
+
+  .alert-modal,
+  .confirm-modal {
+    padding: 22px 42px 22px 20px;
   }
 }

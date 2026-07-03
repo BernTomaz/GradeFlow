@@ -5,10 +5,12 @@ import { map, switchMap } from 'rxjs';
 import { CorrectionApiService } from '../../core/api/correction-api.service';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
+import { LocalDatePipe } from '../../shared/local-date.pipe';
+import { questionTitle } from '../../shared/question-text';
 
 @Component({
   selector: 'app-submission-detail',
-  imports: [AsyncPipe, DatePipe, RouterLink],
+  imports: [AsyncPipe, DatePipe, LocalDatePipe, RouterLink],
   templateUrl: './submission-detail.component.html'
 })
 export class SubmissionDetailComponent {
@@ -34,9 +36,7 @@ export class SubmissionDetailComponent {
     )
   );
 
-  questionTitle(text: string) {
-    return text.split('\n')[0];
-  }
+  protected readonly questionTitle = questionTitle;
 
   correct(submissionId: string) {
     this.correctionApi.correct(submissionId).subscribe(() => {

@@ -1,7 +1,7 @@
 <section class="page-header form-shell">
   <div>
-    <h1>{{ answerId || questionId ? 'Responder questão' : submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
-    <p>Informe as respostas do aluno manualmente.</p>
+    <h1>{{ studentInfoOnly ? 'Editar aluno' : answerId || questionId ? 'Responder questão' : submissionId ? 'Editar submissão' : 'Nova submissão' }}</h1>
+    <p>{{ studentInfoOnly ? 'Atualize os dados do aluno.' : 'Informe as respostas do aluno manualmente.' }}</p>
   </div>
 </section>
 
@@ -26,43 +26,45 @@
       </div>
     }
 
-    <div formArrayName="answers" class="list compact">
-      @for (answer of answers.controls; track answer; let i = $index) {
-        <label [formGroupName]="i" class="answer-row">
-          <span>{{ questions[i].order }}. {{ questionTitle(questions[i]) }}</span>
-          @if (questions[i].type === QuestionType.MultipleChoice) {
-            <div class="choice-list">
-              @for (option of multipleChoiceOptions(questions[i]); track option.value) {
-                <label>
-                  <input type="radio" formControlName="answer" [value]="option.value" />
-                  <span>{{ option.value }}) {{ option.text }}</span>
-                </label>
-              }
-            </div>
-          } @else if (questions[i].type === QuestionType.TrueFalse) {
-            <div class="choice-list">
-              @for (option of trueFalseOptions; track option.value) {
-                <label>
-                  <input type="radio" formControlName="answer" [value]="option.value" />
-                  <span>{{ option.text }}</span>
-                </label>
-              }
-            </div>
-          } @else {
-            <input formControlName="answer" maxlength="4000" />
-          }
-        </label>
-      } @empty {
-        <p class="empty">Cadastre questões antes de criar uma submissão.</p>
-      }
-    </div>
+    @if (!studentInfoOnly) {
+      <div formArrayName="answers" class="list compact">
+        @for (answer of answers.controls; track answer; let i = $index) {
+          <label [formGroupName]="i" class="answer-row">
+            <span>{{ questions[i].order }}. {{ questionTitle(questions[i]) }}</span>
+            @if (questions[i].type === QuestionType.MultipleChoice) {
+              <div class="choice-list">
+                @for (option of multipleChoiceOptions(questions[i]); track option.value) {
+                  <label>
+                    <input type="radio" formControlName="answer" [value]="option.value" />
+                    <span>{{ option.value }}) {{ option.text }}</span>
+                  </label>
+                }
+              </div>
+            } @else if (questions[i].type === QuestionType.TrueFalse) {
+              <div class="choice-list">
+                @for (option of trueFalseOptions; track option.value) {
+                  <label>
+                    <input type="radio" formControlName="answer" [value]="option.value" />
+                    <span>{{ option.text }}</span>
+                  </label>
+                }
+              </div>
+            } @else {
+              <input formControlName="answer" maxlength="4000" />
+            }
+          </label>
+        } @empty {
+          <p class="empty">Cadastre questões antes de criar uma submissão.</p>
+        }
+      </div>
+    }
 
     <div class="actions form-actions">
       <a [routerLink]="assignmentId ? ['/assignments', assignmentId] : ['/assignments']" class="button">
         Voltar
       </a>
-      <button class="button primary" type="submit" [disabled]="saving || form.invalid || answers.length === 0">
-        {{ answerId || questionId ? 'Salvar resposta' : 'Salvar submissão' }}
+      <button class="button primary" type="submit" [disabled]="saving || form.invalid || (!studentInfoOnly && answers.length === 0)">
+        {{ studentInfoOnly ? 'Salvar aluno' : answerId || questionId ? 'Salvar resposta' : 'Salvar submissão' }}
       </button>
       @if (submissionId && (answerId || questionId)) {
         <button class="button primary" type="button" [disabled]="saving || form.invalid" (click)="correctQuestion()">

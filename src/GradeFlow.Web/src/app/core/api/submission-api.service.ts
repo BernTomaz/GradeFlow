@@ -22,6 +22,10 @@ export class SubmissionApiService {
     return this.http.put<void>(`/api/submissions/${id}`, request);
   }
 
+  updateStudentInfo(id: string, request: Pick<CreateSubmissionRequest, 'studentName' | 'studentEmail'>) {
+    return this.http.put<void>(`/api/submissions/${id}/student`, request);
+  }
+
   updateAnswer(submissionId: string, questionId: string, answer: string) {
     return this.http.put<void>(`/api/submissions/${submissionId}/questions/${questionId}/answer`, { answer });
   }

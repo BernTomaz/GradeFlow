@@ -2,11 +2,14 @@
   <section class="page-header">
     <div>
       <h1>{{ vm.submission.studentName }}</h1>
-      <p>{{ vm.submission.submittedAt | date: 'dd/MM/yyyy HH:mm' }} - Nota {{ vm.submission.finalScore }}</p>
+      <p>{{ vm.submission.submittedAt | localDate | date: 'dd/MM/yyyy HH:mm' }} - Nota {{ vm.submission.finalScore }}</p>
+      @if (vm.submission.studentEmail) {
+        <p>{{ vm.submission.studentEmail }}</p>
+      }
     </div>
     <div class="actions">
       <a [routerLink]="['/assignments', vm.submission.assignmentId]" class="button">Voltar</a>
-      <a [routerLink]="['/submissions', vm.submission.id, 'edit']" class="button">Editar</a>
+      <a [routerLink]="['/submissions', vm.submission.id, 'edit']" [queryParams]="{ info: 'student' }" class="button">Editar</a>
       <button class="button primary" type="button" (click)="correct(vm.submission.id)">Corrigir</button>
       <button class="button danger" type="button" (click)="askDelete(vm.submission.id, vm.submission.assignmentId)">
         Excluir

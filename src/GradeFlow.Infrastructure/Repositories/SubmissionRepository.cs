@@ -58,6 +58,18 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.SubmissionId == submissionId && x.QuestionId == questionId, cancellationToken);
 
+    public async Task ReplaceAnswersAsync(
+        Guid submissionId,
+        IEnumerable<StudentAnswer> answers,
+        CancellationToken cancellationToken = default)
+    {
+        await dbContext.StudentAnswers
+            .Where(x => x.SubmissionId == submissionId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        dbContext.StudentAnswers.AddRange(answers);
+    }
+
     public async Task<int> UpdateAnswerAsync(Guid answerId, string answer, CancellationToken cancellationToken = default)
         => await dbContext.StudentAnswers
             .Where(x => x.Id == answerId)

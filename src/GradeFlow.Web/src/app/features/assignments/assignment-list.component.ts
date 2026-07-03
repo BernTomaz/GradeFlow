@@ -3,10 +3,11 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
+import { LocalDatePipe } from '../../shared/local-date.pipe';
 
 @Component({
   selector: 'app-assignment-list',
-  imports: [AsyncPipe, DatePipe, RouterLink],
+  imports: [AsyncPipe, DatePipe, LocalDatePipe, RouterLink],
   templateUrl: './assignment-list.component.html'
 })
 export class AssignmentListComponent {

@@ -11,7 +11,12 @@
     @for (result of correction.results; track result.questionId) {
       <article class="card">
         <div>
-          <strong>{{ result.isCorrect ? 'Correta' : 'Incorreta' }}</strong>
+          <strong>
+            @if (result.questionOrder) {
+              {{ result.questionOrder }}.
+            }
+            {{ result.isCorrect ? 'Correta' : 'Incorreta' }}
+          </strong>
           <p>{{ result.feedback }}</p>
           <small>{{ result.answer }}</small>
         </div>

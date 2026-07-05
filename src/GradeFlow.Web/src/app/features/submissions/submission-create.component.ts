@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { CorrectionApiService } from '../../core/api/correction-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
@@ -34,6 +35,7 @@ export class SubmissionCreateComponent {
   ];
   protected loading = !!this.submissionId || !!this.assignmentId;
   protected saving = false;
+  protected correctionFeedback: { isCorrect: boolean; feedback?: string | null; scoreAwarded: number } | null = null;
   protected questions: QuestionResponse[] = [];
   private originalAnswers: CreateStudentAnswerRequest[] = [];
   protected readonly form = this.fb.nonNullable.group({
@@ -116,13 +118,35 @@ export class SubmissionCreateComponent {
 
   correctQuestion() {
     const questionId = this.questions[0]?.id;
-    if (!this.submissionId || !questionId) return;
+    const answer = this.answers.at(0)?.value?.answer;
+    if (!this.submissionId || !questionId || !answer) return;
 
     this.saving = true;
-    this.correctionApi.correctQuestion(this.submissionId, questionId).subscribe({
-      next: () => this.router.navigate(['/submissions', this.submissionId]),
+    this.errorMessage = null;
+    this.correctionFeedback = null;
+    this.submissionApi.updateAnswer(this.submissionId, questionId, answer).pipe(
+      switchMap(() => this.correctionApi.correctQuestion(this.submissionId!, questionId))
+    ).subscribe({
+      next: (correction) => {
+        const result = correction.results[0];
+        this.rememberAnswer(questionId, answer);
+        this.correctionFeedback = {
+          isCorrect: result?.isCorrect ?? false,
+          feedback: result?.feedback ?? 'Correção concluída sem feedback.',
+          scoreAwarded: result?.scoreAwarded ?? 0
+        };
+        this.saving = false;
+      },
       error: (error) => this.handleError(error)
     });
+  }
+
+  private rememberAnswer(questionId: string, answer: string) {
+    const savedAnswer = { questionId, answer };
+    this.originalAnswers = [
+      ...this.originalAnswers.filter((item) => item.questionId !== questionId),
+      savedAnswer
+    ];
   }
 
   private saveCurrentAnswer(afterUpdate: () => void) {
@@ -132,7 +156,10 @@ export class SubmissionCreateComponent {
 
     this.saving = true;
     this.submissionApi.updateAnswer(this.submissionId, questionId, answer).subscribe({
-      next: afterUpdate,
+      next: () => {
+        this.rememberAnswer(questionId, answer);
+        afterUpdate();
+      },
       error: (error) => this.handleError(error)
     });
   }
@@ -206,6 +233,15 @@ export class SubmissionCreateComponent {
 
   questionTitle(question: QuestionResponse) {
     return questionTitle(question.text);
+  }
+
+  closeCorrectionFeedback() {
+    if (this.submissionId) {
+      this.router.navigate(['/submissions', this.submissionId]);
+      return;
+    }
+
+    this.correctionFeedback = null;
   }
 
   multipleChoiceOptions(question: QuestionResponse) {

@@ -543,6 +543,11 @@ small {
   color: #ffffff;
 }
 
+.alert-modal.correct-modal {
+  border-color: #137333;
+  background: #137333;
+}
+
 .modal-close {
   position: absolute;
   top: 10px;

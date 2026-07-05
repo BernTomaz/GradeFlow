@@ -80,13 +80,15 @@ public sealed class ShortTextCorrectionStrategy : ICorrectionStrategy
             .Concat(ReadAcceptedAnswers(answerKey.AcceptedAnswersJson))
             .Select(Normalize);
 
-        return CorrectionStrategyResult.Result(question, answerKey, acceptedAnswers.Contains(answer));
+        return CorrectionStrategyResult.Result(question, answerKey, acceptedAnswers.Any(accepted => IsMatch(answer, accepted)));
     }
 
     private static IReadOnlyCollection<string> ReadAcceptedAnswers(string? json)
         => string.IsNullOrWhiteSpace(json)
             ? []
-            : JsonSerializer.Deserialize<string[]>(json) ?? [];
+            : (JsonSerializer.Deserialize<string[]>(json) ?? [])
+                .SelectMany(answer => answer.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                .ToList();
 
     private static string Normalize(string value)
     {
@@ -115,6 +117,9 @@ public sealed class ShortTextCorrectionStrategy : ICorrectionStrategy
 
         return builder.ToString().Trim().Normalize(NormalizationForm.FormC);
     }
+
+    private static bool IsMatch(string answer, string acceptedAnswer)
+        => answer == acceptedAnswer || $" {answer} ".Contains($" {acceptedAnswer} ", StringComparison.Ordinal);
 }
 
 internal static class CorrectionStrategyResult

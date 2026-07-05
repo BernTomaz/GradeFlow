@@ -68,10 +68,20 @@
       </button>
       @if (submissionId && (answerId || questionId)) {
         <button class="button primary" type="button" [disabled]="saving || form.invalid" (click)="correctQuestion()">
-          Corrigir
+          {{ saving ? 'Corrigindo...' : 'Corrigir' }}
         </button>
       }
     </div>
   </form>
 }
 
+@if (correctionFeedback) {
+  <div class="modal-backdrop">
+    <div class="alert-modal" [class.correct-modal]="correctionFeedback.isCorrect">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="closeCorrectionFeedback()">×</button>
+      <strong>{{ correctionFeedback.isCorrect ? 'Correta' : 'Incorreta' }}</strong>
+      <p>{{ correctionFeedback.feedback }}</p>
+      <small>{{ correctionFeedback.scoreAwarded }} pts</small>
+    </div>
+  </div>
+}

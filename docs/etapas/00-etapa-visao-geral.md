@@ -38,12 +38,12 @@ Arquitetura planejada:
 - Domain para entidades e regras centrais
 
 Ordem recomendada
-Segue a ordem oficial de `docs/etapas/`.
+Segue a ordem oficial de implementacao.
 1. MVP backend
 2. Motor de correcao
 3. Frontend simples
-4. Revisao manual
-5. Testes
+4. Testes
+5. Revisao manual
 6. Login
 7. Importacao e relatorios
 8. IA, OCR e recursos avancados

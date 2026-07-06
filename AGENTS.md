@@ -58,6 +58,6 @@ A referência oficial de execução segue a ordem dos arquivos em `docs/etapas/`
 4. `docs/etapas/04-etapa-crud-avaliacoes-questoes.md`
 5. `docs/etapas/05-etapa-submissao-respostas.md`
 6. `docs/etapas/06-etapa-motor-correcao.md`
-7. `docs/etapas/09-etapa-testes.md`
-8. `docs/etapas/07-etapa-frontend-angular.md`
-9. `docs/etapas/08-etapa-revisao-manual-auditoria.md`
+7. `docs/etapas/07-etapa-frontend-angular.md`
+8. `docs/etapas/08-etapa-testes.md`
+9. `docs/etapas/09-etapa-revisao-manual-auditoria.md`

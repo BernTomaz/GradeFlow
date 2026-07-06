@@ -27,20 +27,20 @@ Fase 2 - Frontend MVP
 7. Criar tela de resultado.
 8. Integrar Angular com API.
 
-Fase 3 - Revisao e auditoria
-1. Criar tela de revisao manual.
-2. Criar endpoint de revisao.
-3. Criar tabela CorrectionLog.
-4. Registrar alteracoes de nota.
-5. Recalcular nota final apos revisao.
-
-Fase 4 - Qualidade
+Fase 3 - Qualidade
 1. Testar MultipleChoiceCorrectionStrategy.
 2. Testar TrueFalseCorrectionStrategy.
 3. Testar NumericCorrectionStrategy.
 4. Testar ShortTextCorrectionStrategy.
 5. Testar CorrectionService.
 6. Testar fluxo completo de submissao e correcao.
+
+Fase 4 - Revisao e auditoria
+1. Criar tela de revisao manual.
+2. Criar endpoint de revisao.
+3. Criar tabela CorrectionLog.
+4. Registrar alteracoes de nota.
+5. Recalcular nota final apos revisao.
 
 Fase 5 - Autenticacao
 1. Criar entidade User.

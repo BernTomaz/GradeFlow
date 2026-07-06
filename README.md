@@ -55,19 +55,8 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ## Arquitetura Planejada
 
-O projeto é organizado seguindo uma separação simples de responsabilidades. A implementação segue a ordem oficial abaixo.
-
-```txt
-01. Estrutura do backend
-02. Modelagem do dominio
-03. Banco de dados e EF Core
-04. CRUD de avaliacoes, questoes e gabaritos
-05. Submissao de respostas
-06. Motor de correcao
-07. Frontend Angular
-08. Testes
-09. Revisao manual e auditoria
-```
+O projeto é organizado seguindo uma separação simples de responsabilidades.
+A implementação segue a ordem oficial definida em `docs/etapas/`.
 
 ```txt
 src/

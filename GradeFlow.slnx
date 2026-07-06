@@ -5,4 +5,7 @@
     <Project Path="src/GradeFlow.Domain/GradeFlow.Domain.csproj" />
     <Project Path="src/GradeFlow.Infrastructure/GradeFlow.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GradeFlow.Tests/GradeFlow.Tests.csproj" />
+  </Folder>
 </Solution>

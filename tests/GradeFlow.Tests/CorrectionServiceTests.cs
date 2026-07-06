@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
 using GradeFlow.Application.Corrections;
 using GradeFlow.Application.Repositories;
@@ -49,6 +50,109 @@ public sealed class CorrectionServiceTests
         repository.SaveChangesCount.Should().Be(1);
     }
 
+    [Fact]
+    public async Task Correct_question_async_should_correct_one_answer_and_keep_submission_pending_when_others_are_open()
+    {
+        var assignmentId = Guid.NewGuid();
+        var submissionId = Guid.NewGuid();
+        var firstQuestion = Question(assignmentId, QuestionType.MultipleChoice, "A", points: 2, order: 1);
+        var secondQuestion = Question(assignmentId, QuestionType.TrueFalse, "false", points: 3, order: 2);
+        var submission = Submission(submissionId, assignmentId, firstQuestion, secondQuestion);
+        var repository = new FakeSubmissionRepository(submission);
+        var service = new CorrectionService(
+            repository,
+            [new MultipleChoiceCorrectionStrategy(), new TrueFalseCorrectionStrategy()]);
+
+        var response = await service.CorrectQuestionAsync(submissionId, firstQuestion.Id);
+
+        response.Should().NotBeNull();
+        response!.Results.Should().ContainSingle();
+        response.Results.Single().QuestionId.Should().Be(firstQuestion.Id);
+        response.FinalScore.Should().Be(2);
+        submission.Status.Should().Be(SubmissionStatus.Pending);
+        submission.StudentAnswers.Single(x => x.QuestionId == secondQuestion.Id).Feedback.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Correct_async_should_return_null_when_submission_does_not_exist()
+    {
+        var submission = Submission(Guid.NewGuid(), Guid.NewGuid(), Question(Guid.NewGuid(), QuestionType.MultipleChoice, "A", 1, 1));
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), [new MultipleChoiceCorrectionStrategy()]);
+
+        var response = await service.CorrectAsync(Guid.NewGuid());
+
+        response.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Correct_async_should_fail_when_answer_has_no_answer_key()
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = Question(assignmentId, QuestionType.MultipleChoice, "A", 1, 1);
+        question.AnswerKey = null;
+        var submission = Submission(Guid.NewGuid(), assignmentId, question);
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), [new MultipleChoiceCorrectionStrategy()]);
+
+        var act = () => service.CorrectAsync(submission.Id);
+
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Every answered question must have an answer key.");
+    }
+
+    [Fact]
+    public async Task Correct_async_should_fail_when_strategy_is_missing()
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = Question(assignmentId, QuestionType.Numeric, "10", 1, 1);
+        var submission = Submission(Guid.NewGuid(), assignmentId, question);
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), []);
+
+        var act = () => service.CorrectAsync(submission.Id);
+
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("No correction strategy for question type Numeric.");
+    }
+
+    [Fact]
+    public async Task Correct_question_async_should_fail_when_question_was_not_answered()
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = Question(assignmentId, QuestionType.MultipleChoice, "A", 1, 1);
+        var submission = Submission(Guid.NewGuid(), assignmentId, question);
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), [new MultipleChoiceCorrectionStrategy()]);
+
+        var act = () => service.CorrectQuestionAsync(submission.Id, Guid.NewGuid());
+
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Question must be answered before correction.");
+    }
+
+    [Fact]
+    public async Task Correct_question_async_should_fail_when_answer_has_no_answer_key()
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = Question(assignmentId, QuestionType.MultipleChoice, "A", 1, 1);
+        var submission = Submission(Guid.NewGuid(), assignmentId, question);
+        submission.StudentAnswers.Single().Question!.AnswerKey = null;
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), [new MultipleChoiceCorrectionStrategy()]);
+
+        var act = () => service.CorrectQuestionAsync(submission.Id, question.Id);
+
+        await act.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Every answered question must have an answer key.");
+    }
+
+    [Fact]
+    public async Task Correct_question_async_should_return_null_when_submission_does_not_exist()
+    {
+        var submission = Submission(Guid.NewGuid(), Guid.NewGuid(), Question(Guid.NewGuid(), QuestionType.MultipleChoice, "A", 1, 1));
+        var service = new CorrectionService(new FakeSubmissionRepository(submission), [new MultipleChoiceCorrectionStrategy()]);
+
+        var response = await service.CorrectQuestionAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        response.Should().BeNull();
+    }
+
     private static Question Question(
         Guid assignmentId,
         QuestionType type,
@@ -83,6 +187,26 @@ public sealed class CorrectionServiceTests
             Question = question,
             Answer = answer
         };
+
+    private static Submission Submission(Guid submissionId, Guid assignmentId, params Question[] questions)
+    {
+        var assignment = new Assignment
+        {
+            Id = assignmentId,
+            Questions = questions.ToList()
+        };
+
+        return new Submission
+        {
+            Id = submissionId,
+            AssignmentId = assignmentId,
+            Assignment = assignment,
+            Status = SubmissionStatus.Pending,
+            StudentAnswers = questions
+                .Select(question => StudentAnswer(submissionId, question, question.AnswerKey?.CorrectAnswer ?? "A"))
+                .ToList()
+        };
+    }
 
     private sealed class FakeSubmissionRepository(Submission submission) : ISubmissionRepository
     {

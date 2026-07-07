@@ -81,6 +81,16 @@
   <p class="loading"></p>
 }
 
+@if (errorMessage) {
+  <div class="modal-backdrop">
+    <div class="alert-modal">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="errorMessage = null">×</button>
+      <strong>Atenção</strong>
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+}
+
 @if (pendingDelete) {
   <div class="modal-backdrop">
     <div class="confirm-modal">

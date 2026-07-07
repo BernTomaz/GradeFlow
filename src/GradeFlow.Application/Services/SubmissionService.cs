@@ -24,6 +24,26 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         return submission is null ? null : Map(submission);
     }
 
+    public async Task<IReadOnlyCollection<CorrectionLogResponse>?> GetCorrectionLogsAsync(
+        Guid submissionId,
+        CancellationToken cancellationToken = default)
+    {
+        if (await submissionRepository.GetByIdAsync(submissionId, cancellationToken) is null) return null;
+
+        return (await submissionRepository.GetCorrectionLogsAsync(submissionId, cancellationToken))
+            .Select(log => new CorrectionLogResponse(
+                log.Id,
+                log.SubmissionId,
+                log.QuestionId,
+                log.CorrectionType,
+                log.OriginalAnswer,
+                log.ExpectedAnswer,
+                log.Score,
+                log.Message,
+                log.CreatedAt))
+            .ToList();
+    }
+
     public async Task<SubmissionResponse?> CreateAsync(
         Guid assignmentId,
         CreateSubmissionRequest request,
@@ -149,6 +169,59 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
 
         await submissionRepository.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public async Task<ReviewStudentAnswerResponse?> ReviewAnswerAsync(
+        Guid answerId,
+        ReviewStudentAnswerRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request.ScoreAwarded < 0)
+        {
+            throw new ValidationException("ScoreAwarded must be greater than or equal to zero.");
+        }
+
+        var answer = await submissionRepository.GetAnswerForReviewAsync(answerId, cancellationToken);
+        if (answer?.Submission is null || answer.Question is null) return null;
+
+        if (request.ScoreAwarded > answer.Question.Points)
+        {
+            throw new ValidationException("ScoreAwarded cannot be greater than question points.");
+        }
+
+        answer.ScoreAwarded = request.ScoreAwarded;
+        answer.Feedback = request.Feedback?.Trim();
+        answer.IsCorrect = request.IsCorrect;
+        answer.NeedsReview = false;
+
+        var submission = answer.Submission;
+        submission.FinalScore = submission.StudentAnswers.Sum(x => x.Id == answer.Id ? answer.ScoreAwarded : x.ScoreAwarded);
+        submission.Status = SubmissionStatus.Reviewed;
+        submission.ReviewedAt = DateTime.UtcNow;
+
+        submissionRepository.AddCorrectionLog(new CorrectionLog
+        {
+            Id = Guid.NewGuid(),
+            SubmissionId = answer.SubmissionId,
+            QuestionId = answer.QuestionId,
+            CorrectionType = "ManualReview",
+            OriginalAnswer = answer.Answer,
+            NormalizedAnswer = answer.Answer.Trim(),
+            ExpectedAnswer = answer.Question.AnswerKey?.CorrectAnswer,
+            Score = answer.ScoreAwarded,
+            Message = answer.Feedback,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await submissionRepository.SaveChangesAsync(cancellationToken);
+        return new ReviewStudentAnswerResponse(
+            answer.Id,
+            answer.SubmissionId,
+            answer.ScoreAwarded,
+            answer.Feedback,
+            answer.IsCorrect,
+            answer.NeedsReview,
+            submission.FinalScore);
     }
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)

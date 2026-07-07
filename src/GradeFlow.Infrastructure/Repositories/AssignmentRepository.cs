@@ -11,7 +11,7 @@ public sealed class AssignmentRepository(GradeFlowDbContext dbContext) : IAssign
         => await dbContext.Assignments
             .AsNoTracking()
             .Include(x => x.Questions)
-            .OrderBy(x => x.Title)
+            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync(cancellationToken);
 
     public async Task<Assignment?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

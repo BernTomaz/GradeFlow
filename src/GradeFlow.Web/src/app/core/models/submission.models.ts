@@ -35,3 +35,31 @@ export interface StudentAnswerResponse {
   feedback?: string | null;
   needsReview: boolean;
 }
+
+export interface ReviewStudentAnswerRequest {
+  scoreAwarded: number;
+  feedback?: string | null;
+  isCorrect: boolean;
+}
+
+export interface ReviewStudentAnswerResponse {
+  answerId: string;
+  submissionId: string;
+  scoreAwarded: number;
+  feedback?: string | null;
+  isCorrect: boolean;
+  needsReview: boolean;
+  finalScore: number;
+}
+
+export interface CorrectionLogResponse {
+  id: string;
+  submissionId: string;
+  questionId: string;
+  correctionType: string;
+  originalAnswer: string;
+  expectedAnswer?: string | null;
+  score: number;
+  message?: string | null;
+  createdAt: string;
+}

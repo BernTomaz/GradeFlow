@@ -11,6 +11,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
     public DbSet<Submission> Submissions => Set<Submission>();
     public DbSet<StudentAnswer> StudentAnswers => Set<StudentAnswer>();
     public DbSet<CorrectionResult> CorrectionResults => Set<CorrectionResult>();
+    public DbSet<CorrectionLog> CorrectionLogs => Set<CorrectionLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -106,6 +107,20 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
             entity.Property(x => x.Feedback).HasMaxLength(2000);
             entity.Property(x => x.CorrectionType).HasMaxLength(100);
             entity.Property(x => x.CreatedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<CorrectionLog>(entity =>
+        {
+            entity.ToTable("CorrectionLogs");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.CorrectionType).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.OriginalAnswer).IsRequired().HasMaxLength(4000);
+            entity.Property(x => x.NormalizedAnswer).HasMaxLength(4000);
+            entity.Property(x => x.ExpectedAnswer).HasMaxLength(2000);
+            entity.Property(x => x.Score).HasPrecision(18, 2);
+            entity.Property(x => x.Message).HasMaxLength(2000);
+            entity.Property(x => x.CreatedAt).IsRequired();
+            entity.Property(x => x.ReviewedByUserId).HasMaxLength(200);
         });
     }
 }

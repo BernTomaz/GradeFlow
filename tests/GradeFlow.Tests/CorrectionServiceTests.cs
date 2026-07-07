@@ -234,6 +234,12 @@ public sealed class CorrectionServiceTests
         public Task<StudentAnswer?> GetAnswerAsync(Guid submissionId, Guid questionId, CancellationToken cancellationToken = default)
             => Task.FromResult(submission.StudentAnswers.FirstOrDefault(x => x.SubmissionId == submissionId && x.QuestionId == questionId));
 
+        public Task<StudentAnswer?> GetAnswerForReviewAsync(Guid answerId, CancellationToken cancellationToken = default)
+            => Task.FromResult(submission.StudentAnswers.FirstOrDefault(x => x.Id == answerId));
+
+        public Task<IReadOnlyCollection<CorrectionLog>> GetCorrectionLogsAsync(Guid submissionId, CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyCollection<CorrectionLog>>([]);
+
         public Task ReplaceAnswersAsync(Guid submissionId, IEnumerable<StudentAnswer> answers, CancellationToken cancellationToken = default)
         {
             submission.StudentAnswers = answers.ToList();
@@ -265,6 +271,10 @@ public sealed class CorrectionServiceTests
 
         public void AddCorrectionResult(CorrectionResult correctionResult)
             => AddedCorrectionResults.Add(correctionResult);
+
+        public void AddCorrectionLog(CorrectionLog correctionLog)
+        {
+        }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

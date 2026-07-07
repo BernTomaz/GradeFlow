@@ -58,6 +58,23 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.SubmissionId == submissionId && x.QuestionId == questionId, cancellationToken);
 
+    public async Task<StudentAnswer?> GetAnswerForReviewAsync(Guid answerId, CancellationToken cancellationToken = default)
+        => await dbContext.StudentAnswers
+            .Include(x => x.Submission)
+                .ThenInclude(x => x!.StudentAnswers)
+            .Include(x => x.Question)
+                .ThenInclude(x => x!.AnswerKey)
+            .FirstOrDefaultAsync(x => x.Id == answerId, cancellationToken);
+
+    public async Task<IReadOnlyCollection<CorrectionLog>> GetCorrectionLogsAsync(
+        Guid submissionId,
+        CancellationToken cancellationToken = default)
+        => await dbContext.CorrectionLogs
+            .AsNoTracking()
+            .Where(x => x.SubmissionId == submissionId)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync(cancellationToken);
+
     public async Task ReplaceAnswersAsync(
         Guid submissionId,
         IEnumerable<StudentAnswer> answers,
@@ -105,6 +122,9 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public void AddCorrectionResult(CorrectionResult correctionResult)
         => dbContext.CorrectionResults.Add(correctionResult);
+
+    public void AddCorrectionLog(CorrectionLog correctionLog)
+        => dbContext.CorrectionLogs.Add(correctionLog);
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         => dbContext.SaveChangesAsync(cancellationToken);

@@ -11,6 +11,8 @@ public interface ISubmissionRepository
     Task<Submission?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Submission?> GetForCorrectionAsync(Guid id, CancellationToken cancellationToken = default);
     Task<StudentAnswer?> GetAnswerAsync(Guid submissionId, Guid questionId, CancellationToken cancellationToken = default);
+    Task<StudentAnswer?> GetAnswerForReviewAsync(Guid answerId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<CorrectionLog>> GetCorrectionLogsAsync(Guid submissionId, CancellationToken cancellationToken = default);
     Task ReplaceAnswersAsync(Guid submissionId, IEnumerable<StudentAnswer> answers, CancellationToken cancellationToken = default);
     Task<int> UpdateAnswerAsync(Guid answerId, string answer, CancellationToken cancellationToken = default);
     Task RefreshSubmissionAfterAnswerUpdateAsync(Guid submissionId, CancellationToken cancellationToken = default);
@@ -18,5 +20,6 @@ public interface ISubmissionRepository
     void AddAnswer(StudentAnswer answer);
     void Remove(Submission submission);
     void AddCorrectionResult(CorrectionResult correctionResult);
+    void AddCorrectionLog(CorrectionLog correctionLog);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

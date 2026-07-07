@@ -8,6 +8,7 @@ public interface IQuestionRepository
     Task<IReadOnlyCollection<Question>> GetByAssignmentIdAsync(Guid assignmentId, CancellationToken cancellationToken = default);
     Task<Question?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Question?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> HasAnswersAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> OrderExistsAsync(Guid assignmentId, int order, Guid? exceptQuestionId = null, CancellationToken cancellationToken = default);
     void Add(Question question);
     void Remove(Question question);

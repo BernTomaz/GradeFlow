@@ -32,6 +32,31 @@ public sealed record UpdateStudentInfoRequest(
     [MaxLength(320)]
     string? StudentEmail);
 
+public sealed record ReviewStudentAnswerRequest(
+    decimal ScoreAwarded,
+    string? Feedback,
+    bool IsCorrect);
+
+public sealed record ReviewStudentAnswerResponse(
+    Guid AnswerId,
+    Guid SubmissionId,
+    decimal ScoreAwarded,
+    string? Feedback,
+    bool IsCorrect,
+    bool NeedsReview,
+    decimal FinalScore);
+
+public sealed record CorrectionLogResponse(
+    Guid Id,
+    Guid SubmissionId,
+    Guid QuestionId,
+    string CorrectionType,
+    string OriginalAnswer,
+    string? ExpectedAnswer,
+    decimal Score,
+    string? Message,
+    DateTime CreatedAt);
+
 public sealed record SubmissionResponse(
     Guid Id,
     Guid AssignmentId,

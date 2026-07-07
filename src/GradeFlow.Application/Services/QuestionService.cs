@@ -78,6 +78,10 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
     {
         var question = await questionRepository.GetForUpdateAsync(id, cancellationToken);
         if (question is null) return false;
+        if (await questionRepository.HasAnswersAsync(id, cancellationToken))
+        {
+            throw new ValidationException("Não é possível excluir uma questão que já possui respostas.");
+        }
 
         questionRepository.Remove(question);
         await questionRepository.SaveChangesAsync(cancellationToken);

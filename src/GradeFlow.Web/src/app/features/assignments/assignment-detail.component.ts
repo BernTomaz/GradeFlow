@@ -5,6 +5,7 @@ import { combineLatest, map, startWith, Subject, switchMap } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
+import { apiErrorMessage } from '../../shared/api-error';
 import { LocalDatePipe } from '../../shared/local-date.pipe';
 import { questionTitle } from '../../shared/question-text';
 
@@ -21,6 +22,7 @@ export class AssignmentDetailComponent {
   private readonly assignmentId$ = this.route.paramMap.pipe(map((params) => params.get('id')!));
   private readonly refresh$ = new Subject<void>();
   protected pendingDelete: { type: 'question' | 'submission'; id: string } | null = null;
+  protected errorMessage: string | null = null;
 
   protected readonly vm$ = this.assignmentId$.pipe(
     switchMap((id) =>
@@ -52,9 +54,15 @@ export class AssignmentDetailComponent {
 
     const pendingDelete = this.pendingDelete;
     this.pendingDelete = null;
+    this.errorMessage = null;
     const request = pendingDelete.type === 'question'
       ? this.questionApi.delete(pendingDelete.id)
       : this.submissionApi.delete(pendingDelete.id);
-    request.subscribe(() => this.refresh$.next());
+    request.subscribe({
+      next: () => this.refresh$.next(),
+      error: (error) => {
+        this.errorMessage = apiErrorMessage(error, 'Não foi possível excluir.');
+      }
+    });
   }
 }

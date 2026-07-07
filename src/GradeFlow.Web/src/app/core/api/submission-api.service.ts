@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateSubmissionRequest, SubmissionResponse } from '../models/submission.models';
+import { CorrectionLogResponse, CreateSubmissionRequest, ReviewStudentAnswerRequest, ReviewStudentAnswerResponse, SubmissionResponse } from '../models/submission.models';
 
 @Injectable({ providedIn: 'root' })
 export class SubmissionApiService {
@@ -12,6 +12,10 @@ export class SubmissionApiService {
 
   getById(id: string) {
     return this.http.get<SubmissionResponse>(`/api/submissions/${id}`);
+  }
+
+  getCorrectionLogs(id: string) {
+    return this.http.get<CorrectionLogResponse[]>(`/api/submissions/${id}/correction-logs`);
   }
 
   create(assignmentId: string, request: CreateSubmissionRequest) {
@@ -28,6 +32,10 @@ export class SubmissionApiService {
 
   updateAnswer(submissionId: string, questionId: string, answer: string) {
     return this.http.put<void>(`/api/submissions/${submissionId}/questions/${questionId}/answer`, { answer });
+  }
+
+  reviewAnswer(answerId: string, request: ReviewStudentAnswerRequest) {
+    return this.http.put<ReviewStudentAnswerResponse>(`/api/student-answers/${answerId}/review`, request);
   }
 
   delete(id: string) {

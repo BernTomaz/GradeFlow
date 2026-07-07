@@ -47,5 +47,14 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
 
     [HttpDelete("questions/{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
-        => await questionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();
+    {
+        try
+        {
+            return await questionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
 }

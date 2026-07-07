@@ -9,22 +9,83 @@
 
   <div class="list">
     @for (result of correction.results; track result.questionId) {
-      <article class="card">
-        <div>
-          <strong>
-            @if (result.questionOrder) {
-              {{ result.questionOrder }}.
-            }
-            {{ result.isCorrect ? 'Correta' : 'Incorreta' }}
-          </strong>
-          <p>{{ result.feedback }}</p>
-          <small>{{ result.answer }}</small>
+      <article class="card review-card">
+        <div class="review-summary">
+          <div class="review-title-row">
+            <strong>
+              @if (result.questionOrder) {
+                {{ result.questionOrder }}.
+              }
+              {{ result.isCorrect ? 'Correta' : 'Incorreta' }}
+            </strong>
+            <span>{{ result.scoreAwarded }} pts</span>
+          </div>
+          <p>{{ result.questionText }}</p>
+          <div class="answer-grid">
+            <span>Resposta</span>
+            <strong>{{ result.answer }}</strong>
+            <span>Gabarito</span>
+            <strong>{{ result.expectedAnswer || '-' }}</strong>
+            <span>Feedback atual</span>
+            <strong>{{ result.feedback || '-' }}</strong>
+          </div>
         </div>
-        <span>{{ result.scoreAwarded }} pts</span>
+
+        <form class="review-form" (ngSubmit)="review(result)">
+          <label>
+            Pontuação
+            <input
+              type="number"
+              min="0"
+              [max]="result.questionPoints ?? null"
+              step="0.01"
+              name="score-{{ result.id }}"
+              [(ngModel)]="result.reviewScoreAwarded">
+          </label>
+          <label>
+            Feedback
+            <textarea
+              rows="2"
+              name="feedback-{{ result.id }}"
+              [(ngModel)]="result.reviewFeedback"></textarea>
+          </label>
+          <label>
+            Resultado
+            <select name="correct-{{ result.id }}" [(ngModel)]="result.reviewIsCorrect">
+              <option [ngValue]="true">Correta</option>
+              <option [ngValue]="false">Incorreta</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit" [disabled]="savingAnswerId === result.id">
+            {{ savingAnswerId === result.id ? 'Salvando...' : 'Salvar revisão' }}
+          </button>
+        </form>
+
+        <aside class="audit-inline">
+          <div class="audit-inline-title">
+            <strong>Auditoria</strong>
+            <small>{{ result.auditLogs.length }}</small>
+          </div>
+          <div class="audit-scroll">
+            @if (result.auditLogs.length) {
+              @for (log of result.auditLogs; track log.id) {
+                <div class="audit-entry">
+                  <div class="audit-meta">
+                    <strong>{{ log.score }} pts</strong>
+                    <small>{{ log.createdAt | localDate | date:'dd/MM/yyyy HH:mm' }}</small>
+                  </div>
+                  <p>{{ log.message || 'Revisão manual registrada.' }}</p>
+                  <small>Resposta: {{ log.originalAnswer }} | Gabarito: {{ log.expectedAnswer || '-' }}</small>
+                </div>
+              }
+            } @else {
+              <p class="audit-empty">Sem revisão manual.</p>
+            }
+          </div>
+        </aside>
       </article>
     }
   </div>
 } @else {
   <p class="loading"></p>
 }
-

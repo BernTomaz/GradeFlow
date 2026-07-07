@@ -343,6 +343,79 @@ public sealed class ApplicationServicesTests
         await invalidNumber.Should().ThrowAsync<ValidationException>().WithMessage("Numeric answers must be valid numbers.");
     }
 
+    [Fact]
+    public async Task Submission_service_should_review_answer_recalculate_score_and_log_change()
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = new Question
+        {
+            Id = Guid.NewGuid(),
+            AssignmentId = assignmentId,
+            Type = QuestionType.ShortText,
+            Points = 5,
+            AnswerKey = new AnswerKey { CorrectAnswer = "GradeFlow" }
+        };
+        var answer = new StudentAnswer
+        {
+            Id = Guid.NewGuid(),
+            QuestionId = question.Id,
+            Question = question,
+            Answer = "grade flow",
+            ScoreAwarded = 0,
+            NeedsReview = true
+        };
+        var submission = new Submission
+        {
+            Id = Guid.NewGuid(),
+            AssignmentId = assignmentId,
+            StudentName = "Ana",
+            StudentAnswers = [answer]
+        };
+        answer.SubmissionId = submission.Id;
+        answer.Submission = submission;
+        var repository = new FakeSubmissionRepositoryForService { Submissions = [submission] };
+        var service = new SubmissionService(repository);
+
+        var response = await service.ReviewAnswerAsync(
+            answer.Id,
+            new ReviewStudentAnswerRequest(4, "Revisado", true));
+
+        response.Should().NotBeNull();
+        response!.FinalScore.Should().Be(4);
+        response.NeedsReview.Should().BeFalse();
+        submission.Status.Should().Be(SubmissionStatus.Reviewed);
+        repository.CorrectionLogs.Should().ContainSingle(x => x.CorrectionType == "ManualReview");
+    }
+
+    [Fact]
+    public async Task Submission_service_should_list_correction_logs()
+    {
+        var submission = new Submission { Id = Guid.NewGuid(), AssignmentId = Guid.NewGuid(), StudentName = "Ana" };
+        var repository = new FakeSubmissionRepositoryForService
+        {
+            Submissions = [submission]
+        };
+        repository.CorrectionLogs.Add(new CorrectionLog
+        {
+            Id = Guid.NewGuid(),
+            SubmissionId = submission.Id,
+            QuestionId = Guid.NewGuid(),
+            CorrectionType = "ManualReview",
+            OriginalAnswer = "A",
+            ExpectedAnswer = "B",
+            Score = 1,
+            Message = "Ajuste",
+            CreatedAt = DateTime.UtcNow
+        });
+        var service = new SubmissionService(repository);
+
+        var logs = await service.GetCorrectionLogsAsync(submission.Id);
+        var missing = await service.GetCorrectionLogsAsync(Guid.NewGuid());
+
+        logs.Should().ContainSingle(x => x.Message == "Ajuste");
+        missing.Should().BeNull();
+    }
+
     private static CreateQuestionRequest QuestionRequest(int order, decimal points)
         => new(
             " Quanto e 2 + 2? ",
@@ -405,6 +478,9 @@ public sealed class ApplicationServicesTests
         public Task<Question?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
             => GetByIdAsync(id, cancellationToken);
 
+        public Task<bool> HasAnswersAsync(Guid id, CancellationToken cancellationToken = default)
+            => Task.FromResult(false);
+
         public Task<bool> OrderExistsAsync(Guid assignmentId, int order, Guid? exceptQuestionId = null, CancellationToken cancellationToken = default)
             => Task.FromResult(ExistingOrder == order || Questions.Any(x => x.AssignmentId == assignmentId && x.Order == order && x.Id != exceptQuestionId));
 
@@ -431,6 +507,7 @@ public sealed class ApplicationServicesTests
         public List<Submission> Submissions { get; init; } = [];
         public int SaveChangesCount { get; private set; }
         public int RefreshCount { get; private set; }
+        public List<CorrectionLog> CorrectionLogs { get; } = [];
 
         public Task<bool> AssignmentExistsAsync(Guid assignmentId, CancellationToken cancellationToken = default)
             => Task.FromResult(assignmentId == ExistingAssignmentId);
@@ -452,6 +529,12 @@ public sealed class ApplicationServicesTests
 
         public Task<StudentAnswer?> GetAnswerAsync(Guid submissionId, Guid questionId, CancellationToken cancellationToken = default)
             => Task.FromResult(Submissions.FirstOrDefault(x => x.Id == submissionId)?.StudentAnswers.FirstOrDefault(x => x.QuestionId == questionId));
+
+        public Task<StudentAnswer?> GetAnswerForReviewAsync(Guid answerId, CancellationToken cancellationToken = default)
+            => Task.FromResult(Submissions.SelectMany(x => x.StudentAnswers).FirstOrDefault(x => x.Id == answerId));
+
+        public Task<IReadOnlyCollection<CorrectionLog>> GetCorrectionLogsAsync(Guid submissionId, CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyCollection<CorrectionLog>>(CorrectionLogs.Where(x => x.SubmissionId == submissionId).ToList());
 
         public Task ReplaceAnswersAsync(Guid submissionId, IEnumerable<StudentAnswer> answers, CancellationToken cancellationToken = default)
         {
@@ -487,6 +570,9 @@ public sealed class ApplicationServicesTests
         public void AddCorrectionResult(CorrectionResult correctionResult)
         {
         }
+
+        public void AddCorrectionLog(CorrectionLog correctionLog)
+            => CorrectionLogs.Add(correctionLog);
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

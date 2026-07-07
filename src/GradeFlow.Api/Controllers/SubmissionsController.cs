@@ -23,6 +23,12 @@ public sealed class SubmissionsController(
     public async Task<ActionResult<SubmissionResponse>> GetById(Guid id, CancellationToken cancellationToken)
         => await submissionService.GetByIdAsync(id, cancellationToken) is { } submission ? Ok(submission) : NotFound();
 
+    [HttpGet("submissions/{id:guid}/correction-logs")]
+    public async Task<ActionResult<IReadOnlyCollection<CorrectionLogResponse>>> GetCorrectionLogs(
+        Guid id,
+        CancellationToken cancellationToken)
+        => await submissionService.GetCorrectionLogsAsync(id, cancellationToken) is { } logs ? Ok(logs) : NotFound();
+
     [HttpPost("assignments/{assignmentId:guid}/submissions")]
     public async Task<ActionResult<SubmissionResponse>> Create(
         Guid assignmentId,
@@ -69,6 +75,24 @@ public sealed class SubmissionsController(
         {
             return await submissionService.UpdateAnswerAsync(submissionId, questionId, request, cancellationToken)
                 ? NoContent()
+                : NotFound();
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [HttpPut("student-answers/{answerId:guid}/review")]
+    public async Task<ActionResult<ReviewStudentAnswerResponse>> ReviewAnswer(
+        Guid answerId,
+        ReviewStudentAnswerRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await submissionService.ReviewAnswerAsync(answerId, request, cancellationToken) is { } review
+                ? Ok(review)
                 : NotFound();
         }
         catch (ValidationException exception)

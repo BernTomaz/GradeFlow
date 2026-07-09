@@ -23,6 +23,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
         CancellationToken cancellationToken = default)
         => await dbContext.Submissions
             .AsNoTracking()
+            .Include(x => x.Assignment)
             .Include(x => x.StudentAnswers)
             .Where(x => x.AssignmentId == assignmentId)
             .OrderByDescending(x => x.SubmittedAt)
@@ -31,11 +32,13 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
     public async Task<Submission?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Submissions
             .AsNoTracking()
+            .Include(x => x.Assignment)
             .Include(x => x.StudentAnswers)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<Submission?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Submissions
+            .Include(x => x.Assignment)
             .Include(x => x.StudentAnswers)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -60,6 +63,8 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public async Task<StudentAnswer?> GetAnswerForReviewAsync(Guid answerId, CancellationToken cancellationToken = default)
         => await dbContext.StudentAnswers
+            .Include(x => x.Submission)
+                .ThenInclude(x => x!.Assignment)
             .Include(x => x.Submission)
                 .ThenInclude(x => x!.StudentAnswers)
             .Include(x => x.Question)

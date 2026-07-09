@@ -1,4 +1,6 @@
+using GradeFlow.Api.Services;
 using GradeFlow.Application;
+using GradeFlow.Application.Services;
 using GradeFlow.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddAuthentication("Bearer").AddScheme<JwtAuthenticationOptions, JwtAuthenticationHandler>("Bearer", null);
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -28,6 +35,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(FrontendCorsPolicy);
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

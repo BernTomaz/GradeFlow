@@ -6,6 +6,7 @@ public sealed class Submission
 {
     public Guid Id { get; set; }
     public Guid AssignmentId { get; set; }
+    public Guid? StudentUserId { get; set; }
     public string StudentName { get; set; } = string.Empty;
     public string? StudentEmail { get; set; }
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending;
@@ -15,5 +16,6 @@ public sealed class Submission
     public DateTime? ReviewedAt { get; set; }
 
     public Assignment? Assignment { get; set; }
+    public User? StudentUser { get; set; }
     public ICollection<StudentAnswer> StudentAnswers { get; set; } = [];
 }

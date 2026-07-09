@@ -10,9 +10,11 @@ public sealed class Assignment
     public string? Subject { get; set; }
     public decimal TotalPoints { get; set; }
     public AssignmentStatus Status { get; set; } = AssignmentStatus.Draft;
+    public Guid? TeacherUserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
     public ICollection<Question> Questions { get; set; } = [];
     public ICollection<Submission> Submissions { get; set; } = [];
+    public User? TeacherUser { get; set; }
 }

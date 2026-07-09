@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using GradeFlow.Application.DTOs.Submissions;
 using GradeFlow.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GradeFlow.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api")]
 public sealed class SubmissionsController(
     ISubmissionService submissionService,
@@ -49,6 +51,7 @@ public sealed class SubmissionsController(
     }
 
     [HttpPut("submissions/{id:guid}")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> Update(
         Guid id,
         CreateSubmissionRequest request,
@@ -65,6 +68,7 @@ public sealed class SubmissionsController(
     }
 
     [HttpPut("submissions/{submissionId:guid}/questions/{questionId:guid}/answer")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> UpdateAnswer(
         Guid submissionId,
         Guid questionId,
@@ -84,6 +88,7 @@ public sealed class SubmissionsController(
     }
 
     [HttpPut("student-answers/{answerId:guid}/review")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<ActionResult<ReviewStudentAnswerResponse>> ReviewAnswer(
         Guid answerId,
         ReviewStudentAnswerRequest request,
@@ -102,6 +107,7 @@ public sealed class SubmissionsController(
     }
 
     [HttpPut("submissions/{id:guid}/student")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     public async Task<IActionResult> UpdateStudentInfo(
         Guid id,
         UpdateStudentInfoRequest request,
@@ -120,10 +126,12 @@ public sealed class SubmissionsController(
     }
 
     [HttpDelete("submissions/{id:guid}")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         => await submissionService.DeleteAsync(id, cancellationToken) ? NoContent() : NotFound();
 
     [HttpPost("submissions/{submissionId:guid}/correct")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<ActionResult<CorrectionResponse>> Correct(Guid submissionId, CancellationToken cancellationToken)
     {
         try
@@ -139,6 +147,7 @@ public sealed class SubmissionsController(
     }
 
     [HttpPost("submissions/{submissionId:guid}/questions/{questionId:guid}/correct")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<ActionResult<CorrectionResponse>> CorrectQuestion(
         Guid submissionId,
         Guid questionId,

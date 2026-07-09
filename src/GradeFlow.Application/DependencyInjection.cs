@@ -13,6 +13,8 @@ public static class DependencyInjection
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<ISubmissionService, SubmissionService>();
         services.AddScoped<ICorrectionService, CorrectionService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICorrectionStrategy, MultipleChoiceCorrectionStrategy>();
         services.AddScoped<ICorrectionStrategy, TrueFalseCorrectionStrategy>();
         services.AddScoped<ICorrectionStrategy, NumericCorrectionStrategy>();

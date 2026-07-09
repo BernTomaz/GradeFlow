@@ -1,0 +1,11 @@
+using GradeFlow.Domain.Entities;
+
+namespace GradeFlow.Application.Repositories;
+
+public interface IUserRepository
+{
+    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
+    void Add(User user);
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
+}

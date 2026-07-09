@@ -80,6 +80,9 @@ namespace GradeFlow.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("TeacherUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Subject")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -97,6 +100,8 @@ namespace GradeFlow.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherUserId");
 
                     b.ToTable("Assignments", (string)null);
                 });
@@ -292,6 +297,9 @@ namespace GradeFlow.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<Guid?>("StudentUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
 
@@ -299,7 +307,47 @@ namespace GradeFlow.Infrastructure.Migrations
 
                     b.HasIndex("AssignmentId");
 
+                    b.HasIndex("StudentUserId");
+
                     b.ToTable("Submissions", (string)null);
+                });
+
+            modelBuilder.Entity("GradeFlow.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("GradeFlow.Domain.Entities.AnswerKey", b =>
@@ -362,7 +410,24 @@ namespace GradeFlow.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GradeFlow.Domain.Entities.User", "StudentUser")
+                        .WithMany()
+                        .HasForeignKey("StudentUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Assignment");
+
+                    b.Navigation("StudentUser");
+                });
+
+            modelBuilder.Entity("GradeFlow.Domain.Entities.Assignment", b =>
+                {
+                    b.HasOne("GradeFlow.Domain.Entities.User", "TeacherUser")
+                        .WithMany()
+                        .HasForeignKey("TeacherUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("TeacherUser");
                 });
 
             modelBuilder.Entity("GradeFlow.Domain.Entities.Assignment", b =>

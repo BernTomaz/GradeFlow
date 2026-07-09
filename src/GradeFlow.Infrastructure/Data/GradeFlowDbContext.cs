@@ -12,6 +12,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
     public DbSet<StudentAnswer> StudentAnswers => Set<StudentAnswer>();
     public DbSet<CorrectionResult> CorrectionResults => Set<CorrectionResult>();
     public DbSet<CorrectionLog> CorrectionLogs => Set<CorrectionLog>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,8 +25,13 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
             entity.Property(x => x.Subject).HasMaxLength(200);
             entity.Property(x => x.TotalPoints).HasPrecision(18, 2);
             entity.Property(x => x.Status).IsRequired();
+            entity.Property(x => x.TeacherUserId);
             entity.Property(x => x.CreatedAt).IsRequired();
             entity.Property(x => x.UpdatedAt);
+            entity.HasOne(x => x.TeacherUser)
+                .WithMany()
+                .HasForeignKey(x => x.TeacherUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Question>(entity =>
@@ -63,6 +69,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
         {
             entity.ToTable("Submissions");
             entity.HasKey(x => x.Id);
+            entity.Property(x => x.StudentUserId);
             entity.Property(x => x.StudentName).IsRequired().HasMaxLength(200);
             entity.Property(x => x.StudentEmail).HasMaxLength(320);
             entity.Property(x => x.Status).IsRequired();
@@ -74,6 +81,10 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
                 .WithMany(x => x.Submissions)
                 .HasForeignKey(x => x.AssignmentId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.StudentUser)
+                .WithMany()
+                .HasForeignKey(x => x.StudentUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<StudentAnswer>(entity =>
@@ -121,6 +132,19 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
             entity.Property(x => x.Message).HasMaxLength(2000);
             entity.Property(x => x.CreatedAt).IsRequired();
             entity.Property(x => x.ReviewedByUserId).HasMaxLength(200);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("Users");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.Email).IsRequired().HasMaxLength(320);
+            entity.HasIndex(x => x.Email).IsUnique();
+            entity.Property(x => x.PasswordHash).IsRequired().HasMaxLength(1000);
+            entity.Property(x => x.Role).IsRequired();
+            entity.Property(x => x.CreatedAt).IsRequired();
+            entity.Property(x => x.UpdatedAt);
         });
     }
 }

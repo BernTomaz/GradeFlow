@@ -5,15 +5,22 @@ using GradeFlow.Domain.Enums;
 
 namespace GradeFlow.Application.Services;
 
-public sealed class AssignmentService(IAssignmentRepository assignmentRepository) : IAssignmentService
+public sealed class AssignmentService(
+    IAssignmentRepository assignmentRepository,
+    ICurrentUser? currentUser = null) : IAssignmentService
 {
+    private readonly ICurrentUser currentUser = currentUser ?? SystemCurrentUser.Instance;
+
     public async Task<IReadOnlyCollection<AssignmentResponse>> GetAllAsync(CancellationToken cancellationToken = default)
-        => (await assignmentRepository.GetAllAsync(cancellationToken)).Select(Map).ToList();
+        => (await assignmentRepository.GetAllAsync(cancellationToken))
+            .Where(CanRead)
+            .Select(Map)
+            .ToList();
 
     public async Task<AssignmentResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var assignment = await assignmentRepository.GetByIdAsync(id, cancellationToken);
-        return assignment is null ? null : Map(assignment);
+        return assignment is null || !CanRead(assignment) ? null : Map(assignment);
     }
 
     public async Task<AssignmentResponse> CreateAsync(CreateAssignmentRequest request, CancellationToken cancellationToken = default)
@@ -25,6 +32,7 @@ public sealed class AssignmentService(IAssignmentRepository assignmentRepository
             Description = request.Description?.Trim(),
             Subject = request.Subject?.Trim(),
             Status = AssignmentStatus.Draft,
+            TeacherUserId = currentUser.IsTeacher ? currentUser.Id : null,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -36,7 +44,7 @@ public sealed class AssignmentService(IAssignmentRepository assignmentRepository
     public async Task<bool> UpdateAsync(Guid id, UpdateAssignmentRequest request, CancellationToken cancellationToken = default)
     {
         var assignment = await assignmentRepository.GetForUpdateAsync(id, cancellationToken);
-        if (assignment is null) return false;
+        if (assignment is null || !CanManage(assignment)) return false;
 
         assignment.Title = request.Title.Trim();
         assignment.Description = request.Description?.Trim();
@@ -49,7 +57,7 @@ public sealed class AssignmentService(IAssignmentRepository assignmentRepository
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var assignment = await assignmentRepository.GetForUpdateAsync(id, cancellationToken);
-        if (assignment is null) return false;
+        if (assignment is null || !CanManage(assignment)) return false;
 
         assignmentRepository.Remove(assignment);
         await assignmentRepository.SaveChangesAsync(cancellationToken);
@@ -66,4 +74,10 @@ public sealed class AssignmentService(IAssignmentRepository assignmentRepository
             assignment.Status,
             assignment.CreatedAt,
             assignment.UpdatedAt);
+
+    private bool CanRead(Assignment assignment)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && (assignment.TeacherUserId is null || assignment.TeacherUserId == currentUser.Id));
+
+    private bool CanManage(Assignment assignment) => CanRead(assignment);
 }

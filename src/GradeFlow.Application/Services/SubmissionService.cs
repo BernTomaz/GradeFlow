@@ -7,28 +7,44 @@ using GradeFlow.Domain.Enums;
 
 namespace GradeFlow.Application.Services;
 
-public sealed class SubmissionService(ISubmissionRepository submissionRepository) : ISubmissionService
+public sealed class SubmissionService(
+    ISubmissionRepository submissionRepository,
+    IAssignmentRepository? assignmentRepository = null,
+    ICurrentUser? currentUser = null) : ISubmissionService
 {
+    private readonly ICurrentUser currentUser = currentUser ?? SystemCurrentUser.Instance;
+
     public async Task<IReadOnlyCollection<SubmissionResponse>?> GetByAssignmentIdAsync(
         Guid assignmentId,
         CancellationToken cancellationToken = default)
     {
-        if (!await submissionRepository.AssignmentExistsAsync(assignmentId, cancellationToken)) return null;
+        var assignment = assignmentRepository is null
+            ? null
+            : await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
+        if (assignmentRepository is null)
+        {
+            if (!await submissionRepository.AssignmentExistsAsync(assignmentId, cancellationToken)) return null;
+        }
+        else if (assignment is null || !CanReadAssignment(assignment)) return null;
 
-        return (await submissionRepository.GetByAssignmentIdAsync(assignmentId, cancellationToken)).Select(Map).ToList();
+        return (await submissionRepository.GetByAssignmentIdAsync(assignmentId, cancellationToken))
+            .Where(CanRead)
+            .Select(Map)
+            .ToList();
     }
 
     public async Task<SubmissionResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetByIdAsync(id, cancellationToken);
-        return submission is null ? null : Map(submission);
+        return submission is null || !CanRead(submission) ? null : Map(submission);
     }
 
     public async Task<IReadOnlyCollection<CorrectionLogResponse>?> GetCorrectionLogsAsync(
         Guid submissionId,
         CancellationToken cancellationToken = default)
     {
-        if (await submissionRepository.GetByIdAsync(submissionId, cancellationToken) is null) return null;
+        var submission = await submissionRepository.GetByIdAsync(submissionId, cancellationToken);
+        if (submission is null || !CanRead(submission)) return null;
 
         return (await submissionRepository.GetCorrectionLogsAsync(submissionId, cancellationToken))
             .Select(log => new CorrectionLogResponse(
@@ -55,12 +71,19 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
             return null;
         }
 
+        var assignment = assignmentRepository is null
+            ? null
+            : await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
+        if (assignment is not null && !CanCreateSubmission(assignment)) return null;
+        if (assignmentRepository is not null && assignment is null) return null;
+
         Validate(request, questions);
 
         var submission = new Submission
         {
             Id = Guid.NewGuid(),
             AssignmentId = assignmentId,
+            StudentUserId = currentUser.IsStudent ? currentUser.Id : null,
             StudentName = request.StudentName.Trim(),
             StudentEmail = string.IsNullOrWhiteSpace(request.StudentEmail) ? null : request.StudentEmail.Trim(),
             Status = SubmissionStatus.Pending,
@@ -84,7 +107,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
-        if (submission is null) return false;
+        if (submission is null || !CanManage(submission)) return false;
 
         var questions = await submissionRepository.GetAssignmentQuestionsAsync(submission.AssignmentId, cancellationToken);
         Validate(request, questions);
@@ -118,7 +141,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetByIdAsync(submissionId, cancellationToken);
-        if (submission is null) return false;
+        if (submission is null || !CanAnswer(submission)) return false;
 
         var questions = await submissionRepository.GetAssignmentQuestionsAsync(submission.AssignmentId, cancellationToken);
         var question = questions.FirstOrDefault(x => x.Id == questionId);
@@ -162,7 +185,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
         }
 
         var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
-        if (submission is null) return false;
+        if (submission is null || !CanAnswer(submission)) return false;
 
         submission.StudentName = request.StudentName.Trim();
         submission.StudentEmail = string.IsNullOrWhiteSpace(request.StudentEmail) ? null : request.StudentEmail.Trim();
@@ -183,6 +206,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
 
         var answer = await submissionRepository.GetAnswerForReviewAsync(answerId, cancellationToken);
         if (answer?.Submission is null || answer.Question is null) return null;
+        if (!CanTeacherManage(answer.Submission)) return null;
 
         if (request.ScoreAwarded > answer.Question.Points)
         {
@@ -227,7 +251,7 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetForUpdateAsync(id, cancellationToken);
-        if (submission is null) return false;
+        if (submission is null || !CanTeacherManage(submission)) return false;
 
         submissionRepository.Remove(submission);
         await submissionRepository.SaveChangesAsync(cancellationToken);
@@ -304,4 +328,36 @@ public sealed class SubmissionService(ISubmissionRepository submissionRepository
                 answer.IsCorrect,
                 answer.Feedback,
                 answer.NeedsReview)).ToList());
+
+    private bool CanReadAssignment(Assignment assignment)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && CanTeacherUseAssignment(assignment))
+            || currentUser.IsStudent;
+
+    private bool CanCreateSubmission(Assignment assignment)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && CanTeacherUseAssignment(assignment))
+            || currentUser.IsStudent;
+
+    private bool CanRead(Submission submission)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && CanTeacherUseSubmission(submission))
+            || (currentUser.IsStudent && submission.StudentUserId == currentUser.Id);
+
+    private bool CanAnswer(Submission submission)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && CanTeacherUseSubmission(submission))
+            || (currentUser.IsStudent && submission.StudentUserId == currentUser.Id);
+
+    private bool CanManage(Submission submission) => CanTeacherManage(submission);
+
+    private bool CanTeacherManage(Submission submission)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher && CanTeacherUseSubmission(submission));
+
+    private bool CanTeacherUseAssignment(Assignment assignment)
+        => assignment.TeacherUserId is null || assignment.TeacherUserId == currentUser.Id;
+
+    private bool CanTeacherUseSubmission(Submission submission)
+        => submission.Assignment is not null && CanTeacherUseAssignment(submission.Assignment);
 }

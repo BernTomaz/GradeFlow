@@ -15,12 +15,15 @@ public interface ICorrectionService
 
 public sealed class CorrectionService(
     ISubmissionRepository submissionRepository,
-    IEnumerable<ICorrectionStrategy> strategies) : ICorrectionService
+    IEnumerable<ICorrectionStrategy> strategies,
+    ICurrentUser? currentUser = null) : ICorrectionService
 {
+    private readonly ICurrentUser currentUser = currentUser ?? SystemCurrentUser.Instance;
+
     public async Task<CorrectionResponse?> CorrectAsync(Guid submissionId, CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetForCorrectionAsync(submissionId, cancellationToken);
-        if (submission is null) return null;
+        if (submission is null || !CanCorrect(submission)) return null;
 
         foreach (var answer in submission.StudentAnswers)
         {
@@ -49,7 +52,7 @@ public sealed class CorrectionService(
         CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetForCorrectionAsync(submissionId, cancellationToken);
-        if (submission is null) return null;
+        if (submission is null || !CanCorrect(submission)) return null;
 
         var answer = submission.StudentAnswers.FirstOrDefault(x => x.QuestionId == questionId);
         if (answer is null) throw new ValidationException("Question must be answered before correction.");
@@ -122,4 +125,10 @@ public sealed class CorrectionService(
                     x.Feedback,
                     x.NeedsReview))
                 .ToList());
+
+    private bool CanCorrect(Submission submission)
+        => currentUser.IsAdmin
+            || (currentUser.IsTeacher
+                && submission.Assignment is not null
+                && (submission.Assignment.TeacherUserId is null || submission.Assignment.TeacherUserId == currentUser.Id));
 }

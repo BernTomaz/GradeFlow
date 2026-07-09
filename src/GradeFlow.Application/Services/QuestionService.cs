@@ -6,20 +6,27 @@ using GradeFlow.Domain.Entities;
 
 namespace GradeFlow.Application.Services;
 
-public sealed class QuestionService(IQuestionRepository questionRepository) : IQuestionService
+public sealed class QuestionService(
+    IQuestionRepository questionRepository,
+    IAssignmentRepository? assignmentRepository = null,
+    ICurrentUser? currentUser = null) : IQuestionService
 {
+    private readonly ICurrentUser currentUser = currentUser ?? SystemCurrentUser.Instance;
+
     public async Task<IReadOnlyCollection<QuestionResponse>> GetByAssignmentIdAsync(Guid assignmentId, CancellationToken cancellationToken = default)
-        => (await questionRepository.GetByAssignmentIdAsync(assignmentId, cancellationToken)).Select(Map).ToList();
+        => await CanReadAssignmentAsync(assignmentId, cancellationToken)
+            ? (await questionRepository.GetByAssignmentIdAsync(assignmentId, cancellationToken)).Select(Map).ToList()
+            : [];
 
     public async Task<QuestionResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var question = await questionRepository.GetByIdAsync(id, cancellationToken);
-        return question is null ? null : Map(question);
+        return question is null || !await CanReadAssignmentAsync(question.AssignmentId, cancellationToken) ? null : Map(question);
     }
 
     public async Task<QuestionResponse?> CreateAsync(Guid assignmentId, CreateQuestionRequest request, CancellationToken cancellationToken = default)
     {
-        if (!await questionRepository.AssignmentExistsAsync(assignmentId, cancellationToken)) return null;
+        if (!await CanManageAssignmentAsync(assignmentId, cancellationToken)) return null;
         await ValidateAsync(assignmentId, request.Points, request.Order, null, cancellationToken);
 
         var question = new Question
@@ -50,7 +57,7 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
     public async Task<bool> UpdateAsync(Guid id, UpdateQuestionRequest request, CancellationToken cancellationToken = default)
     {
         var question = await questionRepository.GetForUpdateAsync(id, cancellationToken);
-        if (question is null) return false;
+        if (question is null || !await CanManageAssignmentAsync(question.AssignmentId, cancellationToken)) return false;
         await ValidateAsync(question.AssignmentId, request.Points, request.Order, question.Id, cancellationToken);
 
         question.Text = request.Text.Trim();
@@ -77,7 +84,7 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var question = await questionRepository.GetForUpdateAsync(id, cancellationToken);
-        if (question is null) return false;
+        if (question is null || !await CanManageAssignmentAsync(question.AssignmentId, cancellationToken)) return false;
         if (await questionRepository.HasAnswersAsync(id, cancellationToken))
         {
             throw new ValidationException("Não é possível excluir uma questão que já possui respostas.");
@@ -128,4 +135,17 @@ public sealed class QuestionService(IQuestionRepository questionRepository) : IQ
             throw new ValidationException("Ordem já está sendo usada.");
         }
     }
+
+    private async Task<bool> CanReadAssignmentAsync(Guid assignmentId, CancellationToken cancellationToken)
+    {
+        if (assignmentRepository is null)
+            return currentUser.IsAdmin && await questionRepository.AssignmentExistsAsync(assignmentId, cancellationToken);
+
+        var assignment = await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
+        return assignment is not null
+            && (this.currentUser.IsAdmin || (this.currentUser.IsTeacher && (assignment.TeacherUserId is null || assignment.TeacherUserId == this.currentUser.Id)));
+    }
+
+    private Task<bool> CanManageAssignmentAsync(Guid assignmentId, CancellationToken cancellationToken)
+        => CanReadAssignmentAsync(assignmentId, cancellationToken);
 }

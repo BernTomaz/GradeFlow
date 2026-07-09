@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using GradeFlow.Application.DTOs.Questions;
 using GradeFlow.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GradeFlow.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api")]
 public sealed class QuestionsController(IQuestionService questionService) : ControllerBase
 {
@@ -14,6 +16,7 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
         => Ok(await questionService.GetByAssignmentIdAsync(assignmentId, cancellationToken));
 
     [HttpPost("assignments/{assignmentId:guid}/questions")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<ActionResult<QuestionResponse>> Create(Guid assignmentId, CreateQuestionRequest request, CancellationToken cancellationToken)
     {
         try
@@ -33,6 +36,7 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
         => await questionService.GetByIdAsync(id, cancellationToken) is { } question ? Ok(question) : NotFound();
 
     [HttpPut("questions/{id:guid}")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> Update(Guid id, UpdateQuestionRequest request, CancellationToken cancellationToken)
     {
         try
@@ -46,6 +50,7 @@ public sealed class QuestionsController(IQuestionService questionService) : Cont
     }
 
     [HttpDelete("questions/{id:guid}")]
+    [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         try

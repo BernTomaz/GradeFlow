@@ -8,20 +8,43 @@ O GradeFlow tem como objetivo apoiar professores, avaliadores e instituições n
 
 A proposta do projeto é permitir o cadastro de avaliações com questões estruturadas, configuração de gabaritos por tipo de questão e uso de um motor de correção automática para calcular notas de forma mais consistente, rastreável e auditável.
 
-## Funcionalidades Planejadas
+## Status do Projeto
 
-### MVP
+> Projeto em desenvolvimento ativo. O backend já possui o motor de correção, camadas de aplicação/domínio e testes automatizados implementados. O frontend está em construção.
 
-- Criação de avaliações
-- Cadastro de questões
-- Cadastro de gabaritos estruturados
-- Inserção manual de respostas de alunos
-- Correção automática por tipo de questão
-- Cálculo da nota final
-- Feedback por questão
-- Revisão manual de respostas
+### ✅ Implementado
 
-### Tipos de questão iniciais
+**Domínio e correção**
+- Modelagem de domínio (`Assignment`, `Question`, `AnswerKey`, `StudentAnswer`, `Submission`, `CorrectionResult`, `CorrectionLog`)
+- Motor de correção automática via *Strategy Pattern*, com uma estratégia por tipo de questão
+- Correção de múltipla escolha, verdadeiro/falso, numérica (com tolerância) e texto curto (com normalização de acentos, pontuação e espaços)
+- Correção da prova inteira ou de uma questão isolada (recorreção pontual)
+- Log de correção por submissão (`correction-logs`), permitindo auditoria de como cada nota foi calculada
+- Revisão manual de resposta específica, com endpoint dedicado (`review`)
+
+**Backend**
+- Camada de aplicação com serviços (`AssignmentService`, `CorrectionService`, `QuestionService`, `SubmissionService`) e interfaces de repositório
+- API REST completa (CRUD) com controllers para `Assignments`, `Questions` e `Submissions`
+- Persistência com Entity Framework Core + SQL Server, com 3 migrations já aplicadas (`InitialCreate`, `RequireStudentAnswerAnswer`, `AddCorrectionLogs`)
+- Swagger/OpenAPI habilitado em ambiente de desenvolvimento
+- CORS configurado para o frontend Angular
+- Suite de testes automatizados (xUnit + FluentAssertions) cobrindo serviços de aplicação e estratégias de correção
+
+**Frontend**
+- Aplicação Angular 20 (standalone components) com camada `core` (serviços de API e models tipados) e `features` por domínio
+- Telas de listagem, criação e detalhe de avaliações (`assignments`)
+- Tela de criação de questões (`questions`)
+- Telas de criação e detalhe de submissões (`submissions`)
+- Tela de resultado de correção (`correction`)
+
+### 🔜 Planejado
+
+- Fluxo de revisão manual de respostas integrado na UI (hoje o endpoint existe, a tela ainda não)
+- Autenticação e perfis de usuário (professor/avaliador)
+- Pipeline de CI (build + testes automatizados a cada push)
+- Exportação/relatório de notas por turma
+
+### Tipos de questão suportados
 
 - Múltipla escolha
 - Verdadeiro ou falso
@@ -53,18 +76,20 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 - xUnit
 - FluentAssertions
 
-## Arquitetura Planejada
+## Arquitetura
 
-O projeto é organizado seguindo uma separação simples de responsabilidades.
-A implementação segue a ordem oficial definida em `docs/etapas/`.
+O projeto segue uma separação em camadas inspirada em Clean Architecture.
+A ordem de implementação de cada etapa está documentada em `docs/etapas/`.
 
 ```txt
 src/
-  GradeFlow.Api/
-  GradeFlow.Application/
-  GradeFlow.Domain/
-  GradeFlow.Infrastructure/
-  GradeFlow.Web/
+  GradeFlow.Api/             # Controllers, middlewares e ponto de entrada da API
+  GradeFlow.Application/     # Serviços, casos de uso, DTOs e estratégias de correção
+  GradeFlow.Domain/          # Entidades, enums e contratos de domínio
+  GradeFlow.Infrastructure/  # Persistência (EF Core) e implementações de repositório
+  GradeFlow.Web/             # Frontend Angular
+tests/
+  GradeFlow.Tests/           # Testes de unidade (xUnit + FluentAssertions)
 ```
 
 ## Como Rodar Localmente
@@ -85,6 +110,19 @@ A API deve ficar disponível em:
 https://localhost:7013
 ```
 
+A documentação interativa (Swagger) fica em `https://localhost:7013/swagger`.
+
+#### Endpoints principais
+
+| Recurso | Endpoints |
+|---|---|
+| Assignments | `GET/POST /api/assignments`, `GET/PUT/DELETE /api/assignments/{id}` |
+| Questions | `GET/POST /api/assignments/{assignmentId}/questions`, `GET/PUT/DELETE /api/questions/{id}` |
+| Submissions | `GET/POST /api/assignments/{assignmentId}/submissions`, `GET/PUT/DELETE /api/submissions/{id}` |
+| Correção | `POST /api/submissions/{id}/correct`, `POST /api/submissions/{id}/questions/{questionId}/correct` |
+| Revisão manual | `PUT /api/student-answers/{answerId}/review` |
+| Auditoria | `GET /api/submissions/{id}/correction-logs` |
+
 ### Frontend
 
 Em outro terminal:
@@ -101,3 +139,9 @@ http://localhost:4200
 ```
 
 O frontend usa `proxy.conf.json` para encaminhar chamadas `/api` para `https://localhost:7013`.
+
+### Testes
+
+```powershell
+dotnet test
+```

@@ -10,12 +10,12 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ## Status do Projeto
 
-> Projeto em desenvolvimento ativo. O backend já possui o motor de correção, camadas de aplicação/domínio e testes automatizados implementados. O frontend está em construção.
+> Projeto em desenvolvimento ativo. O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação por perfil.
 
 ### ✅ Implementado
 
 **Domínio e correção**
-- Modelagem de domínio (`Assignment`, `Question`, `AnswerKey`, `StudentAnswer`, `Submission`, `CorrectionResult`, `CorrectionLog`)
+- Modelagem de domínio (`Assignment`, `Question`, `AnswerKey`, `StudentAnswer`, `Submission`, `CorrectionResult`, `CorrectionLog`, `User`)
 - Motor de correção automática via *Strategy Pattern*, com uma estratégia por tipo de questão
 - Correção de múltipla escolha, verdadeiro/falso, numérica (com tolerância) e texto curto (com normalização de acentos, pontuação e espaços)
 - Correção da prova inteira ou de uma questão isolada (recorreção pontual)
@@ -23,15 +23,18 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 - Revisão manual de resposta específica, com endpoint dedicado (`review`)
 
 **Backend**
-- Camada de aplicação com serviços (`AssignmentService`, `CorrectionService`, `QuestionService`, `SubmissionService`) e interfaces de repositório
-- API REST completa (CRUD) com controllers para `Assignments`, `Questions` e `Submissions`
-- Persistência com Entity Framework Core + SQL Server, com 3 migrations já aplicadas (`InitialCreate`, `RequireStudentAnswerAnswer`, `AddCorrectionLogs`)
+- Camada de aplicação com serviços (`AssignmentService`, `AuthService`, `CorrectionService`, `QuestionService`, `SubmissionService`) e interfaces de repositório
+- API REST completa (CRUD) com controllers para `Auth`, `Assignments`, `Questions` e `Submissions`
+- Autenticação com JWT, cadastro/login, refresh token simples e autorização por perfis (`Admin`, `Teacher`, `Student`)
+- Permissões no backend para professor gerenciar suas avaliações e aluno ver suas próprias submissões
+- Persistência com Entity Framework Core + SQL Server, com migrations para estrutura inicial, auditoria, usuários e vínculos de dono (`InitialCreate`, `RequireStudentAnswerAnswer`, `AddCorrectionLogs`, `AddUsers`, `AddUserOwnership`)
 - Swagger/OpenAPI habilitado em ambiente de desenvolvimento
 - CORS configurado para o frontend Angular
 - Suite de testes automatizados (xUnit + FluentAssertions) cobrindo serviços de aplicação e estratégias de correção
 
 **Frontend**
 - Aplicação Angular 20 (standalone components) com camada `core` (serviços de API e models tipados) e `features` por domínio
+- Tela de login/cadastro, guard de rotas e interceptor para envio do token JWT
 - Telas de listagem, criação e detalhe de avaliações (`assignments`)
 - Tela de criação de questões (`questions`)
 - Telas de criação e detalhe de submissões (`submissions`)
@@ -39,8 +42,7 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 
 ### 🔜 Planejado
 
-- Fluxo de revisão manual de respostas integrado na UI (hoje o endpoint existe, a tela ainda não)
-- Autenticação e perfis de usuário (professor/avaliador)
+- CI/CD, Docker e deploy público
 - Pipeline de CI (build + testes automatizados a cada push)
 - Exportação/relatório de notas por turma
 
@@ -122,6 +124,7 @@ A documentação interativa (Swagger) fica em `https://localhost:7013/swagger`.
 | Correção | `POST /api/submissions/{id}/correct`, `POST /api/submissions/{id}/questions/{questionId}/correct` |
 | Revisão manual | `PUT /api/student-answers/{answerId}/review` |
 | Auditoria | `GET /api/submissions/{id}/correction-logs` |
+| Auth | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh-token` |
 
 ### Frontend
 

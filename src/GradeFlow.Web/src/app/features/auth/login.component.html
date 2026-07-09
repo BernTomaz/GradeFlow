@@ -1,0 +1,53 @@
+<section class="auth-shell">
+  <div class="auth-heading">
+    <div class="auth-logo">GF</div>
+    <strong>GradeFlow</strong>
+  </div>
+  <p class="auth-subtitle">Use seu email e senha para acessar o GradeFlow.</p>
+
+  <form class="form card auth-card" [formGroup]="form" (ngSubmit)="submit()">
+    @if (registering) {
+      <label>
+        Nome
+        <input formControlName="name" autocomplete="name" />
+      </label>
+    }
+
+    <label>
+      Email
+      <input formControlName="email" type="email" autocomplete="email" />
+    </label>
+
+    <label>
+      Senha
+      <input formControlName="password" type="password" autocomplete="current-password" />
+    </label>
+
+    @if (registering) {
+      <label>
+        Perfil
+        <select formControlName="role">
+          <option [ngValue]="roles.Teacher">Teacher</option>
+          <option [ngValue]="roles.Student">Student</option>
+        </select>
+      </label>
+    }
+
+    @if (error) {
+      <div class="error">{{ error }}</div>
+    }
+
+    @if (success) {
+      <div class="success">{{ success }}</div>
+    }
+
+    <div class="actions form-actions">
+      <button class="button" type="button" (click)="toggleRegistering()">
+        {{ registering ? 'Ja tenho acesso' : 'Criar acesso' }}
+      </button>
+      <button class="button primary" type="submit" [disabled]="form.invalid">
+        {{ registering ? 'Registrar' : 'Entrar' }}
+      </button>
+    </div>
+  </form>
+</section>

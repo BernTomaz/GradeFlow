@@ -143,15 +143,85 @@ small {
   gap: 16px;
 }
 
-.topbar nav a {
+.topbar nav a,
+.nav-button {
   color: #33465f;
+  font: inherit;
   text-decoration: none;
 }
 
 .topbar nav a:hover,
+.nav-button:hover,
 .brand:hover {
   color: #1967d2;
 }
+
+.nav-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-shell {
+  width: min(360px, calc(100% - 32px));
+  margin: clamp(72px, 14vh, 132px) auto 0;
+}
+
+.auth-shell .page-header {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.auth-shell h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+}
+
+.auth-shell p {
+  margin-bottom: 0;
+}
+
+.auth-shell .form {
+  width: 100%;
+  max-width: none;
+}
+
+.auth-heading {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+  color: #eef6ff;
+}
+
+.auth-heading strong {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.auth-logo {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1967d2, #137333);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.auth-subtitle {
+  display: block;
+  margin: 0;
+  padding-bottom: 32px;
+  color: #c3d2e4;
+  text-align: left;
+}
+
 
 .shell {
   width: min(1120px, calc(100% - 32px));
@@ -339,6 +409,34 @@ small {
   transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
+.auth-card.card {
+  display: grid;
+  width: 100%;
+  margin-top: 0;
+  gap: 16px;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 44px rgba(5, 18, 34, 0.22);
+}
+
+.auth-card.card:hover {
+  border-color: rgba(219, 230, 240, 0.96);
+  box-shadow: 0 18px 44px rgba(5, 18, 34, 0.22);
+  transform: none;
+}
+
+.auth-card input,
+.auth-card select {
+  min-height: 46px;
+}
+
+.auth-card .form-actions {
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
 .card strong,
 .card p,
 .card small,
@@ -440,6 +538,14 @@ small {
   border-radius: 8px;
   background: #fce8e6;
   color: #a50e0e;
+}
+
+.success {
+  padding: 12px 14px;
+  border: 1px solid #b7dfc1;
+  border-radius: 8px;
+  background: #e6f4ea;
+  color: #137333;
 }
 
 .answer-row {

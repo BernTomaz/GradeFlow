@@ -1,6 +1,7 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthApiService } from './core/api/auth-api.service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class App implements OnDestroy {
   private readonly router = inject(Router);
+  protected readonly auth = inject(AuthApiService);
   private readonly events: Subscription;
   private loadingTimer: ReturnType<typeof setTimeout> | null = null;
   protected loading = false;
@@ -31,5 +33,10 @@ export class App implements OnDestroy {
   ngOnDestroy() {
     this.events.unsubscribe();
     if (this.loadingTimer) clearTimeout(this.loadingTimer);
+  }
+
+  protected logout() {
+    this.auth.logout();
+    this.router.navigateByUrl('/login');
   }
 }

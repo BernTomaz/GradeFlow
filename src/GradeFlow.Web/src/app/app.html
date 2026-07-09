@@ -1,8 +1,11 @@
 <header class="topbar">
   <a routerLink="/" class="brand"><span>GF</span>GradeFlow</a>
   <nav>
-    <a routerLink="/assignments">Avaliações</a>
-    <a routerLink="/assignments/new">Nova avaliação</a>
+    @if (auth.current()) {
+      <a routerLink="/assignments">Avaliações</a>
+      <a routerLink="/assignments/new">Nova avaliação</a>
+      <button class="nav-button" type="button" (click)="logout()">Sair</button>
+    }
   </nav>
 </header>
 

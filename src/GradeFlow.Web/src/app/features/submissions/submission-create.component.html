@@ -77,7 +77,7 @@
 
 @if (correctionFeedback) {
   <div class="modal-backdrop">
-    <div class="alert-modal" [class.correct-modal]="correctionFeedback.isCorrect">
+    <div class="alert-modal" role="dialog" aria-modal="true" [class.correct-modal]="correctionFeedback.isCorrect">
       <button class="modal-close" type="button" aria-label="Fechar" (click)="closeCorrectionFeedback()">×</button>
       <strong>{{ correctionFeedback.isCorrect ? 'Correta' : 'Incorreta' }}</strong>
       <p>{{ correctionFeedback.feedback }}</p>

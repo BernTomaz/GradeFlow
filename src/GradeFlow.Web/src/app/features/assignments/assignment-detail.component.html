@@ -83,7 +83,7 @@
 
 @if (errorMessage) {
   <div class="modal-backdrop">
-    <div class="alert-modal">
+    <div class="alert-modal" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" aria-label="Fechar" (click)="errorMessage = null">×</button>
       <strong>Atenção</strong>
       <p>{{ errorMessage }}</p>
@@ -93,7 +93,7 @@
 
 @if (pendingDelete) {
   <div class="modal-backdrop">
-    <div class="confirm-modal">
+    <div class="confirm-modal" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" aria-label="Fechar" (click)="pendingDelete = null">×</button>
       <strong>Atenção</strong>
       <p>Tem certeza que deseja excluir {{ pendingDelete.type === 'question' ? 'esta questão' : 'esta submissão' }}?</p>

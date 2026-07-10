@@ -54,7 +54,7 @@
 
 @if (pendingDelete) {
   <div class="modal-backdrop">
-    <div class="confirm-modal">
+    <div class="confirm-modal" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" aria-label="Fechar" (click)="pendingDelete = null">×</button>
       <strong>Atenção</strong>
       <p>Tem certeza que deseja excluir esta submissão?</p>

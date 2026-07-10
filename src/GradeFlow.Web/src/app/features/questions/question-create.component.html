@@ -11,7 +11,7 @@
   <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
     @if (errorMessage) {
       <div class="modal-backdrop">
-        <div class="alert-modal">
+        <div class="alert-modal" role="dialog" aria-modal="true">
           <button class="modal-close" type="button" aria-label="Fechar" (click)="errorMessage = null">×</button>
           <strong>Atenção</strong>
           <p>{{ errorMessage }}</p>

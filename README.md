@@ -6,54 +6,111 @@ Sistema web para criação de avaliações, cadastro de gabaritos estruturados, 
 
 O GradeFlow tem como objetivo apoiar professores, avaliadores e instituições no processo de correção de atividades, provas e trabalhos.
 
-A proposta do projeto é permitir o cadastro de avaliações com questões estruturadas, configuração de gabaritos por tipo de questão e uso de um motor de correção automática para calcular notas de forma mais consistente, rastreável e auditável.
+A proposta do projeto é permitir o cadastro de avaliações com questões estruturadas, configuração de gabaritos por tipo de questão e uso de um motor de correção automática para calcular notas de forma consistente, rastreável e auditável.
+
+Além de servir como uma solução educacional, o GradeFlow é utilizado como projeto de portfólio para demonstrar conhecimentos em:
+
+- Arquitetura em camadas
+- ASP.NET Core Web API
+- Angular
+- Entity Framework Core
+- SQL Server
+- JWT Authentication
+- Testes automatizados
+- Boas práticas de engenharia de software
+
+---
 
 ## Status do Projeto
 
-> Projeto em desenvolvimento ativo. O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação por perfil.
+> Projeto em desenvolvimento ativo.
+
+O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
 
 ### ✅ Implementado
 
-**Domínio e correção**
-- Modelagem de domínio (`Assignment`, `Question`, `AnswerKey`, `StudentAnswer`, `Submission`, `CorrectionResult`, `CorrectionLog`, `User`)
-- Motor de correção automática via *Strategy Pattern*, com uma estratégia por tipo de questão
-- Correção de múltipla escolha, verdadeiro/falso, numérica (com tolerância) e texto curto (com normalização de acentos, pontuação e espaços)
-- Correção da prova inteira ou de uma questão isolada (recorreção pontual)
-- Log de correção por submissão (`correction-logs`), permitindo auditoria de como cada nota foi calculada
-- Revisão manual de resposta específica, com endpoint dedicado (`review`)
+#### Domínio e Correção
 
-**Backend**
-- Camada de aplicação com serviços (`AssignmentService`, `AuthService`, `CorrectionService`, `QuestionService`, `SubmissionService`) e interfaces de repositório
-- API REST completa (CRUD) com controllers para `Auth`, `Assignments`, `Questions` e `Submissions`
-- Autenticação com JWT, cadastro/login, refresh token simples e autorização por perfis (`Admin`, `Teacher`, `Student`)
-- Permissões no backend para professor gerenciar suas avaliações e aluno ver suas próprias submissões
-- Persistência com Entity Framework Core + SQL Server, com migrations para estrutura inicial, auditoria, usuários e vínculos de dono (`InitialCreate`, `RequireStudentAnswerAnswer`, `AddCorrectionLogs`, `AddUsers`, `AddUserOwnership`)
-- Swagger/OpenAPI habilitado em ambiente de desenvolvimento
-- CORS configurado para o frontend Angular
-- Suite de testes automatizados (xUnit + FluentAssertions) cobrindo serviços de aplicação e estratégias de correção
+- Modelagem de domínio:
+  - Assignment
+  - Question
+  - AnswerKey
+  - StudentAnswer
+  - Submission
+  - CorrectionResult
+  - CorrectionLog
+  - User
+- Motor de correção automática utilizando Strategy Pattern
+- Correção de múltipla escolha
+- Correção de verdadeiro ou falso
+- Correção numérica com tolerância configurável
+- Correção de texto curto com normalização de acentos, pontuação e espaços
+- Correção completa da submissão
+- Recorreção de questão individual
+- Registro detalhado de logs de correção
+- Revisão manual de respostas específicas
 
-**Frontend**
-- Aplicação Angular 20 (standalone components) com camada `core` (serviços de API e models tipados) e `features` por domínio
-- Tela de login/cadastro, guard de rotas e interceptor para envio do token JWT
-- Telas de listagem, criação e detalhe de avaliações (`assignments`)
-- Tela de criação de questões (`questions`)
-- Telas de criação e detalhe de submissões (`submissions`)
-- Tela de resultado de correção (`correction`)
+#### Backend
+
+- ASP.NET Core Web API
+- Arquitetura em camadas inspirada em Clean Architecture
+- Serviços de aplicação:
+  - AssignmentService
+  - AuthService
+  - CorrectionService
+  - QuestionService
+  - SubmissionService
+- Repository Pattern
+- Entity Framework Core
+- SQL Server
+- JWT Authentication
+- Refresh Token
+- Controle de acesso baseado em perfis:
+  - Admin
+  - Teacher
+  - Student
+- Autorização por proprietário da avaliação
+- Swagger/OpenAPI
+- CORS configurado para integração com Angular
+- Testes automatizados
+
+#### Frontend
+
+- Angular 20
+- Standalone Components
+- TypeScript
+- Reactive Forms
+- HttpClient
+- Route Guards
+- HTTP Interceptors
+- Login e Cadastro
+- CRUD de avaliações
+- CRUD de questões
+- CRUD de submissões
+- Visualização de resultados de correção
 
 ### 🔜 Planejado
 
-- CI/CD, Docker e deploy público
-- Pipeline de CI (build + testes automatizados a cada push)
-- Exportação/relatório de notas por turma
+- Pipeline CI/CD com GitHub Actions
+- Docker e Docker Compose
+- Deploy público para demonstração
+- Relatórios de desempenho por turma
+- Exportação de notas
+- Dashboard com métricas
+- Cobertura ampliada de testes
 
-### Tipos de questão suportados
+---
+
+## Tipos de Questão Suportados
 
 - Múltipla escolha
 - Verdadeiro ou falso
 - Numérica com tolerância
 - Texto curto com normalização
 
-## Tecnologias
+---
+
+## Tecnologias Utilizadas
 
 ### Backend
 
@@ -61,10 +118,12 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 - ASP.NET Core Web API
 - C#
 - Entity Framework Core
+- SQL Server
+- JWT Authentication
 
 ### Frontend
 
-- Angular
+- Angular 20
 - TypeScript
 - Reactive Forms
 - HttpClient
@@ -78,73 +137,259 @@ A proposta do projeto é permitir o cadastro de avaliações com questões estru
 - xUnit
 - FluentAssertions
 
+### Ferramentas
+
+- Git
+- GitHub
+- Swagger/OpenAPI
+
+---
+
 ## Arquitetura
 
 O projeto segue uma separação em camadas inspirada em Clean Architecture.
-A ordem de implementação de cada etapa está documentada em `docs/etapas/`.
 
 ```txt
 src/
-  GradeFlow.Api/             # Controllers, middlewares e ponto de entrada da API
-  GradeFlow.Application/     # Serviços, casos de uso, DTOs e estratégias de correção
-  GradeFlow.Domain/          # Entidades, enums e contratos de domínio
-  GradeFlow.Infrastructure/  # Persistência (EF Core) e implementações de repositório
-  GradeFlow.Web/             # Frontend Angular
+│
+├── GradeFlow.Api/
+│   ├── Controllers
+│   ├── Middlewares
+│   └── Program.cs
+│
+├── GradeFlow.Application/
+│   ├── Services
+│   ├── DTOs
+│   ├── Interfaces
+│   └── Strategies
+│
+├── GradeFlow.Domain/
+│   ├── Entities
+│   ├── Enums
+│   └── Contracts
+│
+├── GradeFlow.Infrastructure/
+│   ├── Data
+│   ├── Repositories
+│   └── Migrations
+│
+└── GradeFlow.Web/
+    ├── Core
+    ├── Features
+    └── Shared
+
 tests/
-  GradeFlow.Tests/           # Testes de unidade (xUnit + FluentAssertions)
+└── GradeFlow.Tests/
 ```
 
-## Como Rodar Localmente
+---
 
-### Backend
+## Pré-requisitos
 
-No Visual Studio, selecione o perfil `https` do projeto `GradeFlow.Api`.
+Antes de executar o projeto, instale:
 
-Ou rode pelo terminal:
+- .NET 10 SDK
+- Node.js 22 ou superior
+- Angular CLI
+- SQL Server LocalDB, Express ou Developer
+- Git
+- EF Core Tools
+
+Instalação da ferramenta do Entity Framework Core:
+
+```powershell
+dotnet tool install --global dotnet-ef
+```
+
+Verificar versões instaladas:
+
+```powershell
+dotnet --version
+node --version
+npm --version
+dotnet ef --version
+```
+
+---
+
+## Instalação
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/BernTomaz/GradeFlow.git
+cd GradeFlow
+```
+
+Restaurar dependências do backend:
+
+```powershell
+dotnet restore
+```
+
+Instalar dependências do frontend:
+
+```powershell
+cd src/GradeFlow.Web
+npm install
+```
+
+---
+
+## Configuração do Banco de Dados
+
+O projeto utiliza SQL Server com Entity Framework Core Migrations.
+
+### Configurar Connection String
+
+Edite o arquivo:
+
+```txt
+src/GradeFlow.Api/appsettings.json
+```
+
+Exemplo:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=GradeFlowDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
+
+> ⚠️ Este `appsettings.json` é destinado ao ambiente de desenvolvimento local. Em ambientes produtivos, utilize variáveis de ambiente, User Secrets ou serviços de gerenciamento de segredos.
+
+### Aplicar Migrations
+
+Como a solução possui múltiplos projetos, execute o comando a partir da raiz do repositório:
+
+```powershell
+dotnet ef database update --project src\GradeFlow.Infrastructure --startup-project src\GradeFlow.Api
+```
+
+As migrations versionadas no projeto irão criar automaticamente:
+
+- Banco de dados
+- Tabelas
+- Relacionamentos
+- Índices
+- Estrutura inicial do sistema
+
+### Migrations Existentes
+
+- InitialCreate
+- RequireStudentAnswerAnswer
+- AddCorrectionLogs
+- AddUsers
+- AddUserOwnership
+
+---
+
+## Executando o Backend
+
+No Visual Studio, selecione o perfil:
+
+```txt
+https
+```
+
+Ou execute via terminal:
 
 ```powershell
 dotnet run --project src\GradeFlow.Api --launch-profile https
 ```
 
-A API deve ficar disponível em:
+A API estará disponível em:
 
 ```txt
 https://localhost:7013
 ```
 
-A documentação interativa (Swagger) fica em `https://localhost:7013/swagger`.
+Documentação Swagger:
 
-#### Endpoints principais
+```txt
+https://localhost:7013/swagger
+```
 
-| Recurso | Endpoints |
-|---|---|
-| Assignments | `GET/POST /api/assignments`, `GET/PUT/DELETE /api/assignments/{id}` |
-| Questions | `GET/POST /api/assignments/{assignmentId}/questions`, `GET/PUT/DELETE /api/questions/{id}` |
-| Submissions | `GET/POST /api/assignments/{assignmentId}/submissions`, `GET/PUT/DELETE /api/submissions/{id}` |
-| Correção | `POST /api/submissions/{id}/correct`, `POST /api/submissions/{id}/questions/{questionId}/correct` |
-| Revisão manual | `PUT /api/student-answers/{answerId}/review` |
-| Auditoria | `GET /api/submissions/{id}/correction-logs` |
-| Auth | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/refresh-token` |
+---
 
-### Frontend
+## Executando o Frontend
 
-Em outro terminal:
+Abra um novo terminal:
 
 ```powershell
 cd src\GradeFlow.Web
 npm start
 ```
 
-Abra:
+Aplicação disponível em:
 
 ```txt
 http://localhost:4200
 ```
 
-O frontend usa `proxy.conf.json` para encaminhar chamadas `/api` para `https://localhost:7013`.
+O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente chamadas `/api` para a API local.
 
-### Testes
+---
+
+## Endpoints Principais
+
+| Recurso | Endpoints |
+|----------|----------|
+| Assignments | GET, POST `/api/assignments` |
+| Assignment por Id | GET, PUT, DELETE `/api/assignments/{id}` |
+| Questions | GET, POST `/api/assignments/{assignmentId}/questions` |
+| Question por Id | GET, PUT, DELETE `/api/questions/{id}` |
+| Submissions | GET, POST `/api/assignments/{assignmentId}/submissions` |
+| Submission por Id | GET, PUT, DELETE `/api/submissions/{id}` |
+| Correção | POST `/api/submissions/{id}/correct` |
+| Correção de Questão | POST `/api/submissions/{id}/questions/{questionId}/correct` |
+| Revisão Manual | PUT `/api/student-answers/{answerId}/review` |
+| Auditoria | GET `/api/submissions/{id}/correction-logs` |
+| Auth | POST `/api/auth/register` |
+| Login | POST `/api/auth/login` |
+| Refresh Token | POST `/api/auth/refresh-token` |
+
+---
+
+## Executando os Testes
 
 ```powershell
 dotnet test
 ```
+
+Os testes cobrem:
+
+- Serviços de aplicação
+- Regras de negócio
+- Estratégias de correção
+- Fluxos de autenticação
+
+---
+
+## Roadmap
+
+### Curto Prazo
+
+- CI/CD com GitHub Actions
+- Docker Compose
+- Deploy automatizado
+
+### Médio Prazo
+
+- Relatórios por turma
+- Exportação de notas
+- Dashboard administrativo
+
+### Longo Prazo
+
+- Integração com plataformas educacionais
+- Correção assistida por IA
+- Análise estatística de desempenho
+
+---
+
+## Licença
+
+Este projeto é disponibilizado para fins educacionais, estudo e demonstração de portfólio profissional.

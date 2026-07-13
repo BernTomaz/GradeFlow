@@ -325,6 +325,8 @@ Documentação Swagger:
 https://localhost:7013/swagger
 ```
 
+Para testar rotas protegidas pelo Swagger, faça login em `/api/auth/login`, copie o `accessToken`, clique em `Authorize` e informe apenas o token. A interface adiciona o prefixo `Bearer` automaticamente.
+
 ---
 
 ## Executando o Frontend
@@ -371,8 +373,22 @@ Rotas protegidas retornam `401` quando o token está ausente, inválido ou expir
 ## Executando os Testes
 
 ```powershell
-dotnet test GradeFlow.slnx -m:1
+dotnet clean GradeFlow.slnx -m:1
+dotnet restore GradeFlow.slnx
+dotnet build GradeFlow.slnx --no-restore -m:1
+dotnet test GradeFlow.slnx --no-build -m:1
 ```
+
+No frontend:
+
+```powershell
+cd src\GradeFlow.Web
+npm ci
+npm run build
+npm test -- --watch=false
+```
+
+No ambiente local em Windows/OneDrive, `dotnet clean GradeFlow.slnx` pode falhar ao remover arquivos temporarios quando o MSBuild executa projetos em paralelo. Use `-m:1` localmente; no CI, prefira workspace limpo e nao dependa de `clean` sem necessidade.
 
 Os testes cobrem:
 

@@ -34,7 +34,7 @@ npm --version
 ng version
 ```
 
-> Se o Angular CLI não estiver instalado globalmente, use `npx` antes dos comandos `ng` deste README (ex: `npx ng serve`, `npx ng test`).
+> Os comandos principais usam os scripts do `package.json`, então não é necessário instalar o Angular CLI globalmente.
 
 ---
 
@@ -48,24 +48,7 @@ Inicie primeiro o backend:
 https://localhost:7013
 ```
 
-A URL da API pode ser configurada através dos arquivos de ambiente:
-
-```txt
-src/environments/
-├── environment.ts
-└── environment.development.ts
-```
-
-Exemplo ilustrativo (a estrutura pode variar conforme a versão atual do projeto):
-
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'https://localhost:7013/api'
-};
-```
-
-> Ajuste `apiUrl` (ou o nome da propriedade equivalente usada no projeto) caso a API rode em outra porta ou host.
+Em desenvolvimento, as chamadas usam caminhos relativos `/api` e são encaminhadas pelo `proxy.conf.json` para `https://localhost:7013`.
 
 ---
 
@@ -75,6 +58,12 @@ Instalar dependências:
 
 ```powershell
 npm install
+```
+
+Para instalação limpa, validação antes de commit ou ambiente de CI:
+
+```powershell
+npm ci
 ```
 
 ---
@@ -90,7 +79,7 @@ npm start
 Ou:
 
 ```powershell
-ng serve
+npx ng serve --proxy-config proxy.conf.json
 ```
 
 A aplicação ficará disponível em:
@@ -114,7 +103,7 @@ npm run build
 Os arquivos serão gerados em:
 
 ```txt
-dist/
+dist/GradeFlow.Web/
 ```
 
 ---
@@ -124,7 +113,7 @@ dist/
 Executar testes unitários:
 
 ```powershell
-ng test
+npm test -- --watch=false
 ```
 
 ---
@@ -135,9 +124,9 @@ ng test
 src/
 ├── app/
 │   ├── core/
-│   │   ├── services/
-│   │   ├── guards/
-│   │   └── interceptors/
+│   │   ├── api/
+│   │   ├── auth/
+│   │   └── models/
 │   │
 │   ├── features/
 │   │   ├── assignments/
@@ -147,9 +136,6 @@ src/
 │   │   └── auth/
 │   │
 │   └── shared/
-│
-├── environments/
-└── assets/
 ```
 
 ---

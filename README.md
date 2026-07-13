@@ -64,7 +64,7 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - Entity Framework Core
 - SQL Server
 - JWT Authentication
-- Refresh Token
+- Endpoint autenticado para reemissao de token
 - Controle de acesso baseado em perfis:
   - Admin
   - Teacher
@@ -234,6 +234,8 @@ cd src/GradeFlow.Web
 npm install
 ```
 
+Use `npm install` no desenvolvimento local. Para validação limpa ou CI, use `npm ci`, que instala exatamente as versões do `package-lock.json`.
+
 ---
 
 ## Configuração do Banco de Dados
@@ -325,7 +327,7 @@ Documentação Swagger:
 https://localhost:7013/swagger
 ```
 
-Para testar rotas protegidas pelo Swagger, faça login em `/api/auth/login`, copie o `accessToken`, clique em `Authorize` e informe apenas o token. A interface adiciona o prefixo `Bearer` automaticamente.
+Para testar rotas protegidas pelo Swagger, faça login em `/api/auth/login`, copie o campo `token`, clique em `Authorize` e informe apenas o token. A interface adiciona o prefixo `Bearer` automaticamente.
 
 ---
 
@@ -364,7 +366,7 @@ O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente c
 | Auditoria | GET `/api/submissions/{id}/correction-logs` |
 | Auth | POST `/api/auth/register` |
 | Login | POST `/api/auth/login` |
-| Refresh Token | POST `/api/auth/refresh-token` |
+| Reemissão de token | POST `/api/auth/refresh-token` |
 
 ---
 
@@ -387,6 +389,8 @@ npm ci
 npm run build
 npm test -- --watch=false
 ```
+
+Nesta validação, `npm ci` é intencional para reproduzir o comportamento esperado no pipeline.
 
 No ambiente local em Windows/OneDrive, `dotnet clean GradeFlow.slnx` pode falhar ao remover arquivos temporarios quando o MSBuild executa projetos em paralelo. Use `-m:1` localmente; no CI, prefira workspace limpo e nao dependa de `clean` sem necessidade.
 

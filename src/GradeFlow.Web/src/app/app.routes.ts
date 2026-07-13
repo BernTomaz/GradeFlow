@@ -3,6 +3,7 @@ import { authGuard } from './core/auth/auth.guard';
 import { AssignmentCreateComponent } from './features/assignments/assignment-create.component';
 import { AssignmentDetailComponent } from './features/assignments/assignment-detail.component';
 import { AssignmentListComponent } from './features/assignments/assignment-list.component';
+import { ChangePasswordComponent } from './features/auth/change-password.component';
 import { LoginComponent } from './features/auth/login.component';
 import { CorrectionResultComponent } from './features/correction/correction-result.component';
 import { UserRole } from './core/models/auth.models';
@@ -13,6 +14,7 @@ import { SubmissionDetailComponent } from './features/submissions/submission-det
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'assignments' },
   { path: 'login', component: LoginComponent },
+  { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
   { path: 'assignments', component: AssignmentListComponent, canActivate: [authGuard] },
   { path: 'assignments/new', component: AssignmentCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },
   { path: 'assignments/:id/edit', component: AssignmentCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },

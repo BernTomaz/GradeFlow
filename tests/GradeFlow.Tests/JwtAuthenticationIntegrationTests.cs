@@ -92,6 +92,22 @@ public sealed class JwtAuthenticationIntegrationTests
     }
 
     [Fact]
+    public async Task Change_password_requires_authentication_and_current_password()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+
+        var withoutToken = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "secret2"));
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
+        var invalid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("wrong", "secret2"));
+        var valid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "secret2"));
+
+        withoutToken.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        invalid.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        valid.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
     public void Invalid_jwt_configuration_fails_on_start()
     {
         using var factory = CreateFactory(("Jwt:Key", "short"));
@@ -187,6 +203,18 @@ public sealed class JwtAuthenticationIntegrationTests
 
     private sealed class FakeUserRepository(params User[] users) : IUserRepository
     {
+        private readonly List<User> users = users.Select(user => new User
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            PasswordHash = user.PasswordHash,
+            Role = user.Role
+        }).ToList();
+
+        public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => Task.FromResult(users.FirstOrDefault(x => x.Id == id));
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(users.FirstOrDefault(x => x.Email == email));
 
@@ -195,6 +223,7 @@ public sealed class JwtAuthenticationIntegrationTests
 
         public void Add(User user)
         {
+            users.Add(user);
         }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;

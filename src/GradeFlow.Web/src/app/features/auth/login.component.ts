@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApiService } from '../../core/api/auth-api.service';
 import { UserRole } from '../../core/models/auth.models';
+import { passwordStrength } from '../../shared/password-strength';
 
 @Component({
   selector: 'app-login',
@@ -58,5 +59,9 @@ export class LoginComponent {
     this.registering = !this.registering;
     this.error = '';
     this.success = '';
+  }
+
+  protected passwordStrength() {
+    return passwordStrength(this.form.controls.password.value);
   }
 }

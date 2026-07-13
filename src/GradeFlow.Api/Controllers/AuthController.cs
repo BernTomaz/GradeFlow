@@ -35,6 +35,25 @@ public sealed class AuthController(IAuthService authService, ITokenService token
             : Unauthorized(new { error = "Email ou senha invalidos." });
 
     [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken)
+    {
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id))
+            return Unauthorized(new { error = "Token invalido." });
+
+        try
+        {
+            return await authService.ChangePasswordAsync(id, request, cancellationToken)
+                ? NoContent()
+                : BadRequest(new { error = "Senha atual invalida." });
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [Authorize]
     [HttpPost("refresh-token")]
     public ActionResult<AuthResponse> RefreshToken()
     {

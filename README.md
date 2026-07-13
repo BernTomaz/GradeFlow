@@ -84,6 +84,7 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - Route Guards
 - HTTP Interceptors
 - Login e Cadastro
+- Alteração de senha autenticada
 - CRUD de avaliações
 - CRUD de questões
 - CRUD de submissões
@@ -366,6 +367,7 @@ O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente c
 | Auditoria | GET `/api/submissions/{id}/correction-logs` |
 | Auth | POST `/api/auth/register` |
 | Login | POST `/api/auth/login` |
+| Alteração de senha | POST `/api/auth/change-password` |
 | Reemissão de token | POST `/api/auth/refresh-token` |
 
 ---

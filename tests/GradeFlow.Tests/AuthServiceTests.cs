@@ -58,9 +58,29 @@ public sealed class AuthServiceTests
             .WithMessage("Email ja cadastrado.");
     }
 
+    [Fact]
+    public async Task ChangePassword_should_validate_current_password_and_update_hash()
+    {
+        var hasher = new PasswordHasher();
+        var user = new User { Id = Guid.NewGuid(), Email = "ana@email.com", PasswordHash = hasher.Hash("secret1") };
+        var repository = new FakeUserRepository(user);
+        var service = new AuthService(repository, hasher, new FakeTokenService());
+
+        var invalid = await service.ChangePasswordAsync(user.Id, new ChangePasswordRequest("wrong", "secret2"));
+        var valid = await service.ChangePasswordAsync(user.Id, new ChangePasswordRequest("secret1", "secret2"));
+
+        invalid.Should().BeFalse();
+        valid.Should().BeTrue();
+        hasher.Verify(user.PasswordHash, "secret1").Should().BeFalse();
+        hasher.Verify(user.PasswordHash, "secret2").Should().BeTrue();
+    }
+
     private sealed class FakeUserRepository(params User[] users) : IUserRepository
     {
         public List<User> Users { get; } = users.ToList();
+
+        public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => Task.FromResult(Users.FirstOrDefault(x => x.Id == id));
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(Users.FirstOrDefault(x => x.Email == email));

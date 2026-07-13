@@ -24,6 +24,17 @@
     </label>
 
     @if (registering) {
+      <div
+        class="password-meter"
+        [class.weak]="passwordStrength().level === 'weak'"
+        [class.medium]="passwordStrength().level === 'medium'"
+        [class.strong]="passwordStrength().level === 'strong'">
+        <span></span>
+        <small>{{ passwordStrength().label }}</small>
+      </div>
+    }
+
+    @if (registering) {
       <label>
         Perfil
         <select formControlName="role">

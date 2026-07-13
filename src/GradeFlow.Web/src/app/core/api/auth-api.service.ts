@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.models';
+import { AuthResponse, ChangePasswordRequest, LoginRequest, RegisterRequest } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -24,6 +24,10 @@ export class AuthApiService {
 
   refreshToken() {
     return this.http.post<AuthResponse>(`${this.baseUrl}/refresh-token`, {});
+  }
+
+  changePassword(request: ChangePasswordRequest) {
+    return this.http.post<void>(`${this.baseUrl}/change-password`, request);
   }
 
   save(response: AuthResponse) {

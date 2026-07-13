@@ -144,6 +144,7 @@ src/
 
 - Autenticação com JWT
 - Cadastro e login de usuários
+- Alteração de senha autenticada
 - Gerenciamento de avaliações
 - Gerenciamento de questões
 - Gerenciamento de submissões

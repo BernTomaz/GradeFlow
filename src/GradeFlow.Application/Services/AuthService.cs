@@ -11,6 +11,7 @@ public interface IAuthService
 {
     Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
     Task<AuthResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
+    Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default);
 }
 
 public interface ITokenService
@@ -60,6 +61,20 @@ public sealed class AuthService(
         return !passwordHasher.Verify(user.PasswordHash, request.Password)
             ? null
             : tokenService.Create(user);
+    }
+
+    public async Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.NewPassword) || request.NewPassword.Length < 6)
+            throw new ValidationException("Nova senha deve ter pelo menos 6 caracteres.");
+
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        if (user is null || !passwordHasher.Verify(user.PasswordHash, request.CurrentPassword))
+            return false;
+
+        user.PasswordHash = passwordHasher.Hash(request.NewPassword);
+        await userRepository.SaveChangesAsync(cancellationToken);
+        return true;
     }
 }
 

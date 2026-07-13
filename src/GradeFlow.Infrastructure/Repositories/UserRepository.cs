@@ -7,6 +7,9 @@ namespace GradeFlow.Infrastructure.Repositories;
 
 public sealed class UserRepository(GradeFlowDbContext dbContext) : IUserRepository
 {
+    public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         => dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 

@@ -294,6 +294,19 @@ No Visual Studio, selecione o perfil:
 https
 ```
 
+Antes de iniciar a API, configure a chave JWT localmente com user-secrets:
+
+```powershell
+dotnet user-secrets set "Jwt:Key" "troque-por-uma-chave-local-com-32-ou-mais-caracteres" --project src\GradeFlow.Api
+```
+
+As configurações obrigatórias de JWT são `Jwt:Issuer`, `Jwt:Audience`, `Jwt:Key` e `Jwt:ExpirationMinutes`.
+`Issuer`, `Audience` e tempo de expiração podem ficar em `appsettings.json`; a chave (`Jwt:Key`) deve vir de user-secrets em desenvolvimento ou variável de ambiente em produção:
+
+```txt
+Jwt__Key=troque-por-uma-chave-segura-do-ambiente
+```
+
 Ou execute via terminal:
 
 ```powershell
@@ -353,10 +366,12 @@ O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente c
 
 ---
 
+Rotas protegidas retornam `401` quando o token está ausente, inválido ou expirado, e `403` quando o usuário autenticado não possui o perfil exigido.
+
 ## Executando os Testes
 
 ```powershell
-dotnet test
+dotnet test GradeFlow.slnx -m:1
 ```
 
 Os testes cobrem:

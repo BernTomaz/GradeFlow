@@ -4,7 +4,7 @@ Sistema web para criação de avaliações, cadastro de gabaritos estruturados, 
 
 ## Documentação
 
-A documentação completa do projeto está organizada na [Wiki do GradeFlow](https://github.com/BernTomaz/GradeFlow/wiki).
+A documentação completa do projeto está organizada na [Wiki do GradeFlow](docs/wiki/home.md).
 
 ## Objetivo
 

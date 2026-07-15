@@ -2,6 +2,10 @@
 
 Sistema web para criação de avaliações, cadastro de gabaritos estruturados, correção automática de respostas e revisão manual de notas.
 
+## Documentação
+
+A documentação completa do projeto está organizada na [Wiki do GradeFlow](docs/wiki/home.md).
+
 ## Objetivo
 
 O GradeFlow tem como objetivo apoiar professores, avaliadores e instituições no processo de correção de atividades, provas e trabalhos.

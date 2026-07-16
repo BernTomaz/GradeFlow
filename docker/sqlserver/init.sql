@@ -1,0 +1,4 @@
+IF DB_ID(N'GradeFlow') IS NULL
+BEGIN
+    CREATE DATABASE GradeFlow;
+END

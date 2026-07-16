@@ -380,6 +380,27 @@ O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente c
 
 ---
 
+## Executando com Docker Compose
+
+Crie um `.env` local a partir do `.env.example` e ajuste `MSSQL_SA_PASSWORD` e `JWT_KEY`.
+
+```powershell
+docker compose build
+docker compose up
+```
+
+Serviços locais:
+
+- Frontend: `http://localhost:4200`
+- API: `http://localhost:8080`
+- Health check: `http://localhost:8080/health`
+- SQL Server: `localhost,1433`
+
+As migrations de banco não são aplicadas automaticamente nesta etapa. A estratégia controlada de migrations fica na etapa 10.1D.
+O Compose cria apenas o banco vazio `GradeFlow` para permitir conexão da API com o SQL Server.
+
+---
+
 ## Endpoints Principais
 
 | Recurso | Endpoints |

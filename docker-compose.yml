@@ -1,0 +1,69 @@
+services:
+  gradeflow-api:
+    build:
+      context: .
+      dockerfile: src/GradeFlow.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=GradeFlow;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Encrypt=False
+      Cors__AllowedOrigins__0: http://localhost:4200
+      Jwt__Issuer: GradeFlow
+      Jwt__Audience: GradeFlow
+      Jwt__Key: ${JWT_KEY}
+      Jwt__ExpirationMinutes: 480
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/localhost/8080' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  gradeflow-web:
+    build:
+      context: .
+      dockerfile: src/GradeFlow.Web/Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      gradeflow-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  sqlserver-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    volumes:
+      - ./docker/sqlserver/init.sql:/init.sql:ro
+    command: /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -i /init.sql'
+
+volumes:
+  sqlserver-data:

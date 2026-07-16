@@ -25,9 +25,11 @@ Assignment:
 - UpdatedAt
 
 Campos que podem ficar para depois
-- TeacherId
 - CourseId
 - ClassroomId
+
+Campo adicionado depois da autenticacao
+- TeacherUserId
 
 Endpoints recomendados
 POST /api/assignments
@@ -84,3 +86,4 @@ Validacoes
 Regra importante
 A avaliacao ainda nao precisa ter login no MVP.
 Primeiro valide se o fluxo de criacao funciona.
+Depois da etapa de login, o backend passa a validar ownership da avaliacao.

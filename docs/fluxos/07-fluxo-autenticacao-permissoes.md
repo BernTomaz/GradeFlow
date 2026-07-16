@@ -33,6 +33,7 @@ User:
 Endpoints recomendados
 POST /api/auth/register
 POST /api/auth/login
+POST /api/auth/change-password
 POST /api/auth/refresh-token
 
 DTOs sugeridos
@@ -47,9 +48,7 @@ LoginRequest:
 - Password
 
 AuthResponse:
-- AccessToken
-- RefreshToken
-- ExpiresAt
+- Token
 - User
 
 Tecnologias envolvidas
@@ -80,6 +79,10 @@ Teacher:
 Student:
 - Pode ver apenas suas proprias submisssoes.
 
+Observacao
+O endpoint atual `refresh-token` reemite access token.
+Refresh token persistente, revogavel e rotacionado fica para etapa futura.
+
 Cuidados
 - Nunca salvar senha pura.
 - Nunca confiar apenas no frontend.
@@ -89,4 +92,3 @@ Cuidados
 Regra importante
 Login e importante, mas nao prova o valor do projeto.
 O valor e provado pelo motor de correcao funcionando.
-

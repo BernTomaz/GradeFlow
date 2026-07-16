@@ -45,8 +45,10 @@ Segue a ordem oficial de implementacao.
 4. Testes
 5. Revisao manual
 6. Login
-7. Importacao e relatorios
-8. IA, OCR e recursos avancados
+7. Preparacao DevOps local
+8. Importacao e relatorios
+9. Deploy publico final
+10. IA, OCR e recursos avancados
 
 Ponto de atencao
 Nao comece por IA, OCR, dashboard ou login complexo.

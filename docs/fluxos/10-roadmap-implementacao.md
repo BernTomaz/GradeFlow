@@ -50,6 +50,15 @@ Fase 5 - Autenticacao
 5. Implementar roles.
 6. Proteger endpoints.
 7. Criar guards no Angular.
+8. Criar interceptor HTTP.
+9. Implementar alteracao de senha autenticada.
+
+Fase 5.1 - Preparacao DevOps local
+1. Criar CI com GitHub Actions.
+2. Adicionar health check.
+3. Configurar CORS por ambiente.
+4. Containerizar API, frontend e SQL Server local.
+5. Definir estrategia controlada de migrations.
 
 Fase 6 - Produtividade do professor
 1. Importar CSV.
@@ -58,14 +67,22 @@ Fase 6 - Produtividade do professor
 4. Exportar relatorio em PDF.
 5. Criar relatorios basicos.
 
-Fase 7 - Expansao academica
+Fase 7 - Deploy publico final
+1. Escolher hospedagem.
+2. Configurar secrets.
+3. Aplicar migrations de forma controlada.
+4. Publicar backend.
+5. Publicar frontend.
+6. Validar ambiente publico.
+
+Fase 8 - Expansao academica
 1. Criar Course.
 2. Criar Classroom.
 3. Criar Student.
 4. Vincular avaliacao a turma.
 5. Ver historico do aluno.
 
-Fase 8 - Recursos avancados
+Fase 9 - Recursos avancados
 1. Questao multi-selecao.
 2. Pontuacao parcial.
 3. Texto com similaridade.

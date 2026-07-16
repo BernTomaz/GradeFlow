@@ -75,7 +75,8 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
   - Student
 - Autorização por proprietário da avaliação
 - Swagger/OpenAPI
-- CORS configurado para integração com Angular
+- CORS configurado por ambiente
+- Health check em `/health`
 - Testes automatizados
 
 #### Frontend
@@ -94,10 +95,15 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - CRUD de submissões
 - Visualização de resultados de correção
 
+### ✅ DevOps e Operação
+
+- Pipeline CI com GitHub Actions
+- Docker e Docker Compose para execução local
+- Health checks da API e do banco
+- Estratégia controlada de migrations com script idempotente
+
 ### 🔜 Planejado
 
-- Pipeline CI/CD com GitHub Actions
-- Docker e Docker Compose
 - Deploy público para demonstração
 - Relatórios de desempenho por turma
 - Exportação de notas
@@ -204,7 +210,7 @@ tests/
 Antes de executar o projeto, instale:
 
 - .NET 10 SDK
-- Node.js 22 ou superior
+- Node.js 20.19 ou superior
 - Angular CLI
 - SQL Server LocalDB, Express ou Developer
 - Git
@@ -404,8 +410,14 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: `localhost,1433`
 
-As migrations de banco não são aplicadas automaticamente nesta etapa. A estratégia controlada de migrations fica na etapa 10.1D.
-O Compose cria apenas o banco vazio `GradeFlow` para permitir conexão da API com o SQL Server.
+As migrations de banco não são aplicadas automaticamente pelo Compose.
+Gere e aplique o script idempotente conforme [docs/operacao/migrations.md](docs/operacao/migrations.md).
+
+Atalho para gerar o script:
+
+```powershell
+.\scripts\database\generate-migration-script.ps1
+```
 
 ---
 
@@ -447,7 +459,7 @@ No frontend:
 cd src\GradeFlow.Web
 npm ci
 npm run build
-npm test -- --watch=false
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
 Nesta validação, `npm ci` é intencional para reproduzir o comportamento esperado no pipeline.
@@ -467,15 +479,14 @@ Os testes cobrem:
 
 ### Curto Prazo
 
-- CI/CD com GitHub Actions
-- Docker Compose
-- Deploy automatizado
+- Importação de submissões por CSV/Excel
+- Relatórios básicos
+- Exportação de notas
 
 ### Médio Prazo
 
-- Relatórios por turma
-- Exportação de notas
 - Dashboard administrativo
+- Deploy público final
 
 ### Longo Prazo
 

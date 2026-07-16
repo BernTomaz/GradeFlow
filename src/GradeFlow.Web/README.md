@@ -22,7 +22,7 @@ Esta aplicação é responsável pela interface de usuário do sistema, consumin
 
 Antes de executar o frontend, certifique-se de possuir:
 
-- Node.js 22 ou superior
+- Node.js 20.19 ou superior
 - npm
 - Angular CLI
 
@@ -103,7 +103,7 @@ npm run build
 Os arquivos serão gerados em:
 
 ```txt
-dist/GradeFlow.Web/
+dist/GradeFlow.Web/browser/
 ```
 
 ---
@@ -113,7 +113,7 @@ dist/GradeFlow.Web/
 Executar testes unitários:
 
 ```powershell
-npm test -- --watch=false
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
 ---

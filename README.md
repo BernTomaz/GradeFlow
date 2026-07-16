@@ -279,11 +279,19 @@ Exemplo:
 
 ### Aplicar Migrations
 
-Como a solução possui múltiplos projetos, execute o comando a partir da raiz do repositório:
+Para desenvolvimento local direto, a partir da raiz do repositório:
 
 ```powershell
 dotnet ef database update --project src\GradeFlow.Infrastructure --startup-project src\GradeFlow.Api
 ```
+
+Para Docker, homologação e produção, gere um script idempotente e aplique de forma controlada antes de publicar a aplicação:
+
+```powershell
+.\scripts\database\generate-migration-script.ps1
+```
+
+Detalhes da estratégia: [docs/operacao/migrations.md](docs/operacao/migrations.md).
 
 As migrations versionadas no projeto irão criar automaticamente:
 

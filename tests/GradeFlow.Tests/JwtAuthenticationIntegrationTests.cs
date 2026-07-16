@@ -108,6 +108,17 @@ public sealed class JwtAuthenticationIntegrationTests
     }
 
     [Fact]
+    public async Task Health_returns_ok()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/health");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
     public void Invalid_jwt_configuration_fails_on_start()
     {
         using var factory = CreateFactory(("Jwt:Key", "short"));
@@ -149,6 +160,7 @@ public sealed class JwtAuthenticationIntegrationTests
     private static WebApplicationFactory<Program> CreateFactory(params (string Key, string Value)[] overrides)
         => new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
+            builder.UseEnvironment("Testing");
             builder.ConfigureLogging(logging => logging.ClearProviders());
 
             builder.ConfigureAppConfiguration((_, configuration) =>

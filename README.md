@@ -324,6 +324,15 @@ As configurações obrigatórias de JWT são `Jwt:Issuer`, `Jwt:Audience`, `Jwt:
 Jwt__Key=troque-por-uma-chave-segura-do-ambiente
 ```
 
+Em produção, configure também a connection string e as origens permitidas do frontend por variáveis de ambiente:
+
+```txt
+ConnectionStrings__DefaultConnection=Server=...;Database=...;User Id=...;Password=...
+Cors__AllowedOrigins__0=https://seu-frontend.example.com
+```
+
+Use `.env.example` apenas como referência. Não versione `.env` real nem credenciais.
+
 Ou execute via terminal:
 
 ```powershell
@@ -340,6 +349,12 @@ Documentação Swagger:
 
 ```txt
 https://localhost:7013/swagger
+```
+
+Health check:
+
+```txt
+https://localhost:7013/health
 ```
 
 Para testar rotas protegidas pelo Swagger, faça login em `/api/auth/login`, copie o campo `token`, clique em `Authorize` e informe apenas o token. A interface adiciona o prefixo `Bearer` automaticamente.

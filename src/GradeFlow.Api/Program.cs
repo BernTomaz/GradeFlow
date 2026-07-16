@@ -2,12 +2,29 @@ using GradeFlow.Api.Services;
 using GradeFlow.Application;
 using GradeFlow.Application.Services;
 using GradeFlow.Infrastructure;
+using GradeFlow.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 const string FrontendCorsPolicy = "Frontend";
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (builder.Environment.IsProduction())
+{
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException("ConnectionStrings:DefaultConnection is required in Production.");
+    }
+
+    if (allowedOrigins.Length == 0)
+    {
+        throw new InvalidOperationException("Cors:AllowedOrigins must have at least one origin in Production.");
+    }
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -46,10 +63,16 @@ builder.Services.AddOptions<JwtOptions>()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
-        policy.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200")
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
+var healthChecks = builder.Services.AddHealthChecks()
+    .AddCheck("api", () => HealthCheckResult.Healthy());
+if (!string.IsNullOrWhiteSpace(connectionString))
+{
+    healthChecks.AddCheck<DatabaseHealthCheck>("database");
+}
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -76,6 +99,7 @@ app.UseCors(FrontendCorsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHealthChecks("/health");
 app.MapControllers();
 
 app.Run();

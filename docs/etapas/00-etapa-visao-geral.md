@@ -38,17 +38,21 @@ Arquitetura planejada:
 - Domain para entidades e regras centrais
 
 Ordem recomendada
-Segue a ordem oficial de implementacao.
-1. MVP backend
-2. Motor de correcao
-3. Frontend simples
-4. Testes
-5. Revisao manual
-6. Login
-7. Preparacao DevOps local
-8. Importacao e relatorios
-9. Deploy publico final
-10. IA, OCR e recursos avancados
+Segue a ordem oficial de implementacao pelos arquivos da pasta `docs/etapas`.
+1. Estrutura backend
+2. Modelagem de dominio
+3. Banco com EF Core
+4. CRUD de avaliacoes e questoes
+5. Submissao de respostas
+6. Motor de correcao
+7. Frontend Angular
+8. Testes
+9. Revisao manual e auditoria
+10. Login e permissoes
+11. Preparacao DevOps local
+12. Importacao, relatorios e exportacao
+13. Recursos futuros
+14. Deploy publico final
 
 Ponto de atencao
 Nao comece por IA, OCR, dashboard ou login complexo.

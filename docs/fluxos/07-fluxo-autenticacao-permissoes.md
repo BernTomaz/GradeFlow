@@ -77,7 +77,7 @@ Teacher:
 - Pode gerenciar apenas suas avaliacoes.
 
 Student:
-- Pode ver apenas suas proprias submisssoes.
+- Pode ver apenas suas proprias submissoes.
 
 Observacao
 O endpoint atual `refresh-token` reemite access token.

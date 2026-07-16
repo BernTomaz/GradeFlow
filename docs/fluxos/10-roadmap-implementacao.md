@@ -114,12 +114,12 @@ Testes:
 - Moq, se necessario
 
 Exportacao:
-- ClosedXML para Excel
-- QuestPDF para PDF
+- ClosedXML para Excel, se exportacao XLSX for implementada
+- QuestPDF para PDF, se exportacao PDF for implementada
 
 Importacao:
-- CsvHelper para CSV
-- ClosedXML para Excel
+- Leitura simples nativa para CSV basico
+- ClosedXML para Excel, se importacao XLSX for implementada
 
 Arquitetura:
 - Clean Architecture simples

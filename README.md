@@ -104,10 +104,11 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 
 ### 🔜 Planejado
 
-- Deploy público para demonstração
+- Importação de submissões por CSV/Excel
 - Relatórios de desempenho por turma
 - Exportação de notas
 - Dashboard com métricas
+- Deploy público para demonstração
 - Cobertura ampliada de testes
 
 ---

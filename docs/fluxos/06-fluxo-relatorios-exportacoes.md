@@ -9,7 +9,7 @@ Professor.
 Fluxo funcional
 1. Professor abre uma avaliacao.
 2. Acessa a tela de relatorio.
-3. Sistema busca submisssoes corrigidas.
+3. Sistema busca submissoes corrigidas.
 4. Sistema calcula indicadores.
 5. Sistema exibe resumo da turma.
 6. Professor pode exportar os resultados.
@@ -19,8 +19,8 @@ Relatorios iniciais
 - Media da turma
 - Maior nota
 - Menor nota
-- Quantidade de submisssoes corrigidas
-- Quantidade de submisssoes pendentes
+- Quantidade de submissoes corrigidas
+- Quantidade de submissoes pendentes
 - Questao com maior erro
 - Questao com maior acerto
 
@@ -56,12 +56,9 @@ Banco:
 
 Exportacao Excel:
 - ClosedXML
-- EPPlus, observando licenca
 
 Exportacao PDF:
 - QuestPDF
-- Rotativa
-- iText, observando licenca
 
 Frontend:
 - Angular Component de relatorio
@@ -72,4 +69,4 @@ Frontend:
 Regra importante
 Relatorio so deve vir depois da correcao funcionar.
 Dashboard bonito antes do motor de correcao e desperdicio.
-
+Adicionar bibliotecas de exportacao apenas quando a exportacao for implementada.

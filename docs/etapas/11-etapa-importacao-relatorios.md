@@ -3,9 +3,10 @@ GradeFlow - Etapa 11 - Importacao, Relatorios e Exportacao
 Objetivo
 Aumentar a produtividade do professor depois que o MVP estiver funcionando.
 
-Tecnologias
+Tecnologias sugeridas
 CSV:
-- CsvHelper
+- Leitura simples nativa, se o formato continuar basico
+- CsvHelper, se houver muitos casos especiais de CSV
 
 Excel:
 - ClosedXML
@@ -56,3 +57,4 @@ GET /api/assignments/{assignmentId}/export/pdf
 
 Ponto de atencao
 Relatorio e importacao so fazem sentido depois que a correcao base estiver confiavel.
+Nao adicionar biblioteca antes de confirmar que a funcionalidade precisa dela.

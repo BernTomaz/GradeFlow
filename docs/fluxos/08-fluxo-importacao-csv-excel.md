@@ -15,7 +15,7 @@ Fluxo funcional
 3. Seleciona arquivo CSV ou Excel.
 4. Sistema valida o arquivo.
 5. Sistema identifica colunas de aluno e respostas.
-6. Sistema cria submisssoes.
+6. Sistema cria submissoes.
 7. Sistema cria StudentAnswers.
 8. Sistema executa correcao em lote.
 9. Sistema exibe resumo da importacao.
@@ -74,4 +74,3 @@ Validacoes
 Regra importante
 Nao comece por importacao.
 Primeiro faca a submissao manual funcionar.
-

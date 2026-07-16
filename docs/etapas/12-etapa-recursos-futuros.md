@@ -3,6 +3,9 @@ GradeFlow - Etapa 12 - Recursos Futuros
 Objetivo
 Listar evolucoes futuras sem misturar com o MVP.
 
+Observacao
+O deploy publico final fica na etapa 13, depois que as funcionalidades escolhidas para demonstracao estiverem fechadas.
+
 Recursos futuros
 - Turmas
 - Cursos

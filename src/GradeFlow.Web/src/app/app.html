@@ -1,25 +1,68 @@
-<header class="topbar">
-  <a routerLink="/" class="brand"><span>GF</span>GradeFlow</a>
-  <nav>
-    @if (auth.current()) {
-      <a routerLink="/assignments">Avaliações</a>
-      <a routerLink="/assignments/new">Nova avaliação</a>
-      <a routerLink="/change-password">Alterar senha</a>
-      <button class="nav-button" type="button" (click)="logout()">Sair</button>
-    }
-  </nav>
-</header>
+@if (auth.current()) {
+  <div class="app-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <a routerLink="/" class="brand">
+          <img src="favicon.svg" alt="" />
+          <span>GradeFlow</span>
+        </a>
+        <button class="sidebar-toggle" type="button" aria-label="Mostrar ou esconder menu lateral" (click)="toggleSidebar()">
+          <span></span>
+        </button>
+      </div>
 
-@if (loading) {
-  <div class="route-loading" role="status" aria-label="Carregando">
-    <span></span>
+      <div class="sidebar-body">
+        <nav class="side-nav" aria-label="Principal">
+          <a routerLink="/assignments" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-assessments">
+            <span>Avaliações</span>
+          </a>
+          <a routerLink="/assignments/new" routerLinkActive="active" class="nav-new">
+            <span>Nova avaliação</span>
+          </a>
+        </nav>
+
+        <nav class="side-nav side-nav-bottom" aria-label="Configurações">
+          <a routerLink="/change-password" routerLinkActive="active" class="nav-settings">
+            <span>Configuração</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <nav>
+          <div class="theme-switch" aria-label="Tema">
+            <button type="button" [class.active]="theme === 'system'" (click)="setTheme('system')"><i class="pi pi-desktop"></i>Sistema</button>
+            <button type="button" [class.active]="theme === 'light'" (click)="setTheme('light')"><i class="pi pi-sun"></i>Claro</button>
+            <button type="button" [class.active]="theme === 'dark'" (click)="setTheme('dark')"><i class="pi pi-moon"></i>Escuro</button>
+          </div>
+          <button class="nav-button" type="button" (click)="logout()"><i class="pi pi-sign-out"></i>Sair</button>
+        </nav>
+      </header>
+
+      @if (loading) {
+        <div class="route-loading" role="status" aria-label="Carregando">
+          <span></span>
+        </div>
+      }
+
+      <main class="shell">
+        <router-outlet />
+      </main>
+
+      <footer class="footer">Developed by Bernardo Tomaz</footer>
+    </div>
   </div>
+} @else {
+  @if (loading) {
+    <div class="route-loading" role="status" aria-label="Carregando">
+      <span></span>
+    </div>
+  }
+
+  <main class="shell public-shell">
+    <router-outlet />
+    <footer class="footer public-footer">Developed by Bernardo Tomaz</footer>
+  </main>
 }
-
-<main class="shell">
-  <router-outlet />
-</main>
-
-<footer class="footer">
-  Developed by Bernardo Tomaz
-</footer>

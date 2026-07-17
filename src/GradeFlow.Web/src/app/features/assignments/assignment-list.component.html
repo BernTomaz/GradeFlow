@@ -6,32 +6,66 @@
   <a routerLink="/assignments/new" class="button primary">Nova avaliação</a>
 </section>
 
-<div class="list">
-  @if (assignments$ | async; as assignments) {
-    @for (assignment of assignments; track assignment.id) {
-      <article class="card">
-        <a [routerLink]="['/assignments', assignment.id]" class="card-link">
-          <h2>{{ assignment.title }}</h2>
-          <p>{{ assignment.subject || 'Sem disciplina' }}</p>
-          <small>{{ assignment.createdAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</small>
-        </a>
-        <div class="actions">
-          <strong>{{ assignment.totalPoints }} pts</strong>
-          <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
-          <button class="button danger" type="button" (click)="askDelete(assignment.id)">Excluir</button>
-        </div>
-      </article>
-    } @empty {
-      <p class="empty">Nenhuma avaliação cadastrada.</p>
-    }
-    <a routerLink="/assignments/new" class="card add-card">
-      <span>+</span>
-      Nova avaliação
-    </a>
+@if (assignments$ | async; as assignments) {
+  @if (assignments.length) {
+    <section class="table-card assignments-table" aria-label="Avaliações cadastradas">
+      <table>
+        <thead>
+          <tr>
+            <th>Avaliação</th>
+            <th>Disciplina</th>
+            <th>Pontos</th>
+            <th>Criada em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (assignment of assignments; track assignment.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/assignments', assignment.id]" class="table-title">{{ assignment.title }}</a>
+              </td>
+              <td>{{ assignment.subject || 'Sem disciplina' }}</td>
+              <td>{{ assignment.totalPoints }}</td>
+              <td>{{ assignment.createdAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <div class="row-actions">
+                  <a [routerLink]="['/assignments', assignment.id, 'edit']" class="icon-button" aria-label="Editar avaliação" title="Editar">
+                    <i class="pi pi-pencil"></i><span>Editar</span>
+                  </a>
+                  <button class="icon-button danger" type="button" aria-label="Excluir avaliação" title="Excluir" (click)="askDelete(assignment.id)">
+                    <i class="pi pi-trash"></i><span>Excluir</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <div class="list mobile-list">
+      @for (assignment of assignments; track assignment.id) {
+        <article class="card">
+          <a [routerLink]="['/assignments', assignment.id]" class="card-link">
+            <h2>{{ assignment.title }}</h2>
+            <p>{{ assignment.subject || 'Sem disciplina' }}</p>
+            <small>{{ assignment.createdAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</small>
+          </a>
+          <div class="actions">
+            <strong>{{ assignment.totalPoints }} pts</strong>
+            <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
+            <button class="button danger" type="button" (click)="askDelete(assignment.id)">Excluir</button>
+          </div>
+        </article>
+      }
+    </div>
   } @else {
-    <p class="loading"></p>
+    <p class="empty">Nenhuma avaliação cadastrada.</p>
   }
-</div>
+} @else {
+  <p class="loading"></p>
+}
 
 @if (pendingDeleteId) {
   <div class="modal-backdrop">

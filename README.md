@@ -6,10 +6,17 @@ Sistema web para criação de avaliações, cadastro de gabaritos estruturados, 
 
 ## Documentação
 
-A documentação detalhada está dividida por etapa, fluxo e operação.
+A documentação detalhada está dividida por assunto, etapa, fluxo e operação.
 
 - [Wiki do GradeFlow](https://github.com/BernTomaz/GradeFlow/wiki)
 - [Visão geral do projeto](docs/etapas/00-etapa-visao-geral.md)
+- [Status do projeto](docs/status-projeto.md)
+- [Arquitetura](docs/arquitetura.md)
+- [Configuração e execução local](docs/configuracao.md)
+- [Endpoints principais](docs/endpoints.md)
+- [Testes](docs/testes.md)
+- [Integração contínua](docs/ci.md)
+- [Roadmap](docs/roadmap.md)
 - [Roadmap de implementação](docs/fluxos/10-roadmap-implementacao.md)
 - [Tecnologias e arquitetura](docs/fluxos/00-visao-geral-tecnologias.md)
 - [Estratégia de migrations](docs/operacao/migrations.md)
@@ -19,6 +26,8 @@ A documentação detalhada está dividida por etapa, fluxo e operação.
 Projeto em desenvolvimento ativo.
 
 O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
+
+Detalhes completos: [docs/status-projeto.md](docs/status-projeto.md).
 
 ## Processos do Sistema
 
@@ -72,7 +81,9 @@ Testes:
 - xUnit
 - FluentAssertions
 
-## Execução Local
+## Configuração Rápida
+
+Guia completo: [docs/configuracao.md](docs/configuracao.md).
 
 Pré-requisitos:
 
@@ -145,7 +156,17 @@ Serviços locais:
 
 As migrations não são aplicadas automaticamente pelo Compose. Veja [docs/operacao/migrations.md](docs/operacao/migrations.md).
 
+## Referências Rápidas
+
+- [Arquitetura do projeto](docs/arquitetura.md)
+- [Endpoints principais](docs/endpoints.md)
+- [Guia completo de testes](docs/testes.md)
+- [Integração contínua](docs/ci.md)
+- [Roadmap](docs/roadmap.md)
+
 ## Testes
+
+Guia completo: [docs/testes.md](docs/testes.md).
 
 Backend:
 

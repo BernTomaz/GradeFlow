@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using GradeFlow.Application.DTOs.Submissions;
 using GradeFlow.Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +32,34 @@ public sealed class SubmissionsController(
         CancellationToken cancellationToken)
         => await submissionService.GetCorrectionLogsAsync(id, cancellationToken) is { } logs ? Ok(logs) : NotFound();
 
+    [HttpGet("assignments/{assignmentId:guid}/report")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<ActionResult<AssignmentReportResponse>> GetReport(
+        Guid assignmentId,
+        CancellationToken cancellationToken)
+        => await submissionService.GetReportAsync(assignmentId, cancellationToken) is { } report ? Ok(report) : NotFound();
+
+    [HttpGet("assignments/{assignmentId:guid}/export/csv")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<IActionResult> ExportCsv(Guid assignmentId, CancellationToken cancellationToken)
+        => await submissionService.ExportCsvAsync(assignmentId, cancellationToken) is { } csv
+            ? File(Encoding.UTF8.GetBytes(csv), "text/csv", $"gradeflow-{assignmentId}-notas.csv")
+            : NotFound();
+
+    [HttpGet("assignments/{assignmentId:guid}/export/excel")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<IActionResult> ExportExcel(Guid assignmentId, CancellationToken cancellationToken)
+        => await submissionService.ExportExcelAsync(assignmentId, cancellationToken) is { } file
+            ? File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"gradeflow-{assignmentId}-notas.xlsx")
+            : NotFound();
+
+    [HttpGet("assignments/{assignmentId:guid}/export/pdf")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<IActionResult> ExportPdf(Guid assignmentId, CancellationToken cancellationToken)
+        => await submissionService.ExportPdfAsync(assignmentId, cancellationToken) is { } file
+            ? File(file, "application/pdf", $"gradeflow-{assignmentId}-relatorio.pdf")
+            : NotFound();
+
     [HttpPost("assignments/{assignmentId:guid}/submissions")]
     public async Task<ActionResult<SubmissionResponse>> Create(
         Guid assignmentId,
@@ -43,6 +72,27 @@ public sealed class SubmissionsController(
             return created is null
                 ? NotFound()
                 : CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [HttpPost("assignments/{assignmentId:guid}/submissions/import")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<ActionResult<ImportSubmissionsResponse>> Import(
+        Guid assignmentId,
+        IFormFile file,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            using var reader = new StreamReader(file.OpenReadStream());
+            var csv = await reader.ReadToEndAsync(cancellationToken);
+            return await submissionService.ImportCsvAsync(assignmentId, csv, cancellationToken) is { } result
+                ? Ok(result)
+                : NotFound();
         }
         catch (ValidationException exception)
         {

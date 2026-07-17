@@ -416,6 +416,63 @@ public sealed class ApplicationServicesTests
         missing.Should().BeNull();
     }
 
+    [Fact]
+    public async Task Submission_service_should_import_csv_and_build_report()
+    {
+        var assignmentId = Guid.NewGuid();
+        var firstQuestion = new Question
+        {
+            Id = Guid.NewGuid(),
+            AssignmentId = assignmentId,
+            Text = "Q1",
+            Type = QuestionType.MultipleChoice,
+            Order = 1
+        };
+        var secondQuestion = new Question
+        {
+            Id = Guid.NewGuid(),
+            AssignmentId = assignmentId,
+            Text = "Q2",
+            Type = QuestionType.Numeric,
+            Order = 2
+        };
+        var repository = new FakeSubmissionRepositoryForService
+        {
+            ExistingAssignmentId = assignmentId,
+            Questions = [firstQuestion, secondQuestion]
+        };
+        var service = new SubmissionService(repository);
+
+        var import = await service.ImportCsvAsync(
+            assignmentId,
+            """
+            student_name,student_email,q1,q2
+            Ana,ana@email.com,A,10
+            Bia,bia@email.com,B,8
+            """);
+        repository.Submissions[0].FinalScore = 10;
+        repository.Submissions[0].StudentAnswers.First(x => x.QuestionId == firstQuestion.Id).IsCorrect = true;
+        repository.Submissions[1].FinalScore = 6;
+        repository.Submissions[1].StudentAnswers.First(x => x.QuestionId == secondQuestion.Id).IsCorrect = true;
+
+        var report = await service.GetReportAsync(assignmentId);
+        var csv = await service.ExportCsvAsync(assignmentId);
+        var excel = await service.ExportExcelAsync(assignmentId);
+        var pdf = await service.ExportPdfAsync(assignmentId);
+
+        import!.ImportedCount.Should().Be(2);
+        repository.Submissions.Should().HaveCount(2);
+        report!.AverageScore.Should().Be(8);
+        report.HighestScore.Should().Be(10);
+        report.LowestScore.Should().Be(6);
+        report.Questions.Should().Contain(x => x.QuestionId == firstQuestion.Id && x.CorrectCount == 1 && x.IncorrectCount == 1);
+        report.Questions.Should().Contain(x => x.QuestionId == secondQuestion.Id && x.CorrectCount == 1 && x.IncorrectCount == 1);
+        csv.Should().Contain("student_name,student_email,final_score,status");
+        csv.Should().Contain("Ana,ana@email.com,10,Pending");
+        excel.Should().NotBeNullOrEmpty();
+        pdf.Should().NotBeNullOrEmpty();
+    }
+
     private static CreateQuestionRequest QuestionRequest(int order, decimal points)
         => new(
             " Quanto e 2 + 2? ",

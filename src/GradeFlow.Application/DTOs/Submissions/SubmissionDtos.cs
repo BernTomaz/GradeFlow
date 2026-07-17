@@ -57,6 +57,33 @@ public sealed record CorrectionLogResponse(
     string? Message,
     DateTime CreatedAt);
 
+public sealed record ImportSubmissionsResponse(
+    int ImportedCount,
+    IReadOnlyCollection<SubmissionResponse> Submissions);
+
+public sealed record AssignmentReportResponse(
+    Guid AssignmentId,
+    int SubmissionCount,
+    decimal AverageScore,
+    decimal? HighestScore,
+    decimal? LowestScore,
+    IReadOnlyCollection<StudentScoreResponse> Students,
+    IReadOnlyCollection<QuestionReportResponse> Questions);
+
+public sealed record StudentScoreResponse(
+    Guid SubmissionId,
+    string StudentName,
+    string? StudentEmail,
+    decimal FinalScore,
+    SubmissionStatus Status);
+
+public sealed record QuestionReportResponse(
+    Guid QuestionId,
+    int Order,
+    string Text,
+    int CorrectCount,
+    int IncorrectCount);
+
 public sealed record SubmissionResponse(
     Guid Id,
     Guid AssignmentId,

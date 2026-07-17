@@ -27,7 +27,7 @@ Projeto em desenvolvimento ativo.
 
 O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
 
-Detalhes completos: [docs/status-projeto.md](docs/status-projeto.md).
+Detalhes completos: [ver status do projeto](docs/status-projeto.md).
 
 ## Processos do Sistema
 
@@ -83,7 +83,7 @@ Testes:
 
 ## Configuração Rápida
 
-Guia completo: [docs/configuracao.md](docs/configuracao.md).
+Guia completo: [ver configuração e execução local](docs/configuracao.md).
 
 Pré-requisitos:
 
@@ -154,7 +154,7 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: `localhost,1433`
 
-As migrations não são aplicadas automaticamente pelo Compose. Veja [docs/operacao/migrations.md](docs/operacao/migrations.md).
+As migrations não são aplicadas automaticamente pelo Compose. Veja [estratégia de migrations](docs/operacao/migrations.md).
 
 ## Referências Rápidas
 
@@ -166,7 +166,7 @@ As migrations não são aplicadas automaticamente pelo Compose. Veja [docs/opera
 
 ## Testes
 
-Guia completo: [docs/testes.md](docs/testes.md).
+Guia completo: [ver guia de testes](docs/testes.md).
 
 Backend:
 

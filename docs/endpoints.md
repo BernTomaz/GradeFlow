@@ -7,6 +7,11 @@
 | Questions | GET, POST `/api/assignments/{assignmentId}/questions` |
 | Question por Id | GET, PUT, DELETE `/api/questions/{id}` |
 | Submissions | GET, POST `/api/assignments/{assignmentId}/submissions` |
+| Importação de submissões | POST `/api/assignments/{assignmentId}/submissions/import` |
+| Relatório da avaliação | GET `/api/assignments/{assignmentId}/report` |
+| Exportação CSV | GET `/api/assignments/{assignmentId}/export/csv` |
+| Exportação Excel | GET `/api/assignments/{assignmentId}/export/excel` |
+| Exportação PDF | GET `/api/assignments/{assignmentId}/export/pdf` |
 | Submission por Id | GET, PUT, DELETE `/api/submissions/{id}` |
 | Correção | POST `/api/submissions/{id}/correct` |
 | Correção de Questão | POST `/api/submissions/{id}/questions/{questionId}/correct` |

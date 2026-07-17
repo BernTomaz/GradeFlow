@@ -63,3 +63,34 @@ export interface CorrectionLogResponse {
   message?: string | null;
   createdAt: string;
 }
+
+export interface ImportSubmissionsResponse {
+  importedCount: number;
+  submissions: SubmissionResponse[];
+}
+
+export interface AssignmentReportResponse {
+  assignmentId: string;
+  submissionCount: number;
+  averageScore: number;
+  highestScore?: number | null;
+  lowestScore?: number | null;
+  students: StudentScoreResponse[];
+  questions: QuestionReportResponse[];
+}
+
+export interface StudentScoreResponse {
+  submissionId: string;
+  studentName: string;
+  studentEmail?: string | null;
+  finalScore: number;
+  status: SubmissionStatus;
+}
+
+export interface QuestionReportResponse {
+  questionId: string;
+  order: number;
+  text: string;
+  correctCount: number;
+  incorrectCount: number;
+}

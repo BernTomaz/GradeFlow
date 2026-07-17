@@ -27,7 +27,7 @@ Projeto em desenvolvimento ativo.
 
 O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
 
-Detalhes completos: [ver status do projeto](docs/status-projeto.md).
+Detalhes completos: [status do projeto](docs/status-projeto.md).
 
 ## Processos do Sistema
 
@@ -83,7 +83,7 @@ Testes:
 
 ## Configuração Rápida
 
-Guia completo: [ver configuração e execução local](docs/configuracao.md).
+Guia completo: [configuração e execução local](docs/configuracao.md).
 
 Pré-requisitos:
 
@@ -166,7 +166,7 @@ As migrations não são aplicadas automaticamente pelo Compose. Veja [estratégi
 
 ## Testes
 
-Guia completo: [ver guia de testes](docs/testes.md).
+Guia completo: [guia de testes](docs/testes.md).
 
 Backend:
 

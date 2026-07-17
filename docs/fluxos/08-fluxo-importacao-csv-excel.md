@@ -1,7 +1,7 @@
 GradeFlow - Fluxo 08 - Importacao CSV e Excel
 
 Objetivo
-Permitir importar respostas de muitos alunos sem cadastrar tudo manualmente.
+Permitir importar respostas de muitos alunos por CSV sem cadastrar tudo manualmente.
 
 Quando implementar
 Depois do MVP manual, correcao automatica e revisao basica.
@@ -11,7 +11,7 @@ Professor.
 
 Fluxo funcional
 1. Professor abre uma avaliacao.
-2. Clica em importar respostas.
+2. Clica em importar respostas via CSV.
 3. Seleciona arquivo CSV ou Excel.
 4. Sistema valida o arquivo.
 5. Sistema identifica colunas de aluno e respostas.
@@ -27,6 +27,13 @@ Maria        | maria@email.com| A  | 9.8| fotossintese | C
 
 Endpoint recomendado
 POST /api/assignments/{assignmentId}/submissions/import
+
+Formato atual:
+- CSV
+
+Excel:
+- Importacao XLSX ainda nao implementada.
+- ClosedXML deve ser usado apenas se a importacao XLSX for adicionada.
 
 DTO de retorno sugerido
 ImportSubmissionResponse:

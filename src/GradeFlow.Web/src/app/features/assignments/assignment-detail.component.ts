@@ -23,6 +23,7 @@ export class AssignmentDetailComponent {
   private readonly refresh$ = new Subject<void>();
   protected pendingDelete: { type: 'question' | 'submission'; id: string } | null = null;
   protected errorMessage: string | null = null;
+  protected showCsvHelp = false;
 
   protected readonly vm$ = this.assignmentId$.pipe(
     switchMap((id) =>

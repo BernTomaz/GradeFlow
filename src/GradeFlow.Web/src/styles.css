@@ -313,6 +313,24 @@ small {
   opacity: 0.55;
 }
 
+.help-button {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #1967d2;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1967d2;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.help-button:hover {
+  background: #1967d2;
+  color: #ffffff;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -417,6 +435,7 @@ small {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-height: 38px;
   margin-bottom: 12px;
 }
 
@@ -863,6 +882,16 @@ small {
   color: #33465f;
 }
 
+.help-modal pre {
+  overflow-x: auto;
+  margin: 0 0 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #eef4fb;
+  color: #102033;
+  font-size: 13px;
+}
+
 .alert-modal strong {
   display: block;
   margin-bottom: 8px;
@@ -892,6 +921,14 @@ small {
   cursor: pointer;
   font-size: 28px;
   line-height: 1;
+}
+
+.confirm-modal .modal-close {
+  color: #33465f;
+}
+
+.confirm-modal .modal-close:hover {
+  color: #1967d2;
 }
 
 @media (max-width: 720px) {

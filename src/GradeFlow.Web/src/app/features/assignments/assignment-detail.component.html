@@ -50,10 +50,21 @@
     <div>
       <div class="section-title">
         <h2>Submissões</h2>
-        <label class="button">
-          Importar CSV
-          <input type="file" accept=".csv,text/csv" (change)="importCsv(vm.assignment.id, $event)" hidden>
-        </label>
+        <div class="actions">
+          <label class="button">
+            Importar submissões via CSV
+            <input type="file" accept=".csv,text/csv" (change)="importCsv(vm.assignment.id, $event)" hidden>
+          </label>
+          <button
+            class="help-button"
+            type="button"
+            aria-label="Ajuda sobre importação CSV"
+            title="Ajuda sobre importação CSV"
+            (click)="showCsvHelp = true"
+          >
+            ?
+          </button>
+        </div>
       </div>
       <div class="list compact">
         @for (submission of vm.submissions; track submission.id) {
@@ -160,6 +171,19 @@
         <button class="button" type="button" (click)="pendingDelete = null">Cancelar</button>
         <button class="button danger" type="button" (click)="deletePending()">Excluir</button>
       </div>
+    </div>
+  </div>
+}
+
+@if (showCsvHelp) {
+  <div class="modal-backdrop">
+    <div class="confirm-modal help-modal" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="showCsvHelp = false">×</button>
+      <strong>Importação CSV</strong>
+      <p>O arquivo precisa ter uma linha de cabeçalho e uma linha por aluno.</p>
+      <pre>student_name,student_email,q1,q2,q3
+Ana,ana@email.com,A,10,Resposta curta</pre>
+      <p>Use `q1`, `q2`, `q3` na mesma ordem das questões cadastradas na avaliação.</p>
     </div>
   </div>
 }

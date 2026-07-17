@@ -77,7 +77,7 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 
 ## Planejado
 
-- Importação de submissões por CSV/Excel
+- Importação de submissões por CSV
 - Relatórios de desempenho por turma
 - Exportação de notas
 - Dashboard com métricas

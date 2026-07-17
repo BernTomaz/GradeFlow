@@ -38,7 +38,7 @@ Detalhes completos: [status do projeto](docs/status-projeto.md).
 - [Revisão manual](docs/fluxos/05-fluxo-revisao-manual.md)
 - [Relatórios e exportações](docs/fluxos/06-fluxo-relatorios-exportacoes.md)
 - [Autenticação e permissões](docs/fluxos/07-fluxo-autenticacao-permissoes.md)
-- [Importação CSV/Excel](docs/fluxos/08-fluxo-importacao-csv-excel.md)
+- [Importação CSV](docs/fluxos/08-fluxo-importacao-csv-excel.md)
 - [Upload, IA e OCR futuros](docs/fluxos/09-fluxo-upload-arquivos-ia-ocr-futuro.md)
 
 ## Etapas de Implementação

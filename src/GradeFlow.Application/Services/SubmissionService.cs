@@ -130,41 +130,79 @@ public sealed class SubmissionService(
 
         using var workbook = new XLWorkbook();
         var students = workbook.Worksheets.Add("Notas");
-        students.Cell(1, 1).Value = "Aluno";
-        students.Cell(1, 2).Value = "Email";
-        students.Cell(1, 3).Value = "Nota";
-        students.Cell(1, 4).Value = "Status";
+        students.Cell(1, 1).Value = "Relatório GradeFlow";
+        students.Range(1, 1, 1, 4).Merge().Style
+            .Font.SetBold()
+            .Font.SetFontSize(16)
+            .Font.SetFontColor(XLColor.White)
+            .Fill.SetBackgroundColor(XLColor.FromHtml("#1565C0"));
+        students.Cell(2, 1).Value = "Submissões";
+        students.Cell(2, 2).Value = report.SubmissionCount;
+        students.Cell(2, 3).Value = "Média";
+        students.Cell(2, 4).Value = report.AverageScore;
+        students.Cell(3, 1).Value = "Maior nota";
+        students.Cell(3, 2).Value = report.HighestScore;
+        students.Cell(3, 3).Value = "Menor nota";
+        students.Cell(3, 4).Value = report.LowestScore;
+        students.Cell(5, 1).Value = "Aluno";
+        students.Cell(5, 2).Value = "Email";
+        students.Cell(5, 3).Value = "Nota";
+        students.Cell(5, 4).Value = "Status";
         for (var i = 0; i < report.Students.Count; i++)
         {
             var student = report.Students.ElementAt(i);
-            var row = i + 2;
+            var row = i + 6;
             students.Cell(row, 1).Value = student.StudentName;
             students.Cell(row, 2).Value = student.StudentEmail;
             students.Cell(row, 3).Value = student.FinalScore;
             students.Cell(row, 4).Value = student.Status.ToString();
         }
+        FormatWorksheet(students, 5, 4);
 
-        var questions = workbook.Worksheets.Add("Questoes");
-        questions.Cell(1, 1).Value = "Ordem";
-        questions.Cell(1, 2).Value = "Questao";
-        questions.Cell(1, 3).Value = "Acertos";
-        questions.Cell(1, 4).Value = "Erros";
+        var questions = workbook.Worksheets.Add("Questões");
+        questions.Cell(1, 1).Value = "Questões";
+        questions.Range(1, 1, 1, 4).Merge().Style
+            .Font.SetBold()
+            .Font.SetFontSize(16)
+            .Font.SetFontColor(XLColor.White)
+            .Fill.SetBackgroundColor(XLColor.FromHtml("#1565C0"));
+        questions.Cell(3, 1).Value = "Ordem";
+        questions.Cell(3, 2).Value = "Questão";
+        questions.Cell(3, 3).Value = "Acertos";
+        questions.Cell(3, 4).Value = "Erros";
         for (var i = 0; i < report.Questions.Count; i++)
         {
             var question = report.Questions.ElementAt(i);
-            var row = i + 2;
+            var row = i + 4;
             questions.Cell(row, 1).Value = question.Order;
-            questions.Cell(row, 2).Value = question.Text;
+            questions.Cell(row, 2).Value = QuestionTitle(question.Text);
             questions.Cell(row, 3).Value = question.CorrectCount;
             questions.Cell(row, 4).Value = question.IncorrectCount;
         }
-
-        students.Columns().AdjustToContents();
-        questions.Columns().AdjustToContents();
+        FormatWorksheet(questions, 3, 4);
 
         using var stream = new MemoryStream();
         workbook.SaveAs(stream);
         return stream.ToArray();
+    }
+
+    private static void FormatWorksheet(IXLWorksheet worksheet, int headerRow, int columnCount)
+    {
+        var lastRow = Math.Max(headerRow, worksheet.LastRowUsed()?.RowNumber() ?? headerRow);
+        var range = worksheet.Range(headerRow, 1, lastRow, columnCount);
+        range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        range.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+        range.Style.Border.OutsideBorderColor = XLColor.FromHtml("#D9E2EC");
+        range.Style.Border.InsideBorderColor = XLColor.FromHtml("#D9E2EC");
+        worksheet.Range(headerRow, 1, headerRow, columnCount).Style
+            .Font.SetBold()
+            .Font.SetFontColor(XLColor.White)
+            .Fill.SetBackgroundColor(XLColor.FromHtml("#1565C0"));
+        range.SetAutoFilter();
+        worksheet.SheetView.FreezeRows(headerRow);
+        worksheet.Columns().AdjustToContents();
+        worksheet.Column(2).Width = Math.Min(Math.Max(worksheet.Column(2).Width, 28), 60);
+        worksheet.Rows().AdjustToContents();
     }
 
     public async Task<byte[]?> ExportPdfAsync(Guid assignmentId, CancellationToken cancellationToken = default)
@@ -177,64 +215,82 @@ public sealed class SubmissionService(
         {
             container.Page(page =>
             {
-                page.Margin(32);
                 page.Size(PageSizes.A4);
-                page.DefaultTextStyle(x => x.FontSize(10));
-                page.Header().Text("Relatorio GradeFlow").FontSize(18).Bold();
+                page.Margin(36);
+                page.DefaultTextStyle(x => x.FontSize(9).FontColor(Colors.Grey.Darken3));
+                page.Header().Column(header =>
+                {
+                    header.Item()
+                        .Background(Colors.Blue.Darken3)
+                        .Padding(16)
+                        .Column(column =>
+                        {
+                            column.Item().Text("GradeFlow").FontSize(20).Bold().FontColor(Colors.White);
+                            column.Item().Text("Relatório de desempenho da avaliação").FontSize(10).FontColor(Colors.Blue.Lighten4);
+                        });
+                });
                 page.Content().Column(column =>
                 {
-                    column.Spacing(14);
-                    column.Item().Text($"Submissoes: {report.SubmissionCount}  Media: {report.AverageScore:0.##}  Maior: {report.HighestScore?.ToString("0.##", CultureInfo.InvariantCulture) ?? "-"}  Menor: {report.LowestScore?.ToString("0.##", CultureInfo.InvariantCulture) ?? "-"}");
-                    column.Item().Text("Notas por aluno").Bold();
+                    column.Spacing(18);
+                    column.Item().Height(8);
+                    column.Item().Row(row =>
+                    {
+                        row.RelativeItem().Element(cell => SummaryCard(cell, "Submissões", report.SubmissionCount.ToString(CultureInfo.InvariantCulture)));
+                        row.RelativeItem().Element(cell => SummaryCard(cell, "Média", report.AverageScore.ToString("0.##", CultureInfo.InvariantCulture)));
+                        row.RelativeItem().Element(cell => SummaryCard(cell, "Maior nota", report.HighestScore?.ToString("0.##", CultureInfo.InvariantCulture) ?? "-"));
+                        row.RelativeItem().Element(cell => SummaryCard(cell, "Menor nota", report.LowestScore?.ToString("0.##", CultureInfo.InvariantCulture) ?? "-"));
+                    });
+                    column.Item().Text("Notas por aluno").FontSize(13).Bold().FontColor(Colors.Grey.Darken4);
                     column.Item().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
                         {
-                            columns.RelativeColumn();
-                            columns.RelativeColumn();
+                            columns.RelativeColumn(1.4f);
+                            columns.RelativeColumn(1.6f);
                             columns.ConstantColumn(70);
                         });
                         table.Header(header =>
                         {
-                            header.Cell().Text("Aluno").Bold();
-                            header.Cell().Text("Email").Bold();
-                            header.Cell().Text("Nota").Bold();
+                            HeaderCell(header.Cell(), "Aluno");
+                            HeaderCell(header.Cell(), "Email");
+                            HeaderCell(header.Cell(), "Nota");
                         });
                         foreach (var student in report.Students)
                         {
-                            table.Cell().Text(student.StudentName);
-                            table.Cell().Text(student.StudentEmail ?? "-");
-                            table.Cell().Text(student.FinalScore.ToString(CultureInfo.InvariantCulture));
+                            BodyCell(table.Cell(), student.StudentName);
+                            BodyCell(table.Cell(), student.StudentEmail ?? "-");
+                            BodyCell(table.Cell(), student.FinalScore.ToString("0.##", CultureInfo.InvariantCulture));
                         }
                     });
-                    column.Item().Text("Questoes").Bold();
+                    column.Item().Text("Questões").FontSize(13).Bold().FontColor(Colors.Grey.Darken4);
                     column.Item().Table(table =>
                     {
                         table.ColumnsDefinition(columns =>
                         {
-                            columns.ConstantColumn(45);
+                            columns.ConstantColumn(58);
                             columns.RelativeColumn();
-                            columns.ConstantColumn(60);
-                            columns.ConstantColumn(60);
+                            columns.ConstantColumn(58);
+                            columns.ConstantColumn(48);
                         });
                         table.Header(header =>
                         {
-                            header.Cell().Text("Ordem").Bold();
-                            header.Cell().Text("Questao").Bold();
-                            header.Cell().Text("Acertos").Bold();
-                            header.Cell().Text("Erros").Bold();
+                            HeaderCell(header.Cell(), "Ordem");
+                            HeaderCell(header.Cell(), "Questão");
+                            HeaderCell(header.Cell(), "Acertos");
+                            HeaderCell(header.Cell(), "Erros");
                         });
                         foreach (var question in report.Questions)
                         {
-                            table.Cell().Text(question.Order.ToString(CultureInfo.InvariantCulture));
-                            table.Cell().Text(question.Text);
-                            table.Cell().Text(question.CorrectCount.ToString(CultureInfo.InvariantCulture));
-                            table.Cell().Text(question.IncorrectCount.ToString(CultureInfo.InvariantCulture));
+                            BodyCell(table.Cell(), question.Order.ToString(CultureInfo.InvariantCulture));
+                            BodyCell(table.Cell(), QuestionTitle(question.Text));
+                            BodyCell(table.Cell(), question.CorrectCount.ToString(CultureInfo.InvariantCulture));
+                            BodyCell(table.Cell(), question.IncorrectCount.ToString(CultureInfo.InvariantCulture));
                         }
                     });
                 });
-                page.Footer().AlignRight().Text(text =>
+                page.Footer().BorderTop(1).BorderColor(Colors.Grey.Lighten2).PaddingTop(8).AlignRight().Text(text =>
                 {
+                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
                     text.Span("Pagina ");
                     text.CurrentPageNumber();
                     text.Span(" de ");
@@ -243,6 +299,41 @@ public sealed class SubmissionService(
             });
         }).GeneratePdf();
     }
+
+    private static void SummaryCard(IContainer container, string label, string value)
+        => container
+            .PaddingRight(8)
+            .Background(Colors.Grey.Lighten4)
+            .Border(1)
+            .BorderColor(Colors.Grey.Lighten2)
+            .Padding(10)
+            .Column(column =>
+            {
+                column.Item().Text(label).FontSize(8).FontColor(Colors.Grey.Darken1);
+                column.Item().Text(value).FontSize(16).Bold().FontColor(Colors.Blue.Darken3);
+            });
+
+    private static void HeaderCell(IContainer container, string text)
+        => container
+            .Background(Colors.Blue.Darken3)
+            .Border(1)
+            .BorderColor(Colors.White)
+            .PaddingVertical(6)
+            .PaddingHorizontal(8)
+            .Text(text)
+            .Bold()
+            .FontColor(Colors.White);
+
+    private static void BodyCell(IContainer container, string text)
+        => container
+            .BorderBottom(1)
+            .BorderColor(Colors.Grey.Lighten2)
+            .PaddingVertical(6)
+            .PaddingHorizontal(8)
+            .Text(text);
+
+    private static string QuestionTitle(string text)
+        => text.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.Trim() ?? text.Trim();
 
     public async Task<ImportSubmissionsResponse?> ImportCsvAsync(
         Guid assignmentId,

@@ -24,12 +24,16 @@ Frontend:
 - Upload com FormData
 - Tabelas de relatorio
 
-Importacao
+Importacao CSV
 Endpoint:
 POST /api/assignments/{assignmentId}/submissions/import
 
-Formato sugerido:
-student_name | student_email | q1 | q2 | q3 | q4
+Formato aceito:
+CSV com colunas `student_name`, `student_email`, `q1`, `q2`, `q3`, `q4`.
+
+Exemplo:
+student_name,student_email,q1,q2,q3,q4
+Ana,ana@email.com,A,10,Resposta curta,V
 
 Validacoes:
 - Arquivo vazio
@@ -52,8 +56,13 @@ Indicadores:
 
 Exportacao
 Endpoints:
+GET /api/assignments/{assignmentId}/export/csv
 GET /api/assignments/{assignmentId}/export/excel
 GET /api/assignments/{assignmentId}/export/pdf
+
+Observacao:
+- A importacao atual aceita CSV.
+- Excel e PDF estao disponiveis apenas para exportacao.
 
 Ponto de atencao
 Relatorio e importacao so fazem sentido depois que a correcao base estiver confiavel.

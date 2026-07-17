@@ -2,7 +2,7 @@
 
 ## Curto Prazo
 
-- Importação de submissões por CSV/Excel
+- Importação de submissões por CSV
 - Relatórios básicos
 - Exportação de notas
 

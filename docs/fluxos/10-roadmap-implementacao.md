@@ -62,7 +62,7 @@ Fase 5.1 - Preparacao DevOps local
 
 Fase 6 - Produtividade do professor
 1. Importar CSV.
-2. Importar Excel.
+2. Importar Excel futuramente, se XLSX for necessario.
 3. Exportar resultado em Excel.
 4. Exportar relatorio em PDF.
 5. Criar relatorios basicos.

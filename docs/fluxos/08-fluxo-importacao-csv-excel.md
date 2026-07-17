@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 08 - Importacao CSV e Excel
+GradeFlow - Fluxo 08 - Importacao CSV
 
 Objetivo
 Permitir importar respostas de muitos alunos por CSV sem cadastrar tudo manualmente.
@@ -12,7 +12,7 @@ Professor.
 Fluxo funcional
 1. Professor abre uma avaliacao.
 2. Clica em importar respostas via CSV.
-3. Seleciona arquivo CSV ou Excel.
+3. Seleciona arquivo CSV.
 4. Sistema valida o arquivo.
 5. Sistema identifica colunas de aluno e respostas.
 6. Sistema cria submissoes.
@@ -54,7 +54,8 @@ Leitura de CSV:
 - CsvHelper
 
 Leitura de Excel:
-- ClosedXML
+- Nao implementada no fluxo atual
+- ClosedXML deve ser usado se a importacao XLSX for adicionada no futuro
 - EPPlus, observando licenca
 
 Banco:

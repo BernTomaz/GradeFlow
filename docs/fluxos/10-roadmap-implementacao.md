@@ -61,9 +61,10 @@ Fase 5.1 - Preparacao DevOps local
 5. Definir estrategia controlada de migrations.
 
 Fase 6 - Produtividade do professor
+Status: implementada para importacao CSV, relatorios, exportacao CSV, exportacao Excel e exportacao PDF.
 1. Importar CSV.
 2. Importar Excel futuramente, se XLSX for necessario.
-3. Exportar resultado em Excel.
+3. Exportar resultado em CSV e Excel.
 4. Exportar relatorio em PDF.
 5. Criar relatorios basicos.
 
@@ -114,8 +115,8 @@ Testes:
 - Moq, se necessario
 
 Exportacao:
-- ClosedXML para Excel, se exportacao XLSX for implementada
-- QuestPDF para PDF, se exportacao PDF for implementada
+- ClosedXML para Excel
+- QuestPDF para PDF
 
 Importacao:
 - Leitura simples nativa para CSV basico

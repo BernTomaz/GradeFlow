@@ -52,5 +52,6 @@ Validacoes
 
 Ponto de atencao
 No MVP, a submissao pode ser manual.
-Importacao por CSV ou Excel deve ficar para uma fase posterior.
-
+Submissao manual continua sendo o fluxo base.
+Importacao em lote ja existe por CSV.
+Importacao por Excel continua como recurso futuro, se houver necessidade.

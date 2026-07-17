@@ -3,6 +3,9 @@ GradeFlow - Etapa 11 - Importacao, Relatorios e Exportacao
 Objetivo
 Aumentar a produtividade do professor depois que o MVP estiver funcionando.
 
+Status
+Implementada no projeto atual.
+
 Tecnologias sugeridas
 CSV:
 - Leitura simples nativa, se o formato continuar basico

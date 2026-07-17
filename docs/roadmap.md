@@ -2,17 +2,25 @@
 
 ## Curto Prazo
 
-- Importação de submissões por CSV
-- Relatórios básicos
-- Exportação de notas
+- Dashboard administrativo
+- Deploy público final
+- Cobertura ampliada de testes
 
 ## Médio Prazo
 
-- Dashboard administrativo
-- Deploy público final
+- Importação XLSX, se houver demanda real
+- Melhorias de relatórios por turma
+- Refinamentos de UX para fluxos longos de correção
 
 ## Longo Prazo
 
 - Integração com plataformas educacionais
 - Correção assistida por IA
 - Análise estatística de desempenho
+
+## Concluído
+
+- Importação de submissões por CSV
+- Relatórios básicos por avaliação
+- Exportação de notas em CSV, Excel e PDF
+- Layout administrativo responsivo com tema claro, escuro e conforme o sistema

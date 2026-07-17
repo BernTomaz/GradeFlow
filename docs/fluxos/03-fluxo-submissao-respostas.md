@@ -87,6 +87,6 @@ Validacoes
 - Resposta numerica deve poder ser convertida para numero quando a questao for Numeric
 
 Regra importante
-No MVP, submissao manual e suficiente.
-Importacao por Excel ou CSV deve ficar para depois.
-
+O fluxo manual continua sendo a base do sistema.
+Importacao em lote ja existe via CSV no fluxo de importacao.
+Importacao por Excel ainda nao foi implementada.

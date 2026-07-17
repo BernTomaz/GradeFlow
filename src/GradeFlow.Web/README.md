@@ -15,6 +15,8 @@ Esta aplicação é responsável pela interface de usuário do sistema, consumin
 - Angular Router
 - Route Guards
 - HTTP Interceptors
+- PrimeNG Aura
+- PrimeIcons
 
 ---
 
@@ -149,7 +151,12 @@ src/
 - Gerenciamento de questões
 - Gerenciamento de submissões
 - Visualização de correções
+- Importação de submissões via CSV
+- Relatórios de avaliação
+- Exportação de relatórios em CSV, Excel e PDF
 - Controle de acesso por perfil
 - Integração com API REST do GradeFlow
+- Layout administrativo responsivo com sidebar recolhível
+- Temas claro, escuro e conforme o sistema
 
 > Algumas funcionalidades exigem autenticação e permissões específicas de usuário (Admin, Teacher ou Student).

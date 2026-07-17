@@ -3,8 +3,9 @@ GradeFlow - Fluxo 08 - Importacao CSV
 Objetivo
 Permitir importar respostas de muitos alunos por CSV sem cadastrar tudo manualmente.
 
-Quando implementar
-Depois do MVP manual, correcao automatica e revisao basica.
+Status
+Implementado para CSV.
+Importacao XLSX continua como recurso futuro.
 
 Usuario principal
 Professor.
@@ -51,12 +52,12 @@ Backend:
 - Validacao de arquivo
 
 Leitura de CSV:
-- CsvHelper
+- Parser simples no service de submissao
+- CsvHelper deve ser considerado apenas se o formato passar a exigir separadores escapados, aspas complexas ou mais variacoes
 
 Leitura de Excel:
 - Nao implementada no fluxo atual
 - ClosedXML deve ser usado se a importacao XLSX for adicionada no futuro
-- EPPlus, observando licenca
 
 Banco:
 - EF Core
@@ -80,5 +81,5 @@ Validacoes
 - Erros parciais por linha
 
 Regra importante
-Nao comece por importacao.
-Primeiro faca a submissao manual funcionar.
+O sistema aceita importacao de submissões por CSV.
+Excel e PDF estao disponiveis apenas para exportacao.

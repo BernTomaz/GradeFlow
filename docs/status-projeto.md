@@ -2,7 +2,13 @@
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
+O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
+
+## Etapa Atual
+
+- Etapas 01 a 11 concluídas.
+- Próximo trabalho funcional: Etapa 12, recursos futuros.
+- Próximo trabalho operacional: Etapa 13, deploy público final.
 
 ## Implementado
 
@@ -51,6 +57,9 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - CORS configurado por ambiente
 - Health check em `/health`
 - Testes automatizados
+- Importação CSV de submissões
+- Relatório de desempenho por avaliação
+- Exportação de resultados em CSV, Excel e PDF
 
 ### Frontend
 
@@ -67,6 +76,10 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - CRUD de questões
 - CRUD de submissões
 - Visualização de resultados de correção
+- Importação de submissões via CSV
+- Exportação de relatórios em CSV, Excel e PDF
+- Layout administrativo responsivo com sidebar recolhível
+- Temas claro, escuro e conforme o sistema
 
 ### DevOps e Operação
 
@@ -75,14 +88,12 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - Health checks da API e do banco
 - Estratégia controlada de migrations com script idempotente
 
-## Planejado
+## Próximos Passos
 
-- Importação de submissões por CSV
-- Relatórios de desempenho por turma
-- Exportação de notas
 - Dashboard com métricas
 - Deploy público para demonstração
 - Cobertura ampliada de testes
+- Melhorias futuras de importação, como XLSX, se houver necessidade real
 
 ## Tipos de Questão Suportados
 

@@ -25,7 +25,9 @@ A documentação detalhada está dividida por assunto, etapa, fluxo e operação
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados e autenticação baseada em perfis.
+O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
+
+Etapas 01 a 11 concluídas. Os próximos trabalhos são recursos futuros, dashboard e deploy público final.
 
 Detalhes completos: [status do projeto](docs/status-projeto.md).
 
@@ -75,6 +77,8 @@ Frontend:
 - TypeScript
 - Reactive Forms
 - HttpClient
+- PrimeNG Aura
+- PrimeIcons
 
 Testes:
 

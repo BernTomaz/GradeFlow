@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 04 - correção Automatica
+GradeFlow - Fluxo 04 - Correção Automática
 
 Objetivo
 Corrigir automaticamente as respostas de uma submissão com base no tipo de questão e no gabarito estruturado.
@@ -36,7 +36,7 @@ Multipla escolha:
 Verdadeiro ou falso:
 - Comparar true/false.
 
-numérica:
+Numérica:
 - Converter resposta do aluno para número.
 - Comparar com resposta correta.
 - Usar tolerância.
@@ -94,7 +94,7 @@ Frontend:
 - Angular Service
 - Tela de resultado
 - Botao de corrigir
-- Exibicao de nota e feedback
+- Exibição de nota e feedback
 
 Testes recomendados
 - xUnit

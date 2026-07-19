@@ -13,7 +13,7 @@ Teste primeiro as strategies de correção.
 Depois teste o CorrectionService.
 Controllers podem ficar para uma etapa posterior.
 
-Testes obrigatorios
+Testes obrigatórios
 MultipleChoiceCorrectionStrategy:
 - Deve acertar quando alternativa for igual ao gabarito.
 - Deve errar quando alternativa for diferente do gabarito.
@@ -24,7 +24,7 @@ TrueFalseCorrectionStrategy:
 NumericCorrectionStrategy:
 - Deve acertar quando resposta estiver dentro da tolerância.
 - Deve errar quando resposta estiver fora da tolerância.
-- Deve marcar erro quando resposta Não for numérica.
+- Deve marcar erro quando resposta não for numérica.
 
 ShortTextCorrectionStrategy:
 - Deve ignorar maiúsculas e minúsculas.
@@ -39,5 +39,5 @@ CorrectionService:
 - Deve atualizar status da submissão.
 
 Ponto de atenção
-Se o motor de correção Não tem teste, o projeto perde confiança.
-Essa e a parte mais importante para provar maturidade tecnica.
+Se o motor de correção não tem teste, o projeto perde confiança.
+Essa é a parte mais importante para provar maturidade técnica.

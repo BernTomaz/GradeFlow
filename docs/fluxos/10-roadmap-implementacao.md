@@ -3,7 +3,7 @@ GradeFlow - Roadmap de Implementacao
 Objetivo
 Organizar a ordem real de desenvolvimento do projeto.
 
-Fase 1 - MVP tecnico
+Fase 1 - MVP técnico
 1. Criar solution .NET.
 2. Criar projetos Api, Application, Domain e Infrastructure.
 3. Configurar EF Core.
@@ -35,11 +35,11 @@ Fase 3 - Qualidade
 5. Testar CorrectionService.
 6. Testar fluxo completo de submissão e correção.
 
-Fase 4 - revisão e auditoria
+Fase 4 - Revisão e auditoria
 1. Criar tela de revisão manual.
 2. Criar endpoint de revisão.
 3. Criar tabela CorrectionLog.
-4. Registrar alteracoes de nota.
+4. Registrar alterações de nota.
 5. Recalcular nota final após revisão.
 
 Fase 5 - autenticação
@@ -53,7 +53,7 @@ Fase 5 - autenticação
 8. Criar interceptor HTTP.
 9. Implementar alteração de senha autenticada.
 
-Fase 5.1 - Preparacao DevOps local
+Fase 5.1 - Preparação DevOps Local
 1. Criar CI com GitHub Actions.
 2. Adicionar health check.
 3. Configurar CORS por ambiente.
@@ -66,7 +66,7 @@ Status: implementada para importação CSV, relatórios, exportação CSV, expor
 2. Importar Excel futuramente, se XLSX for necessário.
 3. Exportar resultado em CSV e Excel.
 4. Exportar relatório em PDF.
-5. Criar relatórios basicos.
+5. Criar relatórios básicos.
 
 Fase 7 - Deploy público final
 1. Escolher hospedagem.
@@ -76,20 +76,20 @@ Fase 7 - Deploy público final
 5. Publicar frontend.
 6. Validar ambiente público.
 
-Fase 8 - Expansao academica
+Fase 8 - Expansao acadêmica
 1. Criar Course.
 2. Criar Classroom.
 3. Criar Student.
 4. Vincular avaliação a turma.
-5. Ver historico do aluno.
+5. Ver histórico do aluno.
 
-Fase 9 - Recursos avancados
-1. questão multi-selecao.
+Fase 9 - Recursos avançados
+1. questão multi-seleção.
 2. pontuação parcial.
 3. Texto com similaridade.
 4. questão discursiva com rubrica.
 5. Upload de arquivos.
-6. Extracao de texto.
+6. Extração de texto.
 7. IA assistiva.
 8. OCR.
 
@@ -114,11 +114,11 @@ Testes:
 - FluentAssertions
 - Moq, se necessário
 
-exportação:
+Exportação:
 - ClosedXML para Excel
 - QuestPDF para PDF
 
-importação:
+Importação:
 - Leitura simples nativa para CSV básico
 - ClosedXML para Excel, se importação XLSX for implementada
 

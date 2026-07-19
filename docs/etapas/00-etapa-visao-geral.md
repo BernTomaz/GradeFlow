@@ -1,4 +1,4 @@
-GradeFlow - Etapa 00 - Visao Geral
+GradeFlow - Etapa 00 - Visão Geral
 
 Objetivo do projeto
 Criar um sistema web para cadastro de avaliações, questões, gabaritos estruturados, respostas de alunos, correção automática e revisão manual de notas.
@@ -49,7 +49,7 @@ Segue a ordem oficial de implementacao pelos arquivos da pasta `docs/etapas`.
 8. Testes
 9. Revisão manual e auditoria
 10. Login e permissões
-11. Preparacao DevOps local
+11. Preparação DevOps Local
 12. Importação, relatórios e exportação
 13. Recursos futuros
 14. Deploy público final

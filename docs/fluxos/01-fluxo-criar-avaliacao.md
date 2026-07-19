@@ -9,7 +9,7 @@ Professor.
 Fluxo funcional
 1. Professor acessa a tela de avaliações.
 2. Clica em criar nova avaliação.
-3. Informa titulo, descricao, disciplina e status.
+3. Informa título, descrição, disciplina e status.
 4. Sistema salva a avaliação.
 5. Sistema exibe a avaliação criada na lista.
 
@@ -77,13 +77,13 @@ Frontend:
 - Reactive Forms
 - HttpClient
 
-Validacoes
-- Title obrigatorio
+Validações
+- Title obrigatório
 - Title com tamanho máximo
 - Description opcional
 - Subject opcional no MVP
 
 Regra importante
-A avaliação ainda Não precisa ter login no MVP.
+A avaliação ainda não precisa ter login no MVP.
 Primeiro valide se o fluxo de criação funciona.
 Depois da etapa de login, o backend passa a validar ownership da avaliação.

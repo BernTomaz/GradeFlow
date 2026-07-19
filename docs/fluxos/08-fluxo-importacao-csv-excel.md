@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 08 - importação CSV
+GradeFlow - Fluxo 08 - Importação CSV
 
 Objetivo
 Permitir importar respostas de muitos alunos por CSV sem cadastrar tudo manualmente.
@@ -33,7 +33,7 @@ Formato atual:
 - CSV
 
 Excel:
-- importação XLSX ainda Não implementada.
+- importação XLSX ainda não implementada.
 - ClosedXML deve ser usado apenas se a importação XLSX for adicionada.
 
 DTO de retorno sugerido
@@ -70,13 +70,13 @@ Frontend:
 - HttpClient
 - Tela de resumo de importação
 
-Validacoes
+Validações
 - Arquivo vazio
-- Extensao invalida
-- MIME type invalido
+- Extensao inválida
+- MIME type inválido
 - Colunas obrigatórias ausentes
-- questão inexistente
-- Resposta numérica invalida
+- Questão inexistente
+- Resposta numérica inválida
 - Linha duplicada
 - Erros parciais por linha
 

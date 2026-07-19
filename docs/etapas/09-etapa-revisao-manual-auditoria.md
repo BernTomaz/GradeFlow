@@ -1,4 +1,4 @@
-GradeFlow - Etapa 09 - revisão Manual e Auditoria
+GradeFlow - Etapa 09 - Revisão Manual e Auditoria
 
 Objetivo
 Permitir que o professor revise respostas e ajuste notas quando necessário.
@@ -50,5 +50,5 @@ Tarefas
 - Criar tela de revisão no Angular
 
 Ponto de atenção
-Auditoria e essencial.
-O sistema precisa explicar por que uma nota foi atribuida ou alterada.
+Auditoria é essencial.
+O sistema precisa explicar por que uma nota foi atribuída ou alterada.

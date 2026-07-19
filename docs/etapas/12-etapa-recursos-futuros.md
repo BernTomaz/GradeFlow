@@ -3,7 +3,7 @@ GradeFlow - Etapa 12 - Recursos Futuros
 Objetivo
 Listar evolucoes futuras sem misturar com o MVP.
 
-Observacao
+Observação
 O deploy público final fica na etapa 13, depois que as funcionalidades escolhidas para demonstração estiverem fechadas.
 
 Recursos futuros
@@ -15,7 +15,7 @@ Recursos futuros
 - pontuação parcial
 - questões discursivas com rubrica
 - Upload de arquivos
-- Extracao de texto de PDF e DOCX
+- Extração de texto de PDF e DOCX
 - OCR
 - IA assistiva
 
@@ -45,7 +45,7 @@ IA:
 - Sugestao de pontuação
 
 Regra para IA
-IA deve sugerir, Não decidir sozinha.
+IA deve sugerir, não decidir sozinha.
 Respostas discursivas precisam continuar revisaveis por professor.
 
 Ponto de atenção

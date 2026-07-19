@@ -21,18 +21,18 @@ GradeFlow.Api:
 - Controllers
 - Swagger
 - Middlewares
-- Configuracoes da aplicação
+- Configurações da aplicação
 
 GradeFlow.Application:
 - Services
 - DTOs
 - Casos de uso
-- Validacoes
+- Validações
 
 GradeFlow.Domain:
 - Entidades
 - Enums
-- Regras de negocio
+- Regras de negócio
 - Interfaces do motor de correção
 
 GradeFlow.Infrastructure:
@@ -40,7 +40,7 @@ GradeFlow.Infrastructure:
 - DbContext
 - Migrations
 - Repositorios
-- Configuracao de banco
+- Configuração de banco
 
 Tarefas
 - Criar solution GradeFlow
@@ -59,5 +59,5 @@ dotnet new classlib -n GradeFlow.Infrastructure
 
 Ponto de atenção
 Não complique demais a arquitetura no início.
-A separação deve ajudar, Não travar o desenvolvimento.
+A separação deve ajudar, não travar o desenvolvimento.
 

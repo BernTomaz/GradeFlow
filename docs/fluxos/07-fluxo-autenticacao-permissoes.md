@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 07 - autenticação e permissões
+GradeFlow - Fluxo 07 - Autenticação e Permissões
 
 Objetivo
 Controlar o acesso ao sistema por perfil de usuário.
@@ -77,11 +77,11 @@ Teacher:
 - Pode gerenciar apenas suas avaliações.
 
 Student:
-- Pode ver apenas suas proprias submissões.
+- Pode ver apenas suas próprias submissões.
 
-Observacao
+Observação
 O endpoint atual `refresh-token` reemite access token.
-Refresh token persistente, revogavel e rotacionado fica para etapa futura.
+Refresh token persistente, revogável e rotacionado fica para etapa futura.
 
 Cuidados
 - Nunca salvar senha pura.
@@ -90,5 +90,5 @@ Cuidados
 - Não expor PasswordHash em responses.
 
 Regra importante
-Login e importante, mas Não prova o valor do projeto.
-O valor e provado pelo motor de correção funcionando.
+Login é importante, mas não prova o valor do projeto.
+O valor é provado pelo motor de correção funcionando.

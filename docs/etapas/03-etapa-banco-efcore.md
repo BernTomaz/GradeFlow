@@ -9,7 +9,7 @@ Tecnologias
 - Migrations
 
 Banco recomendado
-Se voce usa Visual Studio e quer menos atrito, comece com SQL Server.
+Se você usa Visual Studio e quer menos atrito, comece com SQL Server.
 Se quiser padronizar o projeto, mantenha SQL Server do início ao fim.
 
 Tarefas

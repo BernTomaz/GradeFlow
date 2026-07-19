@@ -40,7 +40,7 @@ Tarefas
 - Criar DTOs
 - Criar AssignmentService
 - Criar QuestionService
-- Validar dados obrigatorios
+- Validar dados obrigatórios
 - Salvar gabarito junto com questão
 - Testar endpoints no Swagger
 

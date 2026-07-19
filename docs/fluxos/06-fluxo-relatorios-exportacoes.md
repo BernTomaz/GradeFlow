@@ -1,7 +1,7 @@
-GradeFlow - Fluxo 06 - relatórios e Exportacoes
+GradeFlow - Fluxo 06 - Relatórios e Exportações
 
 Objetivo
-Transformar os resultados das correcoes em informacoes uteis para professor e instituicao.
+Transformar os resultados das correções em informações úteis para professor e instituição.
 
 usuário principal
 Professor.
@@ -14,9 +14,9 @@ Fluxo funcional
 5. Sistema exibe resumo da turma.
 6. Professor pode exportar os resultados.
 
-relatórios iniciais
+Relatórios iniciais
 - Nota por aluno
-- Media da turma
+- Média da turma
 - Maior nota
 - Menor nota
 - Quantidade de submissões corrigidas
@@ -54,10 +54,10 @@ Banco:
 - Evitar N+1 queries
 - Buscar resultados em lote
 
-exportação Excel:
+Exportação Excel:
 - ClosedXML
 
-exportação PDF:
+Exportação PDF:
 - QuestPDF
 
 Frontend:
@@ -67,6 +67,6 @@ Frontend:
 - Botao para exportar
 
 Regra importante
-relatório so deve vir depois da correção funcionar.
-Dashboard bonito antes do motor de correção e desperdicio.
+Relatório só deve vir depois da correção funcionar.
+Dashboard bonito antes do motor de correção e desperdício.
 Adicionar bibliotecas de exportação apenas quando a exportação for implementada.

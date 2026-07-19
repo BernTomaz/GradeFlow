@@ -8,7 +8,7 @@ Somente depois do MVP, autenticação, importação e revisão manual estarem fu
 
 Fluxo de upload
 1. Professor ou aluno envia arquivo.
-2. Sistema valida extensao, tamanho e MIME type.
+2. Sistema valida extensão, tamanho e MIME type.
 3. Sistema armazena arquivo.
 4. Sistema registra metadados.
 5. Sistema tenta extrair texto, se aplicavel.
@@ -36,7 +36,7 @@ Armazenamento:
 - Disco local no desenvolvimento
 - Azure Blob Storage, AWS S3 ou similar em produção
 
-Extracao de texto
+Extração de texto
 PDF pesquisavel:
 - PdfPig
 - iText, observando licenca
@@ -59,18 +59,18 @@ Usos recomendados:
 - Sugerir pontuação
 
 Cuidados com IA
-- IA deve sugerir, Não decidir sozinha.
+- IA deve sugerir, não decidir sozinha.
 - Respostas discursivas precisam de revisão humana.
 - OCR pode errar caracteres.
-- Escrita manual e muito mais dificil que texto digitado.
+- Escrita manual é muito mais difícil que texto digitado.
 
 Frontend:
 - Angular upload component
 - Barra de progresso
-- Exibicao do texto extraido
+- Exibição do texto extraido
 - Tela de revisão da sugestão da IA
 
 Regra importante
-IA e OCR Não devem entrar no MVP.
+IA e OCR não devem entrar no MVP.
 Sem motor de correção confiável, IA vira enfeite caro.
 

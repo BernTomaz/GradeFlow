@@ -2,9 +2,9 @@
 
 ## Objetivo
 
-Publicar o GradeFlow em ambiente público somente quando as funcionalidades principais e documentacao estiverem concluídas.
+Publicar o GradeFlow em ambiente público somente quando as funcionalidades principais e documentação estiverem concluídas.
 
-está etapa fecha o projeto como demonstração profissional de portfolio.
+Esta etapa fecha o projeto como demonstração profissional de portfolio.
 
 ---
 
@@ -22,7 +22,7 @@ Antes desta etapa, devem estar concluídas:
 
 ---
 
-## decisão de hospedagem
+## Decisão de Hospedagem
 
 Escolher apenas uma arquitetura de deploy.
 
@@ -104,7 +104,7 @@ Nunca versionar ou imprimir:
 
 ---
 
-## validação pública
+## Validação Pública
 
 Validar:
 
@@ -151,25 +151,25 @@ Adicionar:
 
 - URL pública;
 - arquitetura de hospedagem;
-- instrucoes de demonstração;
+- instruções de demonstração;
 - usuário demo, somente se criado de forma segura;
 - limitacoes conhecidas;
 - status do CI.
 
 ---
 
-## critérios de aceite
+## Critérios de Aceite
 
 - CD realiza deploy automatizado.
 - Backend está publicado com HTTPS.
 - Frontend está publicado com HTTPS.
 - Frontend usa URL pública da API.
 - CORS permite apenas origens esperadas.
-- Banco e persistente.
+- Banco é persistente.
 - Migrations seguem estratégia controlada.
-- Secrets Não aparecem no repositório nem nos logs.
+- Secrets não aparecem no repositório nem nos logs.
 - Rollback está documentado.
-- README possui links e instrucoes atualizadas.
+- README possui links e instruções atualizadas.
 
 ## Commit sugerido
 

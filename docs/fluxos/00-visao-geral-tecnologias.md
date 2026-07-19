@@ -1,4 +1,4 @@
-GradeFlow - Visao Geral e Tecnologias
+GradeFlow - Visão Geral e Tecnologias
 
 Objetivo do sistema
 Criar uma plataforma web para professores criarem avaliações, cadastrarem questões e gabaritos estruturados, receberem respostas de alunos, corrigirem automaticamente quando possível e revisarem manualmente quando necessário.
@@ -34,7 +34,7 @@ Banco de dados:
 ORM:
 - Entity Framework Core
 
-autenticação:
+Autenticação:
 - JWT
 - Refresh Token em etapa posterior
 
@@ -54,18 +54,18 @@ GradeFlow.Api:
 - Controllers
 - Swagger
 - Middlewares
-- Configuracoes da aplicação
+- Configurações da aplicação
 
 GradeFlow.Application:
 - DTOs
 - Services
-- Validacoes
+- Validações
 - Casos de uso
 
 GradeFlow.Domain:
 - Entidades
 - Enums
-- Regras puras de negocio
+- Regras puras de negócio
 - Interfaces do motor de correção
 
 GradeFlow.Infrastructure:

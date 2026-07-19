@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 05 - revisão Manual
+GradeFlow - Fluxo 05 - Revisão Manual
 
 Objetivo
 Permitir que o professor revise e ajuste a correção automática quando necessário.
@@ -69,7 +69,7 @@ Banco:
 Frontend:
 - Angular Component para revisão
 - Textarea para feedback
-- Input numerico para pontuação
+- Input numérico para pontuação
 - Visualização lado a lado de resposta e gabarito
 
 Cuidados

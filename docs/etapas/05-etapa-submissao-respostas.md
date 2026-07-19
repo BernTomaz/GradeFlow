@@ -1,4 +1,4 @@
-GradeFlow - Etapa 05 - submissão de Respostas
+GradeFlow - Etapa 05 - Submissão de Respostas
 
 Objetivo
 Permitir inserir respostas de um aluno para uma avaliação.
@@ -43,15 +43,15 @@ SubmissionResponse:
 - FinalScore
 - Answers
 
-Validacoes
-- StudentName obrigatorio
+Validações
+- StudentName obrigatório
 - Assignment precisa existir
 - QuestionId precisa existir
 - Question precisa pertencer a Assignment
-- Resposta Não deve ser nula
+- Resposta não deve ser nula
 
 Ponto de atenção
 No MVP, a submissão pode ser manual.
-submissão manual continua sendo o fluxo base.
-importação em lote já existe por CSV.
-importação por Excel continua como recurso futuro, se houver necessidade.
+Submissão manual continua sendo o fluxo base.
+Importação em lote já existe por CSV.
+Importação por Excel continua como recurso futuro, se houver necessidade.

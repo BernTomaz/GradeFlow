@@ -1,4 +1,4 @@
-GradeFlow - Fluxo 03 - submissão de Respostas
+GradeFlow - Fluxo 03 - Submissão de Respostas
 
 Objetivo
 Permitir inserir respostas de um aluno para uma avaliação.
@@ -80,13 +80,13 @@ Frontend:
 - HttpClient
 - Component de submissão manual
 
-Validacoes
-- StudentName obrigatorio
+Validações
+- StudentName obrigatório
 - Cada resposta deve estar vinculada a uma Question existente
 - A Question precisa pertencer a Assignment informada
 - Resposta numérica deve poder ser convertida para número quando a questão for Numeric
 
 Regra importante
 O fluxo manual continua sendo a base do sistema.
-importação em lote já existe via CSV no fluxo de importação.
-importação por Excel ainda Não foi implementada.
+Importação em lote já existe via CSV no fluxo de importação.
+Importação por Excel ainda não foi implementada.

@@ -41,7 +41,7 @@ Teacher:
 - Pode gerenciar suas avaliações.
 
 Student:
-- Pode ver suas proprias submissões.
+- Pode ver suas próprias submissões.
 
 Tarefas
 - Criar entidade User
@@ -54,11 +54,11 @@ Tarefas
 - Criar guards no Angular
 - Criar interceptor para enviar token
 
-Observacao
-O endpoint atual `refresh-token` reemite um access token, mas ainda Não implementa refresh token persistente, revogavel e rotacionado.
+Observação
+O endpoint atual `refresh-token` reemite um access token, mas ainda não implementa refresh token persistente, revogável e rotacionado.
 Refresh token completo fica como melhoria futura.
 
 Ponto de atenção
 Nunca salve senha pura.
 Nunca confie apenas na permissão do frontend.
-permissão real precisa ser validada no backend.
+Permissão real precisa ser validada no backend.

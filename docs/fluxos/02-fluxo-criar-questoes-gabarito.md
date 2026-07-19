@@ -99,5 +99,5 @@ questão de texto curto precisa de normalizacao.
 questão de multipla escolha precisa comparar alternativas.
 
 Regra importante
-O gabarito estruturado e o que diferencia esse projeto de um sistema fraco.
+O gabarito estruturado é o que diferencia esse projeto de um sistema fraco.
 

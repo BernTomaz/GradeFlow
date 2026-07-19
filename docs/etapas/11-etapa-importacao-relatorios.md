@@ -1,4 +1,4 @@
-GradeFlow - Etapa 11 - importação, relatórios e exportação
+GradeFlow - Etapa 11 - Importação, Relatórios e Exportação
 
 Objetivo
 Aumentar a produtividade do professor depois que o MVP estiver funcionando.
@@ -27,7 +27,7 @@ Frontend:
 - Upload com FormData
 - Tabelas de relatório
 
-importação CSV
+Importação CSV
 Endpoint:
 POST /api/assignments/{assignmentId}/submissions/import
 
@@ -38,11 +38,11 @@ Exemplo:
 student_name,student_email,q1,q2,q3,q4
 Ana,ana@email.com,A,10,Resposta curta,V
 
-Validacoes:
+Validações:
 - Arquivo vazio
 - Colunas obrigatórias ausentes
-- questão inexistente
-- Resposta invalida
+- Questão inexistente
+- Resposta inválida
 - Linha duplicada
 
 relatórios
@@ -51,11 +51,11 @@ GET /api/assignments/{assignmentId}/report
 
 Indicadores:
 - Nota por aluno
-- Media da turma
+- Média da turma
 - Maior nota
 - Menor nota
-- questões com mais erros
-- questões com mais acertos
+- Questões com mais erros
+- Questões com mais acertos
 
 exportação
 Endpoints:
@@ -63,10 +63,10 @@ GET /api/assignments/{assignmentId}/export/csv
 GET /api/assignments/{assignmentId}/export/excel
 GET /api/assignments/{assignmentId}/export/pdf
 
-Observacao:
+Observação:
 - A importação atual aceita CSV.
 - Excel e PDF estão disponíveis apenas para exportação.
 
 Ponto de atenção
-relatório e importação só fazem sentido depois que a correção base estiver confiável.
+Relatório e importação só fazem sentido depois que a correção base estiver confiável.
 Não adicionar biblioteca antes de confirmar que a funcionalidade precisa dela.

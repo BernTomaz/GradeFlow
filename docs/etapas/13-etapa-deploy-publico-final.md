@@ -1,14 +1,14 @@
-# GradeFlow - Etapa 13 - Deploy público Final
+# GradeFlow - Etapa 13 - Deploy Público Final
 
 ## Objetivo
 
 Publicar o GradeFlow em ambiente público somente quando as funcionalidades principais e documentação estiverem concluídas.
 
-Esta etapa fecha o projeto como demonstração profissional de portfolio.
+Esta etapa publica o MVP já fechado para demonstração profissional de portfólio.
 
 ---
 
-## Pre-requisitos
+## Pré-requisitos
 
 Antes desta etapa, devem estar concluídas:
 
@@ -17,7 +17,7 @@ Antes desta etapa, devem estar concluídas:
 - endpoint `/health`;
 - Docker local;
 - estratégia controlada de migrations;
-- funcionalidades planejadas antes do deploy;
+- Etapa 12 concluída;
 - decisão de hospedagem e custo.
 
 ---
@@ -33,7 +33,7 @@ Possibilidades:
 - Azure App Service;
 - Render;
 - Railway;
-- servico de containers compativel.
+- serviço de containers compatível.
 
 ### Frontend
 
@@ -45,17 +45,17 @@ Possibilidades:
 ### Banco
 
 - Azure SQL;
-- SQL Server gerenciado compativel.
+- SQL Server gerenciado compatível.
 
 A escolha deve considerar:
 
 - custo;
 - plano gratuito;
-- suspensao em plano gratuito;
+- suspensão em plano gratuito;
 - suporte a Docker;
 - HTTPS;
 - variáveis de ambiente;
-- integracao GitHub;
+- integração GitHub;
 - banco persistente;
 - facilidade de demonstração.
 
@@ -73,16 +73,16 @@ Executar:
 
 - apenas na `main`;
 - somente após CI aprovado;
-- com environment protegido, se disponivel.
+- com environment protegido, se disponível.
 
-Possiveis etapas:
+Possíveis etapas:
 
 - build de imagens;
-- publicacao no GHCR, se a hospedagem consumir imagens;
+- publicação no GHCR, se a hospedagem consumir imagens;
 - aplicação controlada de migrations;
 - deploy backend;
 - deploy frontend;
-- smoke test pos-deploy.
+- smoke test pós-deploy.
 
 ---
 
@@ -128,13 +128,13 @@ Frontend:
 
 - carregamento inicial;
 - rotas Angular;
-- refresh de pagina;
+- refresh de página;
 - login/logout;
-- navegacao protegida;
+- navegação protegida;
 - chamadas para API pública;
 - mensagens de erro;
-- ausencia de mixed content;
-- HTTPS valido.
+- ausência de mixed content;
+- HTTPS válido.
 
 Observabilidade mínima:
 
@@ -153,7 +153,7 @@ Adicionar:
 - arquitetura de hospedagem;
 - instruções de demonstração;
 - usuário demo, somente se criado de forma segura;
-- limitacoes conhecidas;
+- limitações conhecidas;
 - status do CI.
 
 ---

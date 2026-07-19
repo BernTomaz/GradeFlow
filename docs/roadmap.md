@@ -2,12 +2,13 @@
 
 ## Curto Prazo
 
-- Dashboard administrativo
+- Fechamento para demonstração do MVP
+- Dashboard administrativo simples
 - Deploy público final
-- Cobertura ampliada de testes
 
 ## Médio Prazo
 
+- Cobertura ampliada de testes
 - Importação XLSX, se houver demanda real
 - Melhorias de relatórios por turma
 - Refinamentos de UX para fluxos longos de correção

@@ -68,7 +68,15 @@ Status: implementada para importação CSV, relatórios, exportação CSV, expor
 4. Exportar relatório em PDF.
 5. Criar relatórios básicos.
 
-Fase 7 - Deploy público final
+Fase 7 - Fechamento para demonstração
+1. Revisar fluxo principal de ponta a ponta.
+2. Criar dashboard administrativo simples, se necessário.
+3. Melhorar mensagens de erro e estados vazios.
+4. Preparar dados de demonstração.
+5. Atualizar documentação do MVP.
+6. Validar build, testes e fluxo manual.
+
+Fase 8 - Deploy público final
 1. Escolher hospedagem.
 2. Configurar secrets.
 3. Aplicar migrations de forma controlada.
@@ -76,18 +84,18 @@ Fase 7 - Deploy público final
 5. Publicar frontend.
 6. Validar ambiente público.
 
-Fase 8 - Expansao acadêmica
+Fase 9 - Expansão acadêmica
 1. Criar Course.
 2. Criar Classroom.
 3. Criar Student.
 4. Vincular avaliação a turma.
 5. Ver histórico do aluno.
 
-Fase 9 - Recursos avançados
-1. questão multi-seleção.
-2. pontuação parcial.
+Fase 10 - Recursos avançados
+1. Questão multi-seleção.
+2. Pontuação parcial.
 3. Texto com similaridade.
-4. questão discursiva com rubrica.
+4. Questão discursiva com rubrica.
 5. Upload de arquivos.
 6. Extração de texto.
 7. IA assistiva.
@@ -128,6 +136,6 @@ Arquitetura:
 - Services para casos de uso
 - Controllers finos
 
-decisão mais importante
+Decisão mais importante
 Construa primeiro o motor de correção.
 Todo o resto deve girar em torno dele.

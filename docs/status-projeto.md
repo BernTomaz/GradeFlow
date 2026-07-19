@@ -7,8 +7,9 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 ## Etapa Atual
 
 - Etapas 01 a 11 concluídas.
-- Próximo trabalho funcional: Etapa 12, recursos futuros.
+- Próximo trabalho funcional: Etapa 12, fechamento para demonstração.
 - Próximo trabalho operacional: Etapa 13, deploy público final.
+- Recursos futuros ficam organizados na Etapa 14.
 
 ## Implementado
 
@@ -90,10 +91,10 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 
 ## Próximos Passos
 
-- Dashboard com métricas
-- Deploy público para demonstração
-- Cobertura ampliada de testes
-- Melhorias futuras de importação, como XLSX, se houver necessidade real
+- Fechar o fluxo de demonstração do MVP.
+- Adicionar dashboard administrativo simples, se necessário para a demonstração.
+- Publicar o projeto em ambiente público.
+- Evoluir recursos futuros apenas depois do MVP demonstrável e publicado.
 
 ## Tipos de Questão Suportados
 

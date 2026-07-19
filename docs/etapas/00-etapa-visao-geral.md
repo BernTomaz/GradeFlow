@@ -38,7 +38,7 @@ Arquitetura planejada:
 - Domain para entidades e regras centrais
 
 Ordem recomendada
-Segue a ordem oficial de implementacao pelos arquivos da pasta `docs/etapas`.
+Segue a ordem oficial de implementação pelos arquivos da pasta `docs/etapas`.
 1. Estrutura backend
 2. Modelagem de domínio
 3. Banco com EF Core
@@ -49,10 +49,11 @@ Segue a ordem oficial de implementacao pelos arquivos da pasta `docs/etapas`.
 8. Testes
 9. Revisão manual e auditoria
 10. Login e permissões
-11. Preparação DevOps Local
-12. Importação, relatórios e exportação
-13. Recursos futuros
-14. Deploy público final
+10.1. Preparação DevOps Local
+11. Importação, relatórios e exportação
+12. Fechamento para demonstração
+13. Deploy público final
+14. Recursos futuros
 
 Ponto de atenção
 Não comece por IA, OCR, dashboard ou login complexo.

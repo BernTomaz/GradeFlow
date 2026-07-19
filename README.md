@@ -27,7 +27,7 @@ Projeto em desenvolvimento ativo.
 
 O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
 
-Etapas 01 a 11 concluídas. Os próximos trabalhos são recursos futuros, dashboard e deploy público final.
+Etapas 01 a 11 concluídas. Os próximos trabalhos são fechamento para demonstração, deploy público final e recursos futuros.
 
 Detalhes completos: [status do projeto](docs/status-projeto.md).
 
@@ -58,8 +58,9 @@ Detalhes completos: [status do projeto](docs/status-projeto.md).
 - [10 - Login e permissões](docs/etapas/10-etapa-login-permissoes.md)
 - [10.1 - CI, Docker e deploy final](docs/etapas/10.1-etapa-cicd-docker-deploy-final.md)
 - [11 - Importação e relatórios](docs/etapas/11-etapa-importacao-relatorios.md)
-- [12 - Recursos futuros](docs/etapas/12-etapa-recursos-futuros.md)
+- [12 - Fechamento para demonstração](docs/etapas/12-etapa-fechamento-demonstracao.md)
 - [13 - Deploy público final](docs/etapas/13-etapa-deploy-publico-final.md)
+- [14 - Recursos futuros](docs/etapas/14-etapa-recursos-futuros.md)
 
 ## Stack
 

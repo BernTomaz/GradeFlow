@@ -1,20 +1,20 @@
-GradeFlow - Fluxo 05 - Revisao Manual
+GradeFlow - Fluxo 05 - revisão Manual
 
 Objetivo
-Permitir que o professor revise e ajuste a correcao automatica quando necessario.
+Permitir que o professor revise e ajuste a correção automática quando necessário.
 
-Usuario principal
+usuário principal
 Professor.
 
 Fluxo funcional
-1. Professor abre o resultado da submissao.
-2. Sistema mostra questao, resposta do aluno, gabarito e nota sugerida.
-3. Professor altera a pontuacao se necessario.
+1. Professor abre o resultado da submissão.
+2. Sistema mostra questão, resposta do aluno, gabarito e nota sugerida.
+3. Professor altera a pontuação se necessário.
 4. Professor adiciona feedback manual.
 5. Professor marca resposta como revisada.
 6. Sistema atualiza a nota da resposta.
-7. Sistema recalcula a nota final da submissao.
-8. Sistema registra log da revisao.
+7. Sistema recalcula a nota final da submissão.
+8. Sistema registra log da revisão.
 
 Entidades envolvidas
 StudentAnswer:
@@ -67,16 +67,16 @@ Banco:
 - Recalculo de FinalScore em Submission
 
 Frontend:
-- Angular Component para revisao
+- Angular Component para revisão
 - Textarea para feedback
-- Input numerico para pontuacao
-- Visualizacao lado a lado de resposta e gabarito
+- Input numerico para pontuação
+- Visualização lado a lado de resposta e gabarito
 
 Cuidados
-Sem log, o sistema nao consegue explicar por que uma nota foi alterada.
-Em sistema de correcao, auditabilidade e parte central do produto.
+Sem log, o sistema não consegue explicar por que uma nota foi alterada.
+Em sistema de correção, auditabilidade é parte central do produto.
 
 Regra importante
 A IA, se entrar no futuro, deve sugerir.
-A decisao final em questoes abertas deve continuar revisavel.
+A decisão final em questões abertas deve continuar revisavel.
 

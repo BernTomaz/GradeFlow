@@ -1,28 +1,28 @@
-GradeFlow - Fluxo 06 - Relatorios e Exportacoes
+GradeFlow - Fluxo 06 - relatórios e Exportacoes
 
 Objetivo
 Transformar os resultados das correcoes em informacoes uteis para professor e instituicao.
 
-Usuario principal
+usuário principal
 Professor.
 
 Fluxo funcional
-1. Professor abre uma avaliacao.
-2. Acessa a tela de relatorio.
-3. Sistema busca submissoes corrigidas.
+1. Professor abre uma avaliação.
+2. Acessa a tela de relatório.
+3. Sistema busca submissões corrigidas.
 4. Sistema calcula indicadores.
 5. Sistema exibe resumo da turma.
 6. Professor pode exportar os resultados.
 
-Relatorios iniciais
+relatórios iniciais
 - Nota por aluno
 - Media da turma
 - Maior nota
 - Menor nota
-- Quantidade de submissoes corrigidas
-- Quantidade de submissoes pendentes
-- Questao com maior erro
-- Questao com maior acerto
+- Quantidade de submissões corrigidas
+- Quantidade de submissões pendentes
+- questão com maior erro
+- questão com maior acerto
 
 Endpoints recomendados
 GET /api/assignments/{assignmentId}/report
@@ -54,19 +54,19 @@ Banco:
 - Evitar N+1 queries
 - Buscar resultados em lote
 
-Exportacao Excel:
+exportação Excel:
 - ClosedXML
 
-Exportacao PDF:
+exportação PDF:
 - QuestPDF
 
 Frontend:
-- Angular Component de relatorio
+- Angular Component de relatório
 - Tabela de resultados
 - Cards simples de indicadores
 - Botao para exportar
 
 Regra importante
-Relatorio so deve vir depois da correcao funcionar.
-Dashboard bonito antes do motor de correcao e desperdicio.
-Adicionar bibliotecas de exportacao apenas quando a exportacao for implementada.
+relatório so deve vir depois da correção funcionar.
+Dashboard bonito antes do motor de correção e desperdicio.
+Adicionar bibliotecas de exportação apenas quando a exportação for implementada.

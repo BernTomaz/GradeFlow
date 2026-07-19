@@ -11,13 +11,13 @@ Tecnologias
 - Angular Router
 
 Telas do MVP
-- Lista de avaliacoes
-- Criar avaliacao
-- Detalhe da avaliacao
-- Criar questao
+- Lista de avaliações
+- Criar avaliação
+- Detalhe da avaliação
+- Criar questão
 - Cadastrar gabarito
-- Criar submissao manual
-- Ver resultado da correcao
+- Criar submissão manual
+- Ver resultado da correção
 
 Estrutura sugerida
 src/app/
@@ -41,11 +41,11 @@ Tarefas
 - Criar componentes iniciais
 - Criar services para chamar API
 - Criar formularios reativos
-- Integrar tela de avaliacao com API
-- Integrar submissao manual com API
-- Integrar botao de correcao
+- Integrar tela de avaliação com API
+- Integrar submissão manual com API
+- Integrar botao de correção
 
-Ponto de atencao
-Nao gaste tempo com dashboard bonito agora.
-Primeiro faca o usuario criar, responder e corrigir uma avaliacao.
+Ponto de atenção
+Não gaste tempo com dashboard bonito agora.
+Primeiro faça o usuário criar, responder e corrigir uma avaliação.
 

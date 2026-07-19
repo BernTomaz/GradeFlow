@@ -1,15 +1,15 @@
 GradeFlow - Etapa 08 - Testes
 
 Objetivo
-Garantir que o motor de correcao funciona corretamente.
+Garantir que o motor de correção funciona corretamente.
 
 Tecnologias
 - xUnit
 - FluentAssertions
-- Moq, se necessario
+- Moq, se necessário
 
 Prioridade dos testes
-Teste primeiro as strategies de correcao.
+Teste primeiro as strategies de correção.
 Depois teste o CorrectionService.
 Controllers podem ficar para uma etapa posterior.
 
@@ -22,22 +22,22 @@ TrueFalseCorrectionStrategy:
 - Deve comparar true/false corretamente.
 
 NumericCorrectionStrategy:
-- Deve acertar quando resposta estiver dentro da tolerancia.
-- Deve errar quando resposta estiver fora da tolerancia.
-- Deve marcar erro quando resposta nao for numerica.
+- Deve acertar quando resposta estiver dentro da tolerância.
+- Deve errar quando resposta estiver fora da tolerância.
+- Deve marcar erro quando resposta Não for numérica.
 
 ShortTextCorrectionStrategy:
-- Deve ignorar maiusculas e minusculas.
+- Deve ignorar maiúsculas e minúsculas.
 - Deve ignorar acentos.
-- Deve ignorar pontuacao.
+- Deve ignorar pontuação.
 - Deve aceitar respostas alternativas.
 
 CorrectionService:
-- Deve corrigir todas as respostas de uma submissao.
+- Deve corrigir todas as respostas de uma submissão.
 - Deve somar a nota final.
 - Deve salvar CorrectionResult.
-- Deve atualizar status da submissao.
+- Deve atualizar status da submissão.
 
-Ponto de atencao
-Se o motor de correcao nao tem teste, o projeto perde confianca.
+Ponto de atenção
+Se o motor de correção Não tem teste, o projeto perde confiança.
 Essa e a parte mais importante para provar maturidade tecnica.

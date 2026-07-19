@@ -1,14 +1,14 @@
 GradeFlow - Etapa 00 - Visao Geral
 
 Objetivo do projeto
-Criar um sistema web para cadastro de avaliacoes, questoes, gabaritos estruturados, respostas de alunos, correcao automatica e revisao manual de notas.
+Criar um sistema web para cadastro de avaliações, questões, gabaritos estruturados, respostas de alunos, correção automática e revisão manual de notas.
 
 Problema que o sistema resolve
-Professores e avaliadores precisam corrigir atividades de forma mais organizada, rastreavel e menos manual, principalmente quando existem criterios objetivos de correcao.
+Professores e avaliadores precisam corrigir atividades de forma mais organizada, rastreável e menos manual, principalmente quando existem critérios objetivos de correção.
 
 Ideia central
-O projeto nao deve ser apenas um comparador de texto.
-O ponto principal deve ser um motor de correcao capaz de aplicar regras diferentes para cada tipo de questao.
+O projeto não deve ser apenas um comparador de texto.
+O ponto principal deve ser um motor de correção capaz de aplicar regras diferentes para cada tipo de questão.
 
 Tecnologias principais
 Backend:
@@ -32,28 +32,28 @@ Testes:
 
 Arquitetura planejada:
 - Clean Architecture simples
-- Strategy Pattern para o motor de correcao
+- Strategy Pattern para o motor de correção
 - Controllers finos
-- Services para regras de aplicacao
+- Services para regras de aplicação
 - Domain para entidades e regras centrais
 
 Ordem recomendada
 Segue a ordem oficial de implementacao pelos arquivos da pasta `docs/etapas`.
 1. Estrutura backend
-2. Modelagem de dominio
+2. Modelagem de domínio
 3. Banco com EF Core
-4. CRUD de avaliacoes e questoes
-5. Submissao de respostas
-6. Motor de correcao
+4. CRUD de avaliações e questões
+5. Submissão de respostas
+6. Motor de correção
 7. Frontend Angular
 8. Testes
-9. Revisao manual e auditoria
-10. Login e permissoes
+9. Revisão manual e auditoria
+10. Login e permissões
 11. Preparacao DevOps local
-12. Importacao, relatorios e exportacao
+12. Importação, relatórios e exportação
 13. Recursos futuros
-14. Deploy publico final
+14. Deploy público final
 
-Ponto de atencao
-Nao comece por IA, OCR, dashboard ou login complexo.
-Primeiro faca o sistema corrigir uma avaliacao simples de ponta a ponta.
+Ponto de atenção
+Não comece por IA, OCR, dashboard ou login complexo.
+Primeiro faça o sistema corrigir uma avaliação simples de ponta a ponta.

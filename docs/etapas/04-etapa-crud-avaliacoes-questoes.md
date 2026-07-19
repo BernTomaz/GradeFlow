@@ -1,7 +1,7 @@
-GradeFlow - Etapa 04 - CRUD de Avaliacoes, Questoes e Gabaritos
+GradeFlow - Etapa 04 - CRUD de avaliações, questões e Gabaritos
 
 Objetivo
-Criar os primeiros endpoints para cadastrar avaliacoes, questoes e gabaritos estruturados.
+Criar os primeiros endpoints para cadastrar avaliações, questões e gabaritos estruturados.
 
 Tecnologias
 - ASP.NET Core Controllers
@@ -10,14 +10,14 @@ Tecnologias
 - Entity Framework Core
 - Swagger
 
-Endpoints de avaliacoes
+Endpoints de avaliações
 POST /api/assignments
 GET  /api/assignments
 GET  /api/assignments/{id}
 PUT  /api/assignments/{id}
 DELETE /api/assignments/{id}
 
-Endpoints de questoes
+Endpoints de questões
 GET  /api/assignments/{assignmentId}/questions
 POST /api/assignments/{assignmentId}/questions
 GET  /api/questions/{id}
@@ -41,10 +41,10 @@ Tarefas
 - Criar AssignmentService
 - Criar QuestionService
 - Validar dados obrigatorios
-- Salvar gabarito junto com questao
+- Salvar gabarito junto com questão
 - Testar endpoints no Swagger
 
-Ponto de atencao
-Gabarito precisa ser estruturado por tipo de questao.
-Nao trate tudo como uma string solta.
+Ponto de atenção
+Gabarito precisa ser estruturado por tipo de questão.
+Não trate tudo como uma string solta.
 

@@ -1,17 +1,17 @@
-GradeFlow - Fluxo 01 - Criar Avaliacao
+GradeFlow - Fluxo 01 - Criar avaliação
 
 Objetivo
-Permitir que o professor crie uma avaliacao, atividade, prova ou trabalho.
+Permitir que o professor crie uma avaliação, atividade, prova ou trabalho.
 
-Usuario principal
+usuário principal
 Professor.
 
 Fluxo funcional
-1. Professor acessa a tela de avaliacoes.
-2. Clica em criar nova avaliacao.
+1. Professor acessa a tela de avaliações.
+2. Clica em criar nova avaliação.
 3. Informa titulo, descricao, disciplina e status.
-4. Sistema salva a avaliacao.
-5. Sistema exibe a avaliacao criada na lista.
+4. Sistema salva a avaliação.
+5. Sistema exibe a avaliação criada na lista.
 
 Campos principais
 Assignment:
@@ -28,7 +28,7 @@ Campos que podem ficar para depois
 - CourseId
 - ClassroomId
 
-Campo adicionado depois da autenticacao
+Campo adicionado depois da autenticação
 - TeacherUserId
 
 Endpoints recomendados
@@ -79,11 +79,11 @@ Frontend:
 
 Validacoes
 - Title obrigatorio
-- Title com tamanho maximo
+- Title com tamanho máximo
 - Description opcional
 - Subject opcional no MVP
 
 Regra importante
-A avaliacao ainda nao precisa ter login no MVP.
-Primeiro valide se o fluxo de criacao funciona.
-Depois da etapa de login, o backend passa a validar ownership da avaliacao.
+A avaliação ainda Não precisa ter login no MVP.
+Primeiro valide se o fluxo de criação funciona.
+Depois da etapa de login, o backend passa a validar ownership da avaliação.

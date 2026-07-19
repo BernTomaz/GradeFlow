@@ -92,7 +92,7 @@ SubmissionStatus:
 - Corrected
 - Reviewed
 
-Ponto de atencao
-Nao inclua User, Course, Classroom e Student no MVP inicial.
-Essas entidades entram melhor depois que a correcao estiver funcionando.
-User foi adicionado posteriormente na etapa de login e permissoes.
+Ponto de atenção
+Não inclua User, Course, Classroom e Student no MVP inicial.
+Essas entidades entram melhor depois que a correção estiver funcionando.
+User foi adicionado posteriormente na etapa de login e permissões.

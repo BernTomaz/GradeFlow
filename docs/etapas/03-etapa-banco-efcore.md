@@ -10,14 +10,14 @@ Tecnologias
 
 Banco recomendado
 Se voce usa Visual Studio e quer menos atrito, comece com SQL Server.
-Se quiser padronizar o projeto, mantenha SQL Server do inicio ao fim.
+Se quiser padronizar o projeto, mantenha SQL Server do início ao fim.
 
 Tarefas
 - Instalar pacotes do EF Core
 - Criar GradeFlowDbContext
 - Criar DbSet das entidades
 - Configurar relacionamentos
-- Configurar propriedades obrigatorias
+- Configurar propriedades obrigatórias
 - Criar primeira migration
 - Aplicar migration no banco
 
@@ -33,6 +33,6 @@ Pacotes comuns para SQL Server
 - Microsoft.EntityFrameworkCore.SqlServer
 - Microsoft.EntityFrameworkCore.Design
 
-Ponto de atencao
-Nao deixe connection string real exposta no GitHub.
+Ponto de atenção
+Não deixe connection string real exposta no GitHub.
 Use appsettings.Development.json local ou user secrets.

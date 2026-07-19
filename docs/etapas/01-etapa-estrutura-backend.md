@@ -1,7 +1,7 @@
 GradeFlow - Etapa 01 - Estrutura do Backend
 
 Objetivo
-Criar a base da API em .NET com separacao minima de responsabilidades.
+Criar a base da API em .NET com separação mínima de responsabilidades.
 
 Tecnologias
 - .NET 10
@@ -21,7 +21,7 @@ GradeFlow.Api:
 - Controllers
 - Swagger
 - Middlewares
-- Configuracoes da aplicacao
+- Configuracoes da aplicação
 
 GradeFlow.Application:
 - Services
@@ -33,7 +33,7 @@ GradeFlow.Domain:
 - Entidades
 - Enums
 - Regras de negocio
-- Interfaces do motor de correcao
+- Interfaces do motor de correção
 
 GradeFlow.Infrastructure:
 - Entity Framework Core
@@ -57,7 +57,7 @@ dotnet new classlib -n GradeFlow.Application
 dotnet new classlib -n GradeFlow.Domain
 dotnet new classlib -n GradeFlow.Infrastructure
 
-Ponto de atencao
-Nao complique demais a arquitetura no inicio.
-A separacao deve ajudar, nao travar o desenvolvimento.
+Ponto de atenção
+Não complique demais a arquitetura no início.
+A separação deve ajudar, Não travar o desenvolvimento.
 

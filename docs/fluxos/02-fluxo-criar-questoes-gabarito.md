@@ -1,22 +1,22 @@
-GradeFlow - Fluxo 02 - Criar Questoes e Gabarito
+GradeFlow - Fluxo 02 - Criar questões e Gabarito
 
 Objetivo
-Permitir que o professor cadastre questoes dentro de uma avaliacao e configure o gabarito de cada uma.
+Permitir que o professor cadastre questões dentro de uma avaliação e configure o gabarito de cada uma.
 
-Usuario principal
+usuário principal
 Professor.
 
 Fluxo funcional
-1. Professor abre uma avaliacao.
-2. Clica em adicionar questao.
+1. Professor abre uma avaliação.
+2. Clica em adicionar questão.
 3. Informa o enunciado.
-4. Escolhe o tipo da questao.
-5. Define a pontuacao.
+4. Escolhe o tipo da questão.
+5. Define a pontuação.
 6. Cadastra o gabarito.
-7. Configura regras especificas, se necessario.
-8. Sistema salva questao e gabarito.
+7. Configura regras específicas, se necessário.
+8. Sistema salva questão e gabarito.
 
-Tipos de questao do MVP
+Tipos de questão do MVP
 - MultipleChoice
 - TrueFalse
 - Numeric
@@ -79,7 +79,7 @@ Backend:
 - ASP.NET Core Controller
 - Application Service
 - Enum para QuestionType
-- Serializacao JSON para configuracoes especificas
+- Serialização JSON para configurações específicas
 
 Banco:
 - EF Core
@@ -88,15 +88,15 @@ Banco:
 
 Frontend:
 - Angular Reactive Forms
-- Select para tipo de questao
+- Select para tipo de questão
 - Campos dinamicos conforme o tipo
 - Angular Service com HttpClient
 
 Cuidados
-Nao trate todo gabarito como texto simples.
-Questao numerica precisa de tolerancia.
-Questao de texto curto precisa de normalizacao.
-Questao de multipla escolha precisa comparar alternativas.
+Não trate todo gabarito como texto simples.
+questão numérica precisa de tolerância.
+questão de texto curto precisa de normalizacao.
+questão de multipla escolha precisa comparar alternativas.
 
 Regra importante
 O gabarito estruturado e o que diferencia esse projeto de um sistema fraco.

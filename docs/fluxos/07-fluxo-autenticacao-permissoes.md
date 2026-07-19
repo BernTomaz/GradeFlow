@@ -1,11 +1,11 @@
-GradeFlow - Fluxo 07 - Autenticacao e Permissoes
+GradeFlow - Fluxo 07 - autenticação e permissões
 
 Objetivo
-Controlar o acesso ao sistema por perfil de usuario.
+Controlar o acesso ao sistema por perfil de usuário.
 
 Quando implementar
 Depois do MVP manual funcionar.
-Nao deve ser a primeira etapa.
+Não deve ser a primeira etapa.
 
 Perfis
 - Admin
@@ -13,7 +13,7 @@ Perfis
 - Student
 
 Fluxo de login
-1. Usuario informa email e senha.
+1. usuário informa email e senha.
 2. Backend valida credenciais.
 3. Backend gera JWT.
 4. Frontend armazena token de forma controlada.
@@ -53,7 +53,7 @@ AuthResponse:
 
 Tecnologias envolvidas
 Backend:
-- ASP.NET Core Identity ou autenticacao JWT manual
+- ASP.NET Core Identity ou autenticação JWT manual
 - BCrypt ou PasswordHasher
 - JWT Bearer Authentication
 - Authorization por roles
@@ -69,15 +69,15 @@ Frontend:
 - AuthService
 - Rotas protegidas
 
-Regras de permissao
+Regras de permissão
 Admin:
 - Pode ver tudo.
 
 Teacher:
-- Pode gerenciar apenas suas avaliacoes.
+- Pode gerenciar apenas suas avaliações.
 
 Student:
-- Pode ver apenas suas proprias submissoes.
+- Pode ver apenas suas proprias submissões.
 
 Observacao
 O endpoint atual `refresh-token` reemite access token.
@@ -86,9 +86,9 @@ Refresh token persistente, revogavel e rotacionado fica para etapa futura.
 Cuidados
 - Nunca salvar senha pura.
 - Nunca confiar apenas no frontend.
-- Validar permissao no backend.
-- Nao expor PasswordHash em responses.
+- Validar permissão no backend.
+- Não expor PasswordHash em responses.
 
 Regra importante
-Login e importante, mas nao prova o valor do projeto.
-O valor e provado pelo motor de correcao funcionando.
+Login e importante, mas Não prova o valor do projeto.
+O valor e provado pelo motor de correção funcionando.

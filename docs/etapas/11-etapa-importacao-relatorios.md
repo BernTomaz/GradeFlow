@@ -1,4 +1,4 @@
-GradeFlow - Etapa 11 - Importacao, Relatorios e Exportacao
+GradeFlow - Etapa 11 - importação, relatórios e exportação
 
 Objetivo
 Aumentar a produtividade do professor depois que o MVP estiver funcionando.
@@ -8,7 +8,7 @@ Implementada no projeto atual.
 
 Tecnologias sugeridas
 CSV:
-- Leitura simples nativa, se o formato continuar basico
+- Leitura simples nativa, se o formato continuar básico
 - CsvHelper, se houver muitos casos especiais de CSV
 
 Excel:
@@ -25,9 +25,9 @@ Backend:
 Frontend:
 - Angular
 - Upload com FormData
-- Tabelas de relatorio
+- Tabelas de relatório
 
-Importacao CSV
+importação CSV
 Endpoint:
 POST /api/assignments/{assignmentId}/submissions/import
 
@@ -40,12 +40,12 @@ Ana,ana@email.com,A,10,Resposta curta,V
 
 Validacoes:
 - Arquivo vazio
-- Colunas obrigatorias ausentes
-- Questao inexistente
+- Colunas obrigatórias ausentes
+- questão inexistente
 - Resposta invalida
 - Linha duplicada
 
-Relatorios
+relatórios
 Endpoint:
 GET /api/assignments/{assignmentId}/report
 
@@ -54,19 +54,19 @@ Indicadores:
 - Media da turma
 - Maior nota
 - Menor nota
-- Questoes com mais erros
-- Questoes com mais acertos
+- questões com mais erros
+- questões com mais acertos
 
-Exportacao
+exportação
 Endpoints:
 GET /api/assignments/{assignmentId}/export/csv
 GET /api/assignments/{assignmentId}/export/excel
 GET /api/assignments/{assignmentId}/export/pdf
 
 Observacao:
-- A importacao atual aceita CSV.
-- Excel e PDF estao disponiveis apenas para exportacao.
+- A importação atual aceita CSV.
+- Excel e PDF estão disponíveis apenas para exportação.
 
-Ponto de atencao
-Relatorio e importacao so fazem sentido depois que a correcao base estiver confiavel.
-Nao adicionar biblioteca antes de confirmar que a funcionalidade precisa dela.
+Ponto de atenção
+relatório e importação só fazem sentido depois que a correção base estiver confiável.
+Não adicionar biblioteca antes de confirmar que a funcionalidade precisa dela.

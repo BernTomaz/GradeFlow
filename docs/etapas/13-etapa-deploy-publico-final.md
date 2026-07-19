@@ -1,28 +1,28 @@
-# GradeFlow - Etapa 13 - Deploy Publico Final
+# GradeFlow - Etapa 13 - Deploy público Final
 
 ## Objetivo
 
-Publicar o GradeFlow em ambiente publico somente quando as funcionalidades principais e documentacao estiverem concluidas.
+Publicar o GradeFlow em ambiente público somente quando as funcionalidades principais e documentacao estiverem concluídas.
 
-Esta etapa fecha o projeto como demonstracao profissional de portfolio.
+está etapa fecha o projeto como demonstração profissional de portfolio.
 
 ---
 
 ## Pre-requisitos
 
-Antes desta etapa, devem estar concluidas:
+Antes desta etapa, devem estar concluídas:
 
 - CI validando backend e frontend;
-- configuracoes por ambiente;
+- configurações por ambiente;
 - endpoint `/health`;
 - Docker local;
-- estrategia controlada de migrations;
+- estratégia controlada de migrations;
 - funcionalidades planejadas antes do deploy;
-- decisao de hospedagem e custo.
+- decisão de hospedagem e custo.
 
 ---
 
-## Decisao de hospedagem
+## decisão de hospedagem
 
 Escolher apenas uma arquitetura de deploy.
 
@@ -54,10 +54,10 @@ A escolha deve considerar:
 - suspensao em plano gratuito;
 - suporte a Docker;
 - HTTPS;
-- variaveis de ambiente;
+- variáveis de ambiente;
 - integracao GitHub;
 - banco persistente;
-- facilidade de demonstracao.
+- facilidade de demonstração.
 
 ---
 
@@ -72,14 +72,14 @@ Arquivo esperado:
 Executar:
 
 - apenas na `main`;
-- somente apos CI aprovado;
+- somente após CI aprovado;
 - com environment protegido, se disponivel.
 
 Possiveis etapas:
 
 - build de imagens;
 - publicacao no GHCR, se a hospedagem consumir imagens;
-- aplicacao controlada de migrations;
+- aplicação controlada de migrations;
 - deploy backend;
 - deploy frontend;
 - smoke test pos-deploy.
@@ -104,7 +104,7 @@ Nunca versionar ou imprimir:
 
 ---
 
-## Validacao publica
+## validação pública
 
 Validar:
 
@@ -117,11 +117,11 @@ Validar:
 - `401`;
 - `403`;
 - ownership;
-- criacao de avaliacao;
-- criacao de questao;
-- submissao;
-- correcao;
-- revisao manual;
+- criação de avaliação;
+- criação de questão;
+- submissão;
+- correção;
+- revisão manual;
 - auditoria.
 
 Frontend:
@@ -131,12 +131,12 @@ Frontend:
 - refresh de pagina;
 - login/logout;
 - navegacao protegida;
-- chamadas para API publica;
+- chamadas para API pública;
 - mensagens de erro;
 - ausencia de mixed content;
 - HTTPS valido.
 
-Observabilidade minima:
+Observabilidade mínima:
 
 - logs de startup;
 - logs de erro;
@@ -149,26 +149,26 @@ Observabilidade minima:
 
 Adicionar:
 
-- URL publica;
+- URL pública;
 - arquitetura de hospedagem;
-- instrucoes de demonstracao;
-- usuario demo, somente se criado de forma segura;
+- instrucoes de demonstração;
+- usuário demo, somente se criado de forma segura;
 - limitacoes conhecidas;
 - status do CI.
 
 ---
 
-## Criterios de aceite
+## critérios de aceite
 
 - CD realiza deploy automatizado.
-- Backend esta publicado com HTTPS.
-- Frontend esta publicado com HTTPS.
-- Frontend usa URL publica da API.
+- Backend está publicado com HTTPS.
+- Frontend está publicado com HTTPS.
+- Frontend usa URL pública da API.
 - CORS permite apenas origens esperadas.
 - Banco e persistente.
-- Migrations seguem estrategia controlada.
-- Secrets nao aparecem no repositorio nem nos logs.
-- Rollback esta documentado.
+- Migrations seguem estratégia controlada.
+- Secrets Não aparecem no repositório nem nos logs.
+- Rollback está documentado.
 - README possui links e instrucoes atualizadas.
 
 ## Commit sugerido

@@ -1,7 +1,7 @@
-GradeFlow - Etapa 09 - Revisao Manual e Auditoria
+GradeFlow - Etapa 09 - revisão Manual e Auditoria
 
 Objetivo
-Permitir que o professor revise respostas e ajuste notas quando necessario.
+Permitir que o professor revise respostas e ajuste notas quando necessário.
 
 Tecnologias
 - ASP.NET Core
@@ -10,11 +10,11 @@ Tecnologias
 - Reactive Forms
 
 Fluxo
-1. Professor abre resultado da submissao.
-2. Sistema mostra questao, resposta do aluno, gabarito e nota sugerida.
-3. Professor altera nota, se necessario.
+1. Professor abre resultado da submissão.
+2. Sistema mostra questão, resposta do aluno, gabarito e nota sugerida.
+3. Professor altera nota, se necessário.
 4. Professor adiciona feedback.
-5. Sistema salva revisao.
+5. Sistema salva revisão.
 6. Sistema recalcula nota final.
 7. Sistema registra log.
 
@@ -44,11 +44,11 @@ ReviewStudentAnswerRequest:
 Tarefas
 - Criar CorrectionLog
 - Criar migration
-- Criar endpoint de revisao
+- Criar endpoint de revisão
 - Atualizar StudentAnswer
 - Recalcular Submission.FinalScore
-- Criar tela de revisao no Angular
+- Criar tela de revisão no Angular
 
-Ponto de atencao
+Ponto de atenção
 Auditoria e essencial.
 O sistema precisa explicar por que uma nota foi atribuida ou alterada.

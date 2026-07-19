@@ -1,10 +1,10 @@
-GradeFlow - Etapa 10 - Login e Permissoes
+GradeFlow - Etapa 10 - Login e permissões
 
 Objetivo
-Controlar acesso ao sistema por usuario e perfil depois que o MVP estiver funcionando.
+Controlar acesso ao sistema por usuário e perfil depois que o MVP estiver funcionando.
 
 Quando implementar
-Depois que o MVP de correcao estiver funcionando.
+Depois que o MVP de correção estiver funcionando.
 
 Tecnologias
 - ASP.NET Core Authentication
@@ -38,7 +38,7 @@ Admin:
 - Pode ver tudo.
 
 Teacher:
-- Pode gerenciar suas avaliacoes.
+- Pode gerenciar suas avaliações.
 
 Student:
 - Pode ver suas proprias submissões.
@@ -48,17 +48,17 @@ Tarefas
 - Criar migration
 - Criar registro
 - Criar login
-- Criar alteracao de senha autenticada
+- Criar alteração de senha autenticada
 - Gerar JWT
 - Proteger endpoints
 - Criar guards no Angular
 - Criar interceptor para enviar token
 
 Observacao
-O endpoint atual `refresh-token` reemite um access token, mas ainda nao implementa refresh token persistente, revogavel e rotacionado.
+O endpoint atual `refresh-token` reemite um access token, mas ainda Não implementa refresh token persistente, revogavel e rotacionado.
 Refresh token completo fica como melhoria futura.
 
-Ponto de atencao
+Ponto de atenção
 Nunca salve senha pura.
-Nunca confie apenas na permissao do frontend.
-Permissao real precisa ser validada no backend.
+Nunca confie apenas na permissão do frontend.
+permissão real precisa ser validada no backend.

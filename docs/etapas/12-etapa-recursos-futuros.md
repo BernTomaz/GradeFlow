@@ -4,7 +4,7 @@ Objetivo
 Listar evolucoes futuras sem misturar com o MVP.
 
 Observacao
-O deploy publico final fica na etapa 13, depois que as funcionalidades escolhidas para demonstracao estiverem fechadas.
+O deploy público final fica na etapa 13, depois que as funcionalidades escolhidas para demonstração estiverem fechadas.
 
 Recursos futuros
 - Turmas
@@ -12,8 +12,8 @@ Recursos futuros
 - Cadastro completo de alunos
 - Historico por aluno
 - Multi-selecao
-- Pontuacao parcial
-- Questoes discursivas com rubrica
+- pontuação parcial
+- questões discursivas com rubrica
 - Upload de arquivos
 - Extracao de texto de PDF e DOCX
 - OCR
@@ -42,12 +42,12 @@ IA:
 - Sugestao de feedback
 - Comparacao com rubrica
 - Identificacao de conceitos ausentes
-- Sugestao de pontuacao
+- Sugestao de pontuação
 
 Regra para IA
-IA deve sugerir, nao decidir sozinha.
+IA deve sugerir, Não decidir sozinha.
 Respostas discursivas precisam continuar revisaveis por professor.
 
-Ponto de atencao
-Nao coloque esses recursos no MVP.
-Eles sao bons, mas podem destruir o foco se entrarem cedo demais.
+Ponto de atenção
+Não coloque esses recursos no MVP.
+Eles são bons, mas podem destruir o foco se entrarem cedo demais.

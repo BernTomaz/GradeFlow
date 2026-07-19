@@ -1,7 +1,7 @@
-GradeFlow - Etapa 05 - Submissao de Respostas
+GradeFlow - Etapa 05 - submissão de Respostas
 
 Objetivo
-Permitir inserir respostas de um aluno para uma avaliacao.
+Permitir inserir respostas de um aluno para uma avaliação.
 
 Tecnologias
 - ASP.NET Core Controllers
@@ -10,12 +10,12 @@ Tecnologias
 - Entity Framework Core
 
 Fluxo
-1. Informar avaliacao.
+1. Informar avaliação.
 2. Informar nome e email do aluno.
 3. Enviar lista de respostas.
 4. Salvar Submission.
 5. Salvar StudentAnswers.
-6. Deixar submissao com status Pending.
+6. Deixar submissão com status Pending.
 
 Endpoint principal
 POST /api/assignments/{assignmentId}/submissions
@@ -48,10 +48,10 @@ Validacoes
 - Assignment precisa existir
 - QuestionId precisa existir
 - Question precisa pertencer a Assignment
-- Resposta nao deve ser nula
+- Resposta Não deve ser nula
 
-Ponto de atencao
-No MVP, a submissao pode ser manual.
-Submissao manual continua sendo o fluxo base.
-Importacao em lote ja existe por CSV.
-Importacao por Excel continua como recurso futuro, se houver necessidade.
+Ponto de atenção
+No MVP, a submissão pode ser manual.
+submissão manual continua sendo o fluxo base.
+importação em lote já existe por CSV.
+importação por Excel continua como recurso futuro, se houver necessidade.

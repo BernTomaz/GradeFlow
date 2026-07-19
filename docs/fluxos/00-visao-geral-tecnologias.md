@@ -1,21 +1,21 @@
 GradeFlow - Visao Geral e Tecnologias
 
 Objetivo do sistema
-Criar uma plataforma web para professores criarem avaliacoes, cadastrarem questoes e gabaritos estruturados, receberem respostas de alunos, corrigirem automaticamente quando possivel e revisarem manualmente quando necessario.
+Criar uma plataforma web para professores criarem avaliações, cadastrarem questões e gabaritos estruturados, receberem respostas de alunos, corrigirem automaticamente quando possível e revisarem manualmente quando necessário.
 
 Ideia central
-O sistema nao deve ser apenas um comparador de texto.
-O ponto forte deve ser o motor de correcao, onde cada tipo de questao tem uma regra propria.
+O sistema não deve ser apenas um comparador de texto.
+O ponto forte deve ser o motor de correção, onde cada tipo de questão tem uma regra própria.
 
 Fluxo macro
-1. Professor cria uma avaliacao.
-2. Professor cadastra questoes.
+1. Professor cria uma avaliação.
+2. Professor cadastra questões.
 3. Professor cadastra gabaritos.
 4. Aluno ou professor insere respostas.
-5. Sistema executa a correcao automatica.
+5. Sistema executa a correção automática.
 6. Sistema calcula a nota final.
 7. Professor revisa manualmente respostas duvidosas.
-8. Sistema gera resultado e relatorios.
+8. Sistema gera resultado e relatórios.
 
 Tecnologias recomendadas
 Backend:
@@ -34,13 +34,13 @@ Banco de dados:
 ORM:
 - Entity Framework Core
 
-Autenticacao:
+autenticação:
 - JWT
 - Refresh Token em etapa posterior
 
 Arquitetura:
 - Clean Architecture simples
-- Separacao em Api, Application, Domain e Infrastructure
+- separação em Api, Application, Domain e Infrastructure
 
 Projetos sugeridos
 src/
@@ -54,7 +54,7 @@ GradeFlow.Api:
 - Controllers
 - Swagger
 - Middlewares
-- Configuracoes da aplicacao
+- Configuracoes da aplicação
 
 GradeFlow.Application:
 - DTOs
@@ -66,7 +66,7 @@ GradeFlow.Domain:
 - Entidades
 - Enums
 - Regras puras de negocio
-- Interfaces do motor de correcao
+- Interfaces do motor de correção
 
 GradeFlow.Infrastructure:
 - Entity Framework Core
@@ -76,5 +76,5 @@ GradeFlow.Infrastructure:
 - Integracoes externas
 
 Prioridade real do MVP
-Nao comece por IA, OCR, dashboard ou login complexo.
-Comece pelo fluxo manual completo e pelo motor de correcao.
+Não comece por IA, OCR, dashboard ou login complexo.
+Comece pelo fluxo manual completo e pelo motor de correção.

@@ -1,7 +1,7 @@
-GradeFlow - Etapa 06 - Motor de Correcao
+GradeFlow - Etapa 06 - Motor de correção
 
 Objetivo
-Criar o nucleo do sistema: a correcao automatica por tipo de questao.
+Criar o núcleo do sistema: a correção automática por tipo de questão.
 
 Tecnologias
 - C#
@@ -14,8 +14,8 @@ Interface principal
 ICorrectionStrategy
 
 Responsabilidade da interface
-Receber uma questao, seu gabarito e a resposta do aluno.
-Retornar se esta correto, pontuacao, feedback e necessidade de revisao.
+Receber uma questão, seu gabarito e a resposta do aluno.
+Retornar se está correto, pontuação, feedback e necessidade de revisão.
 
 Strategies do MVP
 - MultipleChoiceCorrectionStrategy
@@ -24,11 +24,11 @@ Strategies do MVP
 - ShortTextCorrectionStrategy
 
 CorrectionService deve
-- Buscar submissao
+- Buscar submissão
 - Buscar respostas do aluno
-- Buscar questoes
+- Buscar questões
 - Buscar gabaritos
-- Identificar tipo da questao
+- Identificar tipo da questão
 - Escolher a strategy correta
 - Corrigir cada resposta
 - Salvar CorrectionResult
@@ -47,19 +47,19 @@ TrueFalse:
 - Comparar valor verdadeiro/falso.
 
 Numeric:
-- Converter resposta para numero.
-- Aplicar tolerancia.
-- Formula: abs(respostaAluno - respostaCorreta) <= tolerancia.
+- Converter resposta para número.
+- Aplicar tolerância.
+- Fórmula: abs(respostaAluno - respostaCorreta) <= tolerância.
 
 ShortText:
 - Normalizar texto.
 - Remover acentos.
-- Ignorar maiusculas/minusculas.
-- Remover pontuacao.
+- Ignorar maiúsculas/minúsculas.
+- Remover pontuação.
 - Comparar com resposta correta e respostas aceitas.
 
-Ponto de atencao
-Controller nao deve corrigir resposta.
+Ponto de atenção
+Controller não deve corrigir resposta.
 Controller chama service.
-Service chama motor de correcao.
+Service chama motor de correção.
 

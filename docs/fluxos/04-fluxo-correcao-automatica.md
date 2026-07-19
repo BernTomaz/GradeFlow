@@ -1,25 +1,25 @@
-GradeFlow - Fluxo 04 - Correcao Automatica
+GradeFlow - Fluxo 04 - correção Automatica
 
 Objetivo
-Corrigir automaticamente as respostas de uma submissao com base no tipo de questao e no gabarito estruturado.
+Corrigir automaticamente as respostas de uma submissão com base no tipo de questão e no gabarito estruturado.
 
-Usuario principal
+usuário principal
 Professor.
 
 Fluxo funcional
-1. Professor abre uma submissao.
+1. Professor abre uma submissão.
 2. Clica em corrigir.
-3. Backend busca a submissao.
+3. Backend busca a submissão.
 4. Backend carrega respostas do aluno.
-5. Backend carrega questoes e gabaritos.
+5. Backend carrega questões e gabaritos.
 6. CorrectionService percorre cada resposta.
-7. CorrectionService escolhe a estrategia correta.
-8. Strategy calcula acerto, pontuacao e feedback.
+7. CorrectionService escolhe a estratégia correta.
+8. Strategy calcula acerto, pontuação e feedback.
 9. Sistema salva CorrectionResult.
 10. Sistema soma a nota final.
-11. Sistema atualiza status da submissao.
+11. Sistema atualiza status da submissão.
 
-Motor de correcao
+Motor de correção
 Interface:
 ICorrectionStrategy
 
@@ -36,16 +36,16 @@ Multipla escolha:
 Verdadeiro ou falso:
 - Comparar true/false.
 
-Numerica:
-- Converter resposta do aluno para numero.
+numérica:
+- Converter resposta do aluno para número.
 - Comparar com resposta correta.
-- Usar tolerancia.
-- Formula: abs(respostaAluno - respostaCorreta) <= tolerancia.
+- Usar tolerância.
+- Fórmula: abs(respostaAluno - respostaCorreta) <= tolerância.
 
 Texto curto:
 - Converter para minusculo.
 - Remover acentos.
-- Remover pontuacao.
+- Remover pontuação.
 - Remover espacos extras.
 - Comparar com resposta correta e respostas aceitas.
 
@@ -102,7 +102,7 @@ Testes recomendados
 - Testes unitarios para cada strategy
 
 Regra importante
-Controller nao deve corrigir resposta.
+Controller não deve corrigir resposta.
 Controller deve chamar o service.
-O service deve chamar o motor de correcao.
+O service deve chamar o motor de correção.
 

@@ -1,20 +1,20 @@
-GradeFlow - Fluxo 03 - Submissao de Respostas
+GradeFlow - Fluxo 03 - submissão de Respostas
 
 Objetivo
-Permitir inserir respostas de um aluno para uma avaliacao.
+Permitir inserir respostas de um aluno para uma avaliação.
 
-Usuario principal
+usuário principal
 No MVP, o professor pode inserir as respostas manualmente.
 Depois, o aluno pode ter login proprio para enviar respostas.
 
 Fluxo funcional
-1. Professor abre uma avaliacao.
-2. Clica em nova submissao.
+1. Professor abre uma avaliação.
+2. Clica em nova submissão.
 3. Informa nome e email do aluno.
-4. Sistema lista as questoes da avaliacao.
-5. Professor insere a resposta de cada questao.
-6. Sistema salva a submissao com status pendente.
-7. Sistema permite executar a correcao.
+4. Sistema lista as questões da avaliação.
+5. Professor insere a resposta de cada questão.
+6. Sistema salva a submissão com status pendente.
+7. Sistema permite executar a correção.
 
 Entidades principais
 Submission:
@@ -67,7 +67,7 @@ Backend:
 - ASP.NET Core Controller
 - Application Service
 - DTOs compostos
-- Validacao de questoes pertencentes a avaliacao
+- validação de questões pertencentes a avaliação
 
 Banco:
 - EF Core
@@ -78,15 +78,15 @@ Frontend:
 - Angular Reactive Forms
 - FormArray para respostas
 - HttpClient
-- Component de submissao manual
+- Component de submissão manual
 
 Validacoes
 - StudentName obrigatorio
 - Cada resposta deve estar vinculada a uma Question existente
 - A Question precisa pertencer a Assignment informada
-- Resposta numerica deve poder ser convertida para numero quando a questao for Numeric
+- Resposta numérica deve poder ser convertida para número quando a questão for Numeric
 
 Regra importante
 O fluxo manual continua sendo a base do sistema.
-Importacao em lote ja existe via CSV no fluxo de importacao.
-Importacao por Excel ainda nao foi implementada.
+importação em lote já existe via CSV no fluxo de importação.
+importação por Excel ainda Não foi implementada.

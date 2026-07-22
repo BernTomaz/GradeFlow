@@ -73,7 +73,8 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - HTTP Interceptors
 - Dashboard inicial após login
 - Indicadores de avaliações, alunos avaliados, média geral e respostas pendentes de revisão
-- Gráfico de média por avaliação com visualização em barras ou pizza
+- Gráfico de média por avaliação com visualização em barras, colunas ou pizza
+- Página própria de relatório por avaliação
 - Exportação do dashboard em PDF via impressão do navegador
 - Login e Cadastro
 - Alteração de senha autenticada

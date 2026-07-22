@@ -6,13 +6,15 @@ import { AssignmentListComponent } from './features/assignments/assignment-list.
 import { ChangePasswordComponent } from './features/auth/change-password.component';
 import { LoginComponent } from './features/auth/login.component';
 import { CorrectionResultComponent } from './features/correction/correction-result.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { UserRole } from './core/models/auth.models';
 import { QuestionCreateComponent } from './features/questions/question-create.component';
 import { SubmissionCreateComponent } from './features/submissions/submission-create.component';
 import { SubmissionDetailComponent } from './features/submissions/submission-detail.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'assignments' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
   { path: 'assignments', component: AssignmentListComponent, canActivate: [authGuard] },

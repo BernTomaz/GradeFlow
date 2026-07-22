@@ -3,7 +3,6 @@
 ## Curto Prazo
 
 - Fechamento para demonstração do MVP
-- Dashboard administrativo simples
 - Deploy público final
 
 ## Médio Prazo
@@ -24,4 +23,5 @@
 - Importação de submissões por CSV
 - Relatórios básicos por avaliação
 - Exportação de notas em CSV, Excel e PDF
+- Dashboard administrativo simples com indicadores e gráfico
 - Layout administrativo responsivo com tema claro, escuro e conforme o sistema

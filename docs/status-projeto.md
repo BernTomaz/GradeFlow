@@ -2,12 +2,12 @@
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
+O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
 
 ## Etapa Atual
 
 - Etapas 01 a 11 concluídas.
-- Próximo trabalho funcional: Etapa 12, fechamento para demonstração.
+- Etapa 12 em andamento: fechamento para demonstração.
 - Próximo trabalho operacional: Etapa 13, deploy público final.
 - Recursos futuros ficam organizados na Etapa 14.
 
@@ -71,6 +71,10 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 - HttpClient
 - Route Guards
 - HTTP Interceptors
+- Dashboard inicial após login
+- Indicadores de avaliações, submissões, média geral e respostas pendentes de revisão
+- Gráfico de média por avaliação com visualização em barras ou pizza
+- Exportação do dashboard em PDF via impressão do navegador
 - Login e Cadastro
 - Alteração de senha autenticada
 - CRUD de avaliações
@@ -92,7 +96,7 @@ O MVP principal já possui backend, frontend Angular, correção automática, re
 ## Próximos Passos
 
 - Fechar o fluxo de demonstração do MVP.
-- Adicionar dashboard administrativo simples, se necessário para a demonstração.
+- Refinar ajustes visuais e fluxo manual de demonstração.
 - Publicar o projeto em ambiente público.
 - Evoluir recursos futuros apenas depois do MVP demonstrável e publicado.
 

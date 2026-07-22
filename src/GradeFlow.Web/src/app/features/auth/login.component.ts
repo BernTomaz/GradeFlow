@@ -49,7 +49,7 @@ export class LoginComponent {
     this.auth.login({ email: request.email, password: request.password }).subscribe({
       next: (response) => {
         this.auth.save(response);
-        this.router.navigateByUrl('/assignments');
+        this.router.navigateByUrl('/dashboard');
       },
       error: (error) => (this.error = error.error?.error ?? 'Nao foi possivel entrar.')
     });

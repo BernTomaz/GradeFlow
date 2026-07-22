@@ -69,8 +69,9 @@ Status: implementada para importação CSV, relatórios, exportação CSV, expor
 5. Criar relatórios básicos.
 
 Fase 7 - Fechamento para demonstração
+Status: em andamento. Dashboard administrativo simples implementado.
 1. Revisar fluxo principal de ponta a ponta.
-2. Criar dashboard administrativo simples, se necessário.
+2. Criar dashboard administrativo simples.
 3. Melhorar mensagens de erro e estados vazios.
 4. Preparar dados de demonstração.
 5. Atualizar documentação do MVP.

@@ -28,12 +28,16 @@ Implementar apenas melhorias pequenas e úteis para demonstrar o produto.
 
 ### Dashboard Administrativo
 
-Criar uma tela inicial simples com:
+Status: implementado no frontend como tela inicial após login.
+
+A tela inicial possui:
 
 - total de avaliações;
 - total de submissões;
 - média geral das avaliações corrigidas;
 - quantidade de respostas pendentes de revisão;
+- gráfico de média por avaliação em barras ou pizza;
+- exportação do dashboard em PDF via impressão do navegador;
 - atalhos para avaliações, submissões e relatórios.
 
 Não criar gráficos complexos nesta etapa.
@@ -112,7 +116,8 @@ Validar manualmente:
 - revisão;
 - importação CSV;
 - exportação CSV, Excel e PDF;
-- dashboard, se implementado.
+- dashboard;
+- exportação em PDF do dashboard pela impressão do navegador.
 
 ## Critérios de Aceite
 

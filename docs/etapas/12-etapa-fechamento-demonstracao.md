@@ -36,7 +36,7 @@ A tela inicial possui:
 - total de alunos avaliados;
 - média geral das avaliações corrigidas;
 - quantidade de respostas pendentes de revisão;
-- gráfico de média por avaliação em barras, colunas ou pizza;
+- gráfico de acertos por questão em barras, colunas ou pizza;
 - página própria de relatório por avaliação;
 - exportação do dashboard em PDF via impressão do navegador;
 - atalhos para avaliações, submissões e relatórios.

@@ -6,6 +6,7 @@
     </div>
     <div class="actions">
       <a routerLink="/assignments" class="button">Voltar</a>
+      <a [routerLink]="['/assignments', vm.assignment.id, 'report']" class="button">Relatório</a>
       <a [routerLink]="['/assignments', vm.assignment.id, 'edit']" class="button">Editar</a>
     </div>
   </section>
@@ -93,60 +94,6 @@
     </div>
   </section>
 
-  <section class="report-section">
-    <div class="section-title">
-      <h2>Relatório</h2>
-      <div class="actions">
-        <button class="button" type="button" (click)="exportCsv(vm.assignment.id)">CSV</button>
-        <button class="button" type="button" (click)="exportExcel(vm.assignment.id)">Excel</button>
-        <button class="button" type="button" (click)="exportPdf(vm.assignment.id)">PDF</button>
-      </div>
-    </div>
-    <div class="report-grid">
-      <article class="card metric-card">
-        <small>Submissões</small>
-        <strong>{{ vm.report.submissionCount }}</strong>
-      </article>
-      <article class="card metric-card">
-        <small>Média</small>
-        <strong>{{ vm.report.averageScore }}</strong>
-      </article>
-      <article class="card metric-card">
-        <small>Maior nota</small>
-        <strong>{{ vm.report.highestScore ?? '-' }}</strong>
-      </article>
-      <article class="card metric-card">
-        <small>Menor nota</small>
-        <strong>{{ vm.report.lowestScore ?? '-' }}</strong>
-      </article>
-    </div>
-
-    <div class="grid two report-lists">
-      <article class="card report-card">
-        <h3>Notas por aluno</h3>
-        <div class="report-table">
-          @for (student of vm.report.students; track student.submissionId) {
-            <span>{{ student.studentName }}</span>
-            <strong>{{ student.finalScore }}</strong>
-          } @empty {
-            <p class="empty">Nenhuma submissão corrigida.</p>
-          }
-        </div>
-      </article>
-
-      <article class="card report-card">
-        <h3>Questões</h3>
-        <div class="report-table question-report">
-          @for (question of vm.report.questions; track question.questionId) {
-            <span>{{ question.order }}. {{ questionTitle(question.text) }}</span>
-            <strong>{{ question.correctCount }} / {{ question.incorrectCount }}</strong>
-          } @empty {
-            <p class="empty">Nenhuma questão cadastrada.</p>
-          }
-        </div>
-      </article>
-    </div>
-  </section>
 } @else {
   <p class="loading"></p>
 }

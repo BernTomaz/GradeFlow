@@ -33,8 +33,7 @@ export class AssignmentDetailComponent {
           combineLatest({
             assignment: this.assignmentApi.getById(id),
             questions: this.questionApi.getByAssignmentId(id),
-            submissions: this.submissionApi.getByAssignmentId(id),
-            report: this.submissionApi.getReport(id)
+            submissions: this.submissionApi.getByAssignmentId(id)
           })
         )
       )
@@ -86,41 +85,4 @@ export class AssignmentDetailComponent {
     });
   }
 
-  exportCsv(assignmentId: string) {
-    this.downloadExport(
-      this.submissionApi.exportCsv(assignmentId),
-      `gradeflow-${assignmentId}-notas.csv`,
-      'Não foi possível exportar o CSV.');
-  }
-
-  exportExcel(assignmentId: string) {
-    this.downloadExport(
-      this.submissionApi.exportExcel(assignmentId),
-      `gradeflow-${assignmentId}-notas.xlsx`,
-      'Não foi possível exportar o Excel.');
-  }
-
-  exportPdf(assignmentId: string) {
-    this.downloadExport(
-      this.submissionApi.exportPdf(assignmentId),
-      `gradeflow-${assignmentId}-relatorio.pdf`,
-      'Não foi possível exportar o PDF.');
-  }
-
-  private downloadExport(request: ReturnType<SubmissionApiService['exportCsv']>, fileName: string, fallback: string) {
-    this.errorMessage = null;
-    request.subscribe({
-      next: (file) => {
-        const url = URL.createObjectURL(file);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        link.click();
-        URL.revokeObjectURL(url);
-      },
-      error: (error) => {
-        this.errorMessage = apiErrorMessage(error, fallback);
-      }
-    });
-  }
 }

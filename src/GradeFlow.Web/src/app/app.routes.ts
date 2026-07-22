@@ -20,6 +20,11 @@ export const routes: Routes = [
   { path: 'assignments', component: AssignmentListComponent, canActivate: [authGuard] },
   { path: 'assignments/new', component: AssignmentCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },
   { path: 'assignments/:id/edit', component: AssignmentCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },
+  {
+    path: 'assignments/:id/report',
+    loadComponent: () => import('./features/assignments/assignment-report.component').then((m) => m.AssignmentReportComponent),
+    canActivate: [authGuard]
+  },
   { path: 'assignments/:id', component: AssignmentDetailComponent, canActivate: [authGuard] },
   { path: 'assignments/:assignmentId/questions/new', component: QuestionCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },
   { path: 'assignments/:assignmentId/questions/:questionId/edit', component: QuestionCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
+import { SubmissionStatus } from '../../core/models/submission.models';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,12 +14,13 @@ import { SubmissionApiService } from '../../core/api/submission-api.service';
 export class DashboardComponent {
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly submissionApi = inject(SubmissionApiService);
-  protected chartType: 'bar' | 'pie' = 'bar';
+  protected chartType: 'bar' | 'column' | 'pie' = 'bar';
+  protected selectedAssignmentId = '';
 
   protected readonly vm$ = this.assignmentApi.getAll().pipe(
     switchMap((assignments) => {
       if (!assignments.length) {
-        return of({ assignments, submissionCount: 0, averageScore: 0, pendingReviews: 0, chart: [], pie: '' });
+        return of({ assignments, items: [] });
       }
 
       return forkJoin(assignments.map((assignment) =>
@@ -28,48 +30,70 @@ export class DashboardComponent {
         })
       )).pipe(
         map((items) => {
-          const submissionCount = items.reduce((sum, item) => sum + (item.report?.submissionCount ?? item.submissions.length), 0);
-          const weightedScore = items.reduce((sum, item) => sum + ((item.report?.averageScore ?? 0) * (item.report?.submissionCount ?? 0)), 0);
-          const pendingReviews = items.reduce(
-            (sum, item) => sum + item.submissions.flatMap((submission) => submission.answers).filter((answer) => answer.needsReview).length,
-            0);
-          const chartBase = items
-            .map((item, index) => ({
-              title: assignments[index].title,
-              averageScore: item.report?.averageScore ?? 0
-            }))
-            .filter((item) => item.averageScore > 0)
-            .slice(0, 6);
-          const totalScore = chartBase.reduce((sum, item) => sum + item.averageScore, 0);
-          let cursor = 0;
           const colors = ['#2563eb', '#16a34a', '#f59e0b', '#dc2626', '#7c3aed', '#0891b2'];
-          const chart = chartBase.map((item, index) => {
-            const start = cursor;
-            cursor += totalScore ? (item.averageScore / totalScore) * 100 : 0;
+          const dashboardItems = items.map((item, index) => {
+            const chartBase = (item.report?.questions ?? [])
+              .map((question) => {
+                const answers = item.submissions.map((submission) => ({
+                  answer: submission.answers.find((answer) => answer.questionId === question.questionId),
+                  isSubmissionPending: submission.status === SubmissionStatus.Pending
+                }));
+                const pendingCount = answers.filter((item) => !item.answer || item.isSubmissionPending || item.answer.needsReview).length;
+                const correctedAnswers = answers.filter((item) => item.answer && !item.isSubmissionPending && !item.answer.needsReview);
+                const correctCount = correctedAnswers.filter((item) => item.answer?.isCorrect).length;
+                return {
+                  title: `Q${question.order}`,
+                  averageScore: correctedAnswers.length ? (correctCount / correctedAnswers.length) * 100 : 0,
+                  pending: pendingCount > 0 && correctedAnswers.length === 0
+                };
+              });
+            const totalScore = chartBase.reduce((sum, question) => sum + question.averageScore, 0);
+            let cursor = 0;
+            const chart = chartBase.map((question, chartIndex) => {
+              const start = cursor;
+              cursor += totalScore ? (question.averageScore / totalScore) * 100 : 0;
+              const color = colors[chartIndex % colors.length];
+
+              return {
+                ...question,
+                color,
+                label: question.pending ? 'Pendente' : `${question.averageScore.toFixed(0)}%`,
+                percent: Math.min(100, Math.max(0, question.averageScore)),
+                slice: `${color} ${start}% ${cursor}%`
+              };
+            });
 
             return {
-              ...item,
-              color: colors[index % colors.length],
-              percent: Math.min(100, Math.max(0, item.averageScore * 10)),
-              slice: `${colors[index % colors.length]} ${start}% ${cursor}%`
+              assignment: assignments[index],
+              submissionCount: item.report?.submissionCount ?? item.submissions.length,
+              averageScore: item.report?.averageScore ?? 0,
+              questionCount: item.report?.questions.length ?? 0,
+              pendingReviews: item.submissions.flatMap((submission) => submission.answers).filter((answer) => answer.needsReview).length,
+              chart,
+              pie: `conic-gradient(${chart.map((question) => question.slice).join(', ')})`
             };
           });
+          this.selectedAssignmentId ||= assignments[0].id;
 
           return {
             assignments,
-            submissionCount,
-            averageScore: submissionCount ? weightedScore / submissionCount : 0,
-            pendingReviews,
-            chart,
-            pie: `conic-gradient(${chart.map((item) => item.slice).join(', ')})`
+            items: dashboardItems
           };
         })
       );
     })
   );
 
-  protected setChartType(chartType: 'bar' | 'pie') {
+  protected setChartType(chartType: 'bar' | 'column' | 'pie') {
     this.chartType = chartType;
+  }
+
+  protected setAssignment(id: string) {
+    this.selectedAssignmentId = id;
+  }
+
+  protected selectedItem(vm: { items: any[] }) {
+    return vm.items.find((item) => item.assignment.id === this.selectedAssignmentId) ?? vm.items[0];
   }
 
   protected exportPdf() {

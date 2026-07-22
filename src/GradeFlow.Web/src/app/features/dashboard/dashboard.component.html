@@ -9,35 +9,50 @@
 </section>
 
 @if (vm$ | async; as vm) {
+  @if (selectedItem(vm); as selected) {
+  <section class="card dashboard-filter" aria-label="Filtro do dashboard">
+    <label>
+      Avaliação
+      <select [value]="selected.assignment.id" (change)="setAssignment($any($event.target).value)">
+        @for (assignment of vm.assignments; track assignment.id) {
+          <option [value]="assignment.id">{{ assignment.title }}</option>
+        }
+      </select>
+    </label>
+  </section>
+
   <section class="dashboard-grid" aria-label="Indicadores do MVP">
     <article class="card metric-card">
-      <span>Avaliações</span>
-      <strong>{{ vm.assignments.length }}</strong>
+      <span>Questões</span>
+      <strong>{{ selected.questionCount }}</strong>
     </article>
     <article class="card metric-card">
-      <span>Submissões</span>
-      <strong>{{ vm.submissionCount }}</strong>
+      <span>Alunos avaliados</span>
+      <strong>{{ selected.submissionCount }}</strong>
     </article>
     <article class="card metric-card">
-      <span>Média geral</span>
-      <strong>{{ vm.averageScore | number: '1.1-1' }}</strong>
+      <span>Média da avaliação</span>
+      <strong>{{ selected.averageScore | number: '1.1-1' }}</strong>
     </article>
     <article class="card metric-card">
       <span>Respostas em revisão</span>
-      <strong>{{ vm.pendingReviews }}</strong>
+      <strong>{{ selected.pendingReviews }}</strong>
     </article>
   </section>
 
-  @if (vm.chart.length) {
+  @if (selected.chart.length) {
     <section class="card dashboard-chart" aria-label="Média por avaliação">
       <div class="chart-header">
         <div>
-          <h2>Média por avaliação</h2>
-          <p>Visão rápida das notas corrigidas.</p>
+          <h2>Acertos por questão</h2>
+          <p>{{ selected.assignment.title }}</p>
         </div>
         <div class="chart-switch" aria-label="Tipo de gráfico">
           <button type="button" [class.active]="chartType === 'bar'" (click)="setChartType('bar')">
             <i class="pi pi-chart-bar"></i>Barras
+          </button>
+          <button type="button" [class.active]="chartType === 'column'" (click)="setChartType('column')">
+            <i class="pi pi-sliders-v"></i>Colunas
           </button>
           <button type="button" [class.active]="chartType === 'pie'" (click)="setChartType('pie')">
             <i class="pi pi-chart-pie"></i>Pizza
@@ -47,22 +62,34 @@
 
       @if (chartType === 'bar') {
         <div class="chart-bars">
-          @for (item of vm.chart; track item.title) {
+          @for (item of selected.chart; track item.title) {
             <div class="chart-row">
               <span>{{ item.title }}</span>
               <div class="chart-track">
-                <i [style.width.%]="item.percent" [style.background]="item.color"></i>
+                <i [class.pending]="item.pending" [style.width.%]="item.pending ? 100 : item.percent" [style.background]="item.color"></i>
               </div>
-              <strong>{{ item.averageScore | number: '1.1-1' }}</strong>
+              <strong [class.pending-label]="item.pending">{{ item.label }}</strong>
+            </div>
+          }
+        </div>
+      } @else if (chartType === 'column') {
+        <div class="column-chart">
+          @for (item of selected.chart; track item.title) {
+            <div class="column-item">
+              <div class="column-track">
+                <i [class.pending]="item.pending" [style.height.%]="item.pending ? 100 : item.percent" [style.background]="item.color"></i>
+              </div>
+              <strong [class.pending-label]="item.pending">{{ item.label }}</strong>
+              <span>{{ item.title }}</span>
             </div>
           }
         </div>
       } @else {
         <div class="pie-chart">
-          <div class="pie" [style.background-image]="vm.pie"></div>
+          <div class="pie" [style.background-image]="selected.pie"></div>
           <div class="pie-legend">
-            @for (item of vm.chart; track item.title) {
-              <span><i [style.background]="item.color"></i><strong>{{ item.averageScore | number: '1.1-1' }}</strong>{{ item.title }}</span>
+            @for (item of selected.chart; track item.title) {
+              <span><i [style.background]="item.color"></i><strong>{{ item.label }}</strong>{{ item.title }}</span>
             }
           </div>
         </div>
@@ -79,13 +106,12 @@
       <strong>Nova avaliação</strong>
       <p>Criar uma avaliação para a demonstração.</p>
     </a>
-    @if (vm.assignments[0]) {
-      <a [routerLink]="['/assignments', vm.assignments[0].id]" class="card card-link">
-        <strong>Última avaliação</strong>
-        <p>{{ vm.assignments[0].title }}</p>
-      </a>
-    }
+    <a [routerLink]="['/assignments', selected.assignment.id]" class="card card-link">
+      <strong>Avaliação selecionada</strong>
+      <p>{{ selected.assignment.title }}</p>
+    </a>
   </section>
+  }
 } @else {
   <p class="loading"></p>
 }

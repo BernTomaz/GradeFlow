@@ -33,6 +33,9 @@
                   <a [routerLink]="['/assignments', assignment.id, 'edit']" class="icon-button" aria-label="Editar avaliação" title="Editar">
                     <i class="pi pi-pencil"></i><span>Editar</span>
                   </a>
+                  <a [routerLink]="['/assignments', assignment.id, 'report']" class="icon-button" aria-label="Relatório da avaliação" title="Relatório">
+                    <i class="pi pi-chart-bar"></i><span>Relatório</span>
+                  </a>
                   <button class="icon-button danger" type="button" aria-label="Excluir avaliação" title="Excluir" (click)="askDelete(assignment.id)">
                     <i class="pi pi-trash"></i><span>Excluir</span>
                   </button>
@@ -55,6 +58,7 @@
           <div class="actions">
             <strong>{{ assignment.totalPoints }} pts</strong>
             <a [routerLink]="['/assignments', assignment.id, 'edit']" class="button">Editar</a>
+            <a [routerLink]="['/assignments', assignment.id, 'report']" class="button">Relatório</a>
             <button class="button danger" type="button" (click)="askDelete(assignment.id)">Excluir</button>
           </div>
         </article>

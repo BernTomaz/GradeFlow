@@ -33,7 +33,7 @@ Status: implementado no frontend como tela inicial após login.
 A tela inicial possui:
 
 - total de avaliações;
-- total de submissões;
+- total de alunos avaliados;
 - média geral das avaliações corrigidas;
 - quantidade de respostas pendentes de revisão;
 - gráfico de média por avaliação em barras ou pizza;

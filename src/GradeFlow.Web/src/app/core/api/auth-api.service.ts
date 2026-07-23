@@ -31,17 +31,20 @@ export class AuthApiService {
   }
 
   save(response: AuthResponse) {
-    localStorage.setItem(this.storageKey, JSON.stringify(response));
+    localStorage.removeItem(this.storageKey);
+    sessionStorage.setItem(this.storageKey, JSON.stringify(response));
     this.current.set(response);
   }
 
   logout() {
     localStorage.removeItem(this.storageKey);
+    sessionStorage.removeItem(this.storageKey);
     this.current.set(null);
   }
 
   private load() {
-    const value = localStorage.getItem(this.storageKey);
+    const value = sessionStorage.getItem(this.storageKey);
+    localStorage.removeItem(this.storageKey);
     return value ? (JSON.parse(value) as AuthResponse) : null;
   }
 }

@@ -7,7 +7,7 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 ## Etapa Atual
 
 - Etapas 01 a 11 concluídas.
-- Etapa 12 em andamento: fechamento para demonstração.
+- Etapa 12 concluída: fechamento para demonstração.
 - Próximo trabalho operacional: Etapa 13, deploy público final.
 - Recursos futuros ficam organizados na Etapa 14.
 
@@ -72,7 +72,7 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - Route Guards
 - HTTP Interceptors
 - Dashboard inicial após login
-- Indicadores de avaliações, alunos avaliados, média geral e respostas pendentes de revisão
+- Indicadores por avaliação: questões, alunos avaliados, média e respostas pendentes de revisão
 - Gráfico de acertos por questão com visualização em barras, colunas ou pizza
 - Página própria de relatório por avaliação
 - Exportação do dashboard em PDF via impressão do navegador
@@ -96,8 +96,6 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 
 ## Próximos Passos
 
-- Fechar o fluxo de demonstração do MVP.
-- Refinar ajustes visuais e fluxo manual de demonstração.
 - Publicar o projeto em ambiente público.
 - Evoluir recursos futuros apenas depois do MVP demonstrável e publicado.
 

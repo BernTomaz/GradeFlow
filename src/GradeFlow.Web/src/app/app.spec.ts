@@ -9,13 +9,17 @@ describe('App', () => {
 
   beforeEach(async () => {
     localStorage.removeItem(storageKey);
+    sessionStorage.removeItem(storageKey);
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideHttpClient(), provideRouter([])]
     }).compileComponents();
   });
 
-  afterEach(() => localStorage.removeItem(storageKey));
+  afterEach(() => {
+    localStorage.removeItem(storageKey);
+    sessionStorage.removeItem(storageKey);
+  });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
@@ -24,7 +28,7 @@ describe('App', () => {
   });
 
   it('should render the app navigation', () => {
-    localStorage.setItem(storageKey, JSON.stringify({
+    sessionStorage.setItem(storageKey, JSON.stringify({
       token: 'test-token',
       expiresAt: new Date(Date.now() + 60000).toISOString(),
       user: {

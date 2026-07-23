@@ -53,11 +53,15 @@
     }
 
     <div class="actions form-actions">
-      <button class="button" type="button" (click)="toggleRegistering()">
+      <button class="button" type="button" (click)="toggleRegistering()" [disabled]="loading">
         {{ registering ? 'Ja tenho acesso' : 'Criar acesso' }}
       </button>
-      <button class="button primary" type="submit" [disabled]="form.invalid">
-        {{ registering ? 'Registrar' : 'Entrar' }}
+      <button class="button primary" type="submit" [disabled]="form.invalid || loading">
+        @if (loading) {
+          Aguarde...
+        } @else {
+          {{ registering ? 'Registrar' : 'Entrar' }}
+        }
       </button>
     </div>
   </form>

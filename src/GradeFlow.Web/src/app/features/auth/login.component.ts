@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AuthApiService } from '../../core/api/auth-api.service';
 import { UserRole } from '../../core/models/auth.models';
 import { passwordStrength } from '../../shared/password-strength';
@@ -16,6 +17,7 @@ export class LoginComponent {
   private readonly router = inject(Router);
   protected readonly roles = UserRole;
   protected registering = false;
+  protected loading = false;
   protected error = '';
   protected success = '';
   protected form = this.fb.nonNullable.group({
@@ -26,6 +28,8 @@ export class LoginComponent {
   });
 
   protected submit() {
+    if (this.loading) return;
+
     this.error = '';
     this.success = '';
     const request = this.form.getRawValue();
@@ -35,7 +39,8 @@ export class LoginComponent {
         return;
       }
 
-      this.auth.register(request).subscribe({
+      this.loading = true;
+      this.auth.register(request).pipe(finalize(() => (this.loading = false))).subscribe({
         next: () => {
           this.registering = false;
           this.success = 'Acesso criado. Entre com seu email e senha.';
@@ -46,7 +51,8 @@ export class LoginComponent {
       return;
     }
 
-    this.auth.login({ email: request.email, password: request.password }).subscribe({
+    this.loading = true;
+    this.auth.login({ email: request.email, password: request.password }).pipe(finalize(() => (this.loading = false))).subscribe({
       next: (response) => {
         this.auth.save(response);
         this.router.navigateByUrl('/dashboard');
@@ -56,6 +62,8 @@ export class LoginComponent {
   }
 
   protected toggleRegistering() {
+    if (this.loading) return;
+
     this.registering = !this.registering;
     this.error = '';
     this.success = '';

@@ -1,5 +1,7 @@
 # GradeFlow - Etapa 12 - Fechamento para Demonstração
 
+Status: concluída em 23/07/2026.
+
 ## Objetivo
 
 Preparar o GradeFlow para uma demonstração pública do MVP, sem adicionar funcionalidades grandes antes do deploy.
@@ -32,9 +34,10 @@ Status: implementado no frontend como tela inicial após login.
 
 A tela inicial possui:
 
-- total de avaliações;
+- filtro por avaliação;
+- total de questões da avaliação selecionada;
 - total de alunos avaliados;
-- média geral das avaliações corrigidas;
+- média da avaliação selecionada;
 - quantidade de respostas pendentes de revisão;
 - gráfico de acertos por questão em barras, colunas ou pizza;
 - página própria de relatório por avaliação;
@@ -122,11 +125,11 @@ Validar manualmente:
 
 ## Critérios de Aceite
 
-- O MVP pode ser demonstrado de ponta a ponta.
-- A tela inicial orienta o professor para os fluxos principais.
+- MVP demonstrado de ponta a ponta.
+- Tela inicial orienta o professor para os fluxos principais.
 - Não há funcionalidade grande parcialmente implementada.
-- Documentação principal está atualizada.
-- Build e testes passam.
+- Documentação principal atualizada.
+- Build e testes passando.
 
 ## Commit Sugerido
 

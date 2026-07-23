@@ -69,7 +69,7 @@ Status: implementada para importação CSV, relatórios, exportação CSV, expor
 5. Criar relatórios básicos.
 
 Fase 7 - Fechamento para demonstração
-Status: em andamento. Dashboard administrativo simples implementado.
+Status: concluída. Dashboard administrativo simples implementado e fluxo manual validado.
 1. Revisar fluxo principal de ponta a ponta.
 2. Criar dashboard administrativo simples.
 3. Melhorar mensagens de erro e estados vazios.

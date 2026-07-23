@@ -27,7 +27,7 @@ Projeto em desenvolvimento ativo.
 
 O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
 
-Etapas 01 a 11 concluídas. A etapa 12 está em andamento com polimentos para demonstração. Os próximos trabalhos são fechamento da demonstração, deploy público final e recursos futuros.
+Etapas 01 a 12 concluídas. O próximo trabalho operacional é o deploy público final; recursos futuros ficam para depois do MVP publicado.
 
 Detalhes completos: [status do projeto](docs/status-projeto.md).
 

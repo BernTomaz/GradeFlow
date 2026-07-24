@@ -19,6 +19,12 @@ Fluxo de login
 4. Frontend armazena token de forma controlada.
 5. Angular envia token nas requisicoes.
 6. Backend valida token e role.
+7. Em login invalido, o backend informa quantas tentativas restam.
+8. Depois de 5 tentativas invalidas por email e IP em 1 minuto, o acesso fica temporariamente bloqueado.
+
+Regra de senha
+- Cadastro e alteração de senha exigem no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial.
+- Login apenas valida a senha cadastrada; a regra de força não é reaplicada ao entrar.
 
 Entidade principal
 User:
@@ -88,6 +94,7 @@ Cuidados
 - Nunca confiar apenas no frontend.
 - Validar permissão no backend.
 - Não expor PasswordHash em responses.
+- Não versionar `.env` real, JWT real ou senhas de banco.
 
 Regra importante
 Login é importante, mas não prova o valor do projeto.

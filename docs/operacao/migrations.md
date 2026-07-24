@@ -27,11 +27,25 @@ O diretório `artifacts/` é ignorado pelo Git.
 Com o SQL Server do `docker-compose.yml` em execução:
 
 ```powershell
-docker cp artifacts/database/gradeflow-migrations.sql gradeflow-sqlserver-1:/tmp/gradeflow-migrations.sql
-docker exec gradeflow-sqlserver-1 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$env:MSSQL_SA_PASSWORD" -C -d GradeFlow -i /tmp/gradeflow-migrations.sql
+docker compose cp artifacts/database/gradeflow-migrations.sql sqlserver:/tmp/gradeflow-migrations.sql
+docker compose exec sqlserver /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /tmp/gradeflow-migrations.sql'
 ```
 
 O mesmo script pode ser executado novamente. Como é idempotente, migrations já aplicadas são ignoradas.
+
+## Backup local Docker
+
+Antes de aplicar migrations ou atualizar a aplicação, gere um backup:
+
+```powershell
+.\scripts\database\backup-docker.ps1
+```
+
+Saida padrao:
+
+```txt
+artifacts/backups/
+```
 
 ## Produção
 

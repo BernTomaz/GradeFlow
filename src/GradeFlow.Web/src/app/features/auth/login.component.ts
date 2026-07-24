@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthApiService } from '../../core/api/auth-api.service';
 import { UserRole } from '../../core/models/auth.models';
-import { passwordStrength } from '../../shared/password-strength';
+import { passwordRules, passwordStrength } from '../../shared/password-strength';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +20,16 @@ export class LoginComponent {
   protected loading = false;
   protected error = '';
   protected success = '';
+  private loginFailures = 0;
+  private readonly maxLoginAttempts = 5;
   protected form = this.fb.nonNullable.group({
     name: [''],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)
+    ]],
     role: [UserRole.Teacher]
   });
 
@@ -54,10 +60,21 @@ export class LoginComponent {
     this.loading = true;
     this.auth.login({ email: request.email, password: request.password }).pipe(finalize(() => (this.loading = false))).subscribe({
       next: (response) => {
+        this.loginFailures = 0;
         this.auth.save(response);
         this.router.navigateByUrl('/dashboard');
       },
-      error: (error) => (this.error = error.error?.error ?? 'Nao foi possivel entrar.')
+      error: (error) => {
+        const message = error.error?.error ?? 'Nao foi possivel entrar.';
+        if (error.status !== 401 || message.includes('Restam')) {
+          this.error = message;
+          return;
+        }
+
+        this.loginFailures++;
+        const remaining = Math.max(0, this.maxLoginAttempts - this.loginFailures);
+        this.error = `${message} Restam ${remaining} tentativa(s).`;
+      }
     });
   }
 
@@ -71,5 +88,9 @@ export class LoginComponent {
 
   protected passwordStrength() {
     return passwordStrength(this.form.controls.password.value);
+  }
+
+  protected passwordRules() {
+    return passwordRules(this.form.controls.password.value);
   }
 }

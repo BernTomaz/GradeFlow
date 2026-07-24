@@ -52,8 +52,27 @@ public sealed class JwtAuthenticationIntegrationTests
         var client = factory.CreateClient();
 
         var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("teacher@gradeflow.test", "wrong"));
+        var body = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        body.Should().Contain("Restam 4 tentativa(s).");
+    }
+
+    [Fact]
+    public async Task Login_is_rate_limited()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+
+        for (var i = 0; i < 5; i++)
+        {
+            var allowed = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("teacher@gradeflow.test", "wrong"));
+            allowed.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        var blocked = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("teacher@gradeflow.test", "wrong"));
+
+        blocked.StatusCode.Should().Be(HttpStatusCode.TooManyRequests);
     }
 
     [Fact]
@@ -97,10 +116,10 @@ public sealed class JwtAuthenticationIntegrationTests
         await using var factory = CreateFactory();
         var client = factory.CreateClient();
 
-        var withoutToken = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "secret2"));
+        var withoutToken = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "Senha1995@"));
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
-        var invalid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("wrong", "secret2"));
-        var valid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "secret2"));
+        var invalid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("wrong", "Senha1995@"));
+        var valid = await client.PostAsJsonAsync("/api/auth/change-password", new ChangePasswordRequest("secret1", "Senha1995@"));
 
         withoutToken.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         invalid.StatusCode.Should().Be(HttpStatusCode.BadRequest);

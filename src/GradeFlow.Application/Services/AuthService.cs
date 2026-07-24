@@ -30,8 +30,7 @@ public sealed class AuthService(
             throw new ValidationException("Nome e obrigatorio.");
         if (string.IsNullOrWhiteSpace(request.Email))
             throw new ValidationException("Email e obrigatorio.");
-        if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
-            throw new ValidationException("Senha deve ter pelo menos 6 caracteres.");
+        ValidatePassword(request.Password, "Senha");
         if (request.Role == UserRole.Admin)
             throw new ValidationException("Perfil Admin nao pode ser criado pelo registro publico.");
 
@@ -65,8 +64,7 @@ public sealed class AuthService(
 
     public async Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(request.NewPassword) || request.NewPassword.Length < 6)
-            throw new ValidationException("Nova senha deve ter pelo menos 6 caracteres.");
+        ValidatePassword(request.NewPassword, "Nova senha");
 
         var user = await userRepository.GetByIdAsync(userId, cancellationToken);
         if (user is null || !passwordHasher.Verify(user.PasswordHash, request.CurrentPassword))
@@ -75,6 +73,18 @@ public sealed class AuthService(
         user.PasswordHash = passwordHasher.Hash(request.NewPassword);
         await userRepository.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    private static void ValidatePassword(string password, string fieldName)
+    {
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+            throw new ValidationException($"{fieldName} deve ter pelo menos 8 caracteres.");
+        if (!password.Any(char.IsUpper))
+            throw new ValidationException($"{fieldName} deve ter pelo menos uma letra maiuscula.");
+        if (!password.Any(char.IsDigit))
+            throw new ValidationException($"{fieldName} deve ter pelo menos um numero.");
+        if (!password.Any(x => !char.IsLetterOrDigit(x)))
+            throw new ValidationException($"{fieldName} deve ter pelo menos um caractere especial.");
     }
 }
 

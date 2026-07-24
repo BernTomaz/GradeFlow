@@ -32,6 +32,11 @@
         <span></span>
         <small>{{ passwordStrength().label }}</small>
       </div>
+      <ul class="password-rules">
+        @for (rule of passwordRules(); track rule.label) {
+          <li [class.ok]="rule.ok">{{ rule.label }}</li>
+        }
+      </ul>
     }
 
     @if (registering) {

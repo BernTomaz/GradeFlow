@@ -5,14 +5,21 @@ using GradeFlow.Application.Services;
 using GradeFlow.Domain.Entities;
 using GradeFlow.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GradeFlow.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public sealed class AuthController(IAuthService authService, ITokenService tokenService) : ControllerBase
+public sealed class AuthController(
+    IAuthService authService,
+    ITokenService tokenService,
+    IMemoryCache memoryCache) : ControllerBase
 {
+    private const int MaxLoginAttempts = 5;
+    private static readonly TimeSpan LoginAttemptWindow = TimeSpan.FromMinutes(1);
+
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request, CancellationToken cancellationToken)
@@ -30,9 +37,25 @@ public sealed class AuthController(IAuthService authService, ITokenService token
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponse>> Login(LoginRequest request, CancellationToken cancellationToken)
-        => await authService.LoginAsync(request, cancellationToken) is { } response
-            ? Ok(response)
-            : Unauthorized(new { error = "Email ou senha invalidos." });
+    {
+        var key = LoginAttemptKey(request.Email);
+        var attempts = memoryCache.Get<int>(key);
+        if (attempts >= MaxLoginAttempts)
+        {
+            return StatusCode(StatusCodes.Status429TooManyRequests, new { error = "Muitas tentativas invalidas. Tente novamente em 1 minuto." });
+        }
+
+        if (await authService.LoginAsync(request, cancellationToken) is { } response)
+        {
+            memoryCache.Remove(key);
+            return Ok(response);
+        }
+
+        attempts++;
+        memoryCache.Set(key, attempts, LoginAttemptWindow);
+        var remaining = Math.Max(0, MaxLoginAttempts - attempts);
+        return Unauthorized(new { error = $"Email ou senha invalidos. Restam {remaining} tentativa(s)." });
+    }
 
     [Authorize]
     [HttpPost("change-password")]
@@ -71,4 +94,7 @@ public sealed class AuthController(IAuthService authService, ITokenService token
             Role = role
         }));
     }
+
+    private string LoginAttemptKey(string email)
+        => $"login:{HttpContext.Connection.RemoteIpAddress}:{email.Trim().ToLowerInvariant()}";
 }

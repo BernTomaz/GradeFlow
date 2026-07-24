@@ -20,6 +20,8 @@
   --sidebar: #0f172a;
   --sidebar-muted: #94a3b8;
   --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --button-bg: rgba(255, 255, 255, 0.88);
+  --button-primary-bg: #ffffff;
 }
 
 html[data-theme="dark"] {
@@ -40,6 +42,8 @@ html[data-theme="dark"] {
   --sidebar: #020617;
   --sidebar-muted: #94a3b8;
   --sidebar-hover: rgba(255, 255, 255, 0.10);
+  --button-bg: #111827;
+  --button-primary-bg: #102018;
 }
 
 body {
@@ -579,7 +583,7 @@ small {
   border: 1px solid rgba(36, 87, 166, 0.42);
   border-radius: 8px;
   padding: 0 15px;
-  background: rgba(255, 255, 255, 0.88);
+  background: var(--button-bg);
   color: var(--brand);
   text-decoration: none;
   cursor: pointer;
@@ -589,7 +593,7 @@ small {
 
 .button.primary {
   border-color: var(--accent);
-  background: #fff;
+  background: var(--button-primary-bg);
   color: var(--accent);
 }
 
@@ -628,7 +632,7 @@ small {
   height: 38px;
   border: 1px solid rgba(36, 87, 166, 0.42);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--button-bg);
   color: var(--brand);
   cursor: pointer;
   font-weight: 800;
@@ -1375,6 +1379,29 @@ small {
 
 .password-meter.strong small {
   color: #137333;
+}
+
+.password-rules {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  color: #6b7886;
+  font-size: 13px;
+  list-style: none;
+}
+
+.password-rules li::before {
+  content: "○";
+  margin-right: 7px;
+}
+
+.password-rules li.ok {
+  color: #137333;
+}
+
+.password-rules li.ok::before {
+  content: "✓";
 }
 
 .answer-row {

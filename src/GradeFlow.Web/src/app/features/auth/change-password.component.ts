@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthApiService } from '../../core/api/auth-api.service';
 import { apiErrorMessage } from '../../shared/api-error';
-import { passwordStrength } from '../../shared/password-strength';
+import { passwordRules, passwordStrength } from '../../shared/password-strength';
 
 @Component({
   selector: 'app-change-password',
@@ -17,7 +17,11 @@ export class ChangePasswordComponent {
   protected success = '';
   protected form = this.fb.nonNullable.group({
     currentPassword: ['', [Validators.required]],
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: ['', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)
+    ]],
     confirmPassword: ['', [Validators.required]]
   });
 
@@ -45,5 +49,9 @@ export class ChangePasswordComponent {
 
   protected passwordStrength() {
     return passwordStrength(this.form.controls.newPassword.value);
+  }
+
+  protected passwordRules() {
+    return passwordRules(this.form.controls.newPassword.value);
   }
 }

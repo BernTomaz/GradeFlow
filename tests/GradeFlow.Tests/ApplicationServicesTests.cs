@@ -71,6 +71,22 @@ public sealed class ApplicationServicesTests
     }
 
     [Fact]
+    public async Task Assignment_service_should_hide_other_teachers_assignments()
+    {
+        var teacherId = Guid.NewGuid();
+        var otherTeacherId = Guid.NewGuid();
+        var own = new Assignment { Id = Guid.NewGuid(), Title = "Own", TeacherUserId = teacherId };
+        var other = new Assignment { Id = Guid.NewGuid(), Title = "Other", TeacherUserId = otherTeacherId };
+        var service = new AssignmentService(new FakeAssignmentRepository(own, other), new FakeCurrentUser(teacherId, UserRole.Teacher));
+
+        var all = await service.GetAllAsync();
+        var blocked = await service.GetByIdAsync(other.Id);
+
+        all.Should().ContainSingle(x => x.Id == own.Id);
+        blocked.Should().BeNull();
+    }
+
+    [Fact]
     public async Task Question_service_should_create_question_with_answer_key()
     {
         var assignmentId = Guid.NewGuid();
@@ -274,6 +290,28 @@ public sealed class ApplicationServicesTests
         submission.StudentName.Should().Be("Carla");
         deleted.Should().BeTrue();
         repository.Submissions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Submission_service_should_hide_other_students_submissions()
+    {
+        var assignmentId = Guid.NewGuid();
+        var studentId = Guid.NewGuid();
+        var own = new Submission { Id = Guid.NewGuid(), AssignmentId = assignmentId, StudentUserId = studentId, StudentName = "Ana" };
+        var other = new Submission { Id = Guid.NewGuid(), AssignmentId = assignmentId, StudentUserId = Guid.NewGuid(), StudentName = "Bia" };
+        var service = new SubmissionService(
+            new FakeSubmissionRepositoryForService
+            {
+                ExistingAssignmentId = assignmentId,
+                Submissions = [own, other]
+            },
+            currentUser: new FakeCurrentUser(studentId, UserRole.Student));
+
+        var all = await service.GetByAssignmentIdAsync(assignmentId);
+        var blocked = await service.GetByIdAsync(other.Id);
+
+        all.Should().ContainSingle(x => x.Id == own.Id);
+        blocked.Should().BeNull();
     }
 
     [Fact]
@@ -636,5 +674,11 @@ public sealed class ApplicationServicesTests
             SaveChangesCount++;
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class FakeCurrentUser(Guid id, UserRole role) : ICurrentUser
+    {
+        public Guid? Id { get; } = id;
+        public UserRole? Role { get; } = role;
     }
 }

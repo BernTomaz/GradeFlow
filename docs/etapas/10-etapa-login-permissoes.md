@@ -33,6 +33,12 @@ POST /api/auth/login
 POST /api/auth/change-password
 POST /api/auth/refresh-token
 
+Regras de senha
+- Cadastro e alteração de senha exigem no mínimo 8 caracteres.
+- A senha precisa ter pelo menos uma letra maiúscula, um número e um caractere especial.
+- Login invalido retorna mensagem com tentativas restantes.
+- Depois de 5 tentativas invalidas por email e IP em 1 minuto, o login fica temporariamente bloqueado.
+
 Regras
 Admin:
 - Pode ver tudo.
@@ -62,3 +68,4 @@ Ponto de atenção
 Nunca salve senha pura.
 Nunca confie apenas na permissão do frontend.
 Permissão real precisa ser validada no backend.
+Não versione `.env` real, JWT real ou senhas de banco.

@@ -145,7 +145,9 @@ Endereços locais:
 
 ## Docker Compose
 
-Crie um `.env` local a partir do `.env.example` e ajuste `MSSQL_SA_PASSWORD` e `JWT_KEY`.
+Crie um `.env` local a partir do `.env.example` e ajuste `MSSQL_SA_PASSWORD`, `APP_DB_PASSWORD` e `JWT_KEY`.
+
+O arquivo `.env` real é local e não deve ser versionado.
 
 ```powershell
 docker compose build
@@ -157,9 +159,15 @@ Serviços locais:
 - Frontend: `http://localhost:4200`
 - API: `http://localhost:8080`
 - Health check: `http://localhost:8080/health`
-- SQL Server: `localhost,1433`
+- SQL Server: acessível apenas pela rede interna do Docker
 
 As migrations não são aplicadas automaticamente pelo Compose. Veja [estratégia de migrations](docs/operacao/migrations.md).
+
+Para gerar backup do banco Docker:
+
+```powershell
+.\scripts\database\backup-docker.ps1
+```
 
 ## Referências Rápidas
 

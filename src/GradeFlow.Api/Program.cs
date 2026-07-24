@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 const string FrontendCorsPolicy = "Frontend";
@@ -81,6 +82,7 @@ if (!string.IsNullOrWhiteSpace(connectionString))
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
@@ -91,6 +93,19 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 builder.Services.AddAuthorization();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("Login", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
 
 var app = builder.Build();
 
@@ -102,6 +117,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(FrontendCorsPolicy);
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHealthChecks("/health");

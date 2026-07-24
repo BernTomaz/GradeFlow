@@ -49,6 +49,8 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - SQL Server
 - JWT Authentication
 - Endpoint autenticado para reemissão de token
+- Senha forte obrigatória no cadastro e na alteração de senha
+- Limite temporário de tentativas inválidas de login
 - Controle de acesso baseado em perfis:
   - Admin
   - Teacher
@@ -93,6 +95,8 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - Docker e Docker Compose para execução local
 - Health checks da API e do banco
 - Estratégia controlada de migrations com script idempotente
+- SQL Server do Docker sem porta publicada para o host
+- Script local de backup do banco Docker
 
 ## Próximos Passos
 

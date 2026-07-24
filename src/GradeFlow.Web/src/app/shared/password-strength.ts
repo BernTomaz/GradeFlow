@@ -11,3 +11,12 @@ export function passwordStrength(password: string) {
   if (score <= 4) return { label: 'Senha média.', level: 'medium' };
   return { label: 'Senha forte.', level: 'strong' };
 }
+
+export function passwordRules(password: string) {
+  return [
+    { label: '8 caracteres ou mais', ok: password.length >= 8 },
+    { label: 'Uma letra maiúscula', ok: /[A-Z]/.test(password) },
+    { label: 'Um número', ok: /\d/.test(password) },
+    { label: 'Um caractere especial', ok: /[^A-Za-z0-9]/.test(password) }
+  ];
+}

@@ -14,6 +14,8 @@ public sealed class SubmissionsController(
     ISubmissionService submissionService,
     ICorrectionService correctionService) : ControllerBase
 {
+    private const long MaxImportFileBytes = 5 * 1024 * 1024;
+
     [HttpGet("assignments/{assignmentId:guid}/submissions")]
     public async Task<ActionResult<IReadOnlyCollection<SubmissionResponse>>> GetByAssignmentId(
         Guid assignmentId,
@@ -88,6 +90,11 @@ public sealed class SubmissionsController(
     {
         try
         {
+            if (file.Length == 0 || file.Length > MaxImportFileBytes)
+            {
+                return BadRequest(new { error = "Arquivo CSV deve ter entre 1 byte e 5 MB." });
+            }
+
             using var reader = new StreamReader(file.OpenReadStream());
             var csv = await reader.ReadToEndAsync(cancellationToken);
             return await submissionService.ImportCsvAsync(assignmentId, csv, cancellationToken) is { } result

@@ -125,6 +125,15 @@ Cors__AllowedOrigins__0=https://seu-frontend.example.com
 
 Use `.env.example` apenas como referência. Não versione `.env` real nem credenciais.
 
+Regras atuais de senha para cadastro e alteração de senha:
+
+- mínimo de 8 caracteres;
+- pelo menos uma letra maiúscula;
+- pelo menos um número;
+- pelo menos um caractere especial.
+
+O login limita tentativas inválidas por email e IP. Após 5 falhas dentro de 1 minuto, a API bloqueia novas tentativas temporariamente.
+
 Executar a API:
 
 ```powershell
@@ -170,7 +179,9 @@ O frontend utiliza o arquivo `proxy.conf.json` para encaminhar automaticamente c
 
 ## Docker Compose
 
-Crie um `.env` local a partir do `.env.example` e ajuste `MSSQL_SA_PASSWORD` e `JWT_KEY`.
+Crie um `.env` local a partir do `.env.example` e ajuste `MSSQL_SA_PASSWORD`, `APP_DB_PASSWORD` e `JWT_KEY`.
+
+O arquivo `.env` real é local e não deve ser versionado.
 
 ```powershell
 docker compose build
@@ -182,7 +193,13 @@ Serviços locais:
 - Frontend: `http://localhost:4200`
 - API: `http://localhost:8080`
 - Health check: `http://localhost:8080/health`
-- SQL Server: `localhost,1433`
+- SQL Server: acessível apenas pela rede interna do Docker
 
 As migrations de banco não são aplicadas automaticamente pelo Compose.
 Gere e aplique o script idempotente conforme [operacao/migrations.md](operacao/migrations.md).
+
+Para gerar backup do banco Docker:
+
+```powershell
+.\scripts\database\backup-docker.ps1
+```

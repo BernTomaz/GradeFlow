@@ -2,11 +2,17 @@ IF DB_ID(N'GradeFlow') IS NULL
 BEGIN
     CREATE DATABASE GradeFlow;
 END
+GO
 
 IF SUSER_ID(N'gradeflow_app') IS NULL
 BEGIN
     CREATE LOGIN gradeflow_app WITH PASSWORD = N'$(APP_DB_PASSWORD)';
 END
+ELSE
+BEGIN
+    ALTER LOGIN gradeflow_app WITH PASSWORD = N'$(APP_DB_PASSWORD)';
+END
+GO
 
 USE GradeFlow;
 

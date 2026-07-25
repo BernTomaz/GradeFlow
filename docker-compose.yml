@@ -62,7 +62,8 @@ services:
       APP_DB_PASSWORD: ${APP_DB_PASSWORD}
     volumes:
       - ./docker/sqlserver/init.sql:/init.sql:ro
-    command: /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -v APP_DB_PASSWORD="$$APP_DB_PASSWORD" -i /init.sql'
+      - ./artifacts/database/gradeflow-migrations.sql:/migrations.sql:ro
+    command: /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -v APP_DB_PASSWORD="$$APP_DB_PASSWORD" -i /init.sql && /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /migrations.sql'
 
 volumes:
   sqlserver-data:

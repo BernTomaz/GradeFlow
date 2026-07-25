@@ -22,16 +22,25 @@ artifacts/database/gradeflow-migrations.sql
 
 O diretório `artifacts/` é ignorado pelo Git.
 
-## Aplicar em ambiente local Docker
+## Docker local
 
-Com o SQL Server do `docker-compose.yml` em execução:
+No Docker local, o serviço `sqlserver-init` aplica `artifacts/database/gradeflow-migrations.sql` ao iniciar o Compose.
+
+Ao criar uma migration nova, gere o script antes de subir os containers:
+
+```powershell
+.\scripts\database\generate-migration-script.ps1
+docker compose up -d --build
+```
+
+O mesmo script pode ser executado novamente. Como é idempotente, migrations já aplicadas são ignoradas.
+
+Para aplicar manualmente com o SQL Server do `docker-compose.yml` em execução:
 
 ```powershell
 docker compose cp artifacts/database/gradeflow-migrations.sql sqlserver:/tmp/gradeflow-migrations.sql
 docker compose exec sqlserver /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /tmp/gradeflow-migrations.sql'
 ```
-
-O mesmo script pode ser executado novamente. Como é idempotente, migrations já aplicadas são ignoradas.
 
 ## Backup local Docker
 

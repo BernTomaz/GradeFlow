@@ -185,8 +185,16 @@ O arquivo `.env` real é local e não deve ser versionado.
 
 ```powershell
 docker compose build
-docker compose up
+docker compose up -d
 ```
+
+Também é possível reconstruir e iniciar em um único comando:
+
+```powershell
+docker compose up -d --build
+```
+
+Use `-d` para executar os containers em segundo plano e liberar o terminal.
 
 Serviços locais:
 
@@ -195,8 +203,26 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker
 
-As migrations de banco não são aplicadas automaticamente pelo Compose.
-Gere e aplique o script idempotente conforme [operacao/migrations.md](operacao/migrations.md).
+O Compose prepara o banco local e aplica `artifacts/database/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Ao criar uma migration nova, gere o script antes de subir o Docker:
+
+```powershell
+.\scripts\database\generate-migration-script.ps1
+docker compose up -d --build
+```
+
+Para parar os containers mantendo o banco local:
+
+```powershell
+docker compose down
+```
+
+Para parar e apagar também o volume do banco Docker:
+
+```powershell
+docker compose down -v
+```
+
+Use `-v` com cuidado: ele remove volumes, incluindo os dados locais do SQL Server.
 
 Para gerar backup do banco Docker:
 

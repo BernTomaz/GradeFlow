@@ -203,7 +203,7 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker
 
-O Compose prepara o banco local e aplica `artifacts/database/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Ao criar uma migration nova, gere o script antes de subir o Docker:
+O Compose prepara o banco local e aplica `artifacts/database/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Veja [operacao/migrations.md](operacao/migrations.md). Ao criar uma migration nova, gere o script antes de subir o Docker:
 
 ```powershell
 .\scripts\database\generate-migration-script.ps1

@@ -22,11 +22,13 @@ artifacts/database/gradeflow-migrations.sql
 
 O diretório `artifacts/` é ignorado pelo Git.
 
+Como o script gerado não é versionado, clones limpos precisam executar esse comando antes do primeiro `docker compose up`.
+
 ## Docker local
 
 No Docker local, o serviço `sqlserver-init` aplica `artifacts/database/gradeflow-migrations.sql` ao iniciar o Compose.
 
-Ao criar uma migration nova, gere o script antes de subir os containers:
+Ao criar uma migration nova ou iniciar o projeto em um clone limpo, gere o script antes de subir os containers:
 
 ```powershell
 .\scripts\database\generate-migration-script.ps1
@@ -34,6 +36,8 @@ docker compose up -d --build
 ```
 
 O mesmo script pode ser executado novamente. Como é idempotente, migrations já aplicadas são ignoradas.
+
+Se `artifacts/database/gradeflow-migrations.sql` não existir, o `sqlserver-init` falha e a API não sobe.
 
 Para aplicar manualmente com o SQL Server do `docker-compose.yml` em execução:
 
@@ -63,9 +67,11 @@ Fluxo recomendado:
 1. Fazer backup do banco.
 2. Gerar o script idempotente a partir do commit que será publicado.
 3. Revisar o SQL gerado.
-4. Aplicar o script uma única vez, antes do deploy da aplicação.
+4. Aplicar o script uma única vez, antes do deploy da aplicação, com um usuário operacional autorizado a DDL.
 5. Interromper o deploy se a migration falhar.
 6. Publicar a aplicação somente após a migration concluir.
+
+O usuário da aplicação (`gradeflow_app`) não deve aplicar migrations em produção. Ele deve permanecer restrito às permissões necessárias para operar a aplicação.
 
 ## Rollback
 

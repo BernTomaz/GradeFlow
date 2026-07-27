@@ -45,7 +45,8 @@ Testes:
 - Regras de negócio devem ficar em services, domain ou no motor de correção.
 - Não coloque lógica de correção dentro dos controllers.
 - O motor de correção deve usar Strategy Pattern.
-- Não implemente IA, OCR, upload, relatórios ou login antes do MVP.
+- O MVP já possui login, importação CSV, relatórios e exportações.
+- Não implemente IA, OCR, upload de arquivos ou recursos futuros antes do deploy público final.
 - Sempre que possível, rode build e testes após alterações.
 
 ## Ordem Recomendada
@@ -61,3 +62,9 @@ A referência oficial de execução segue a ordem dos arquivos em `docs/etapas/`
 7. `docs/etapas/07-etapa-frontend-angular.md`
 8. `docs/etapas/08-etapa-testes.md`
 9. `docs/etapas/09-etapa-revisao-manual-auditoria.md`
+10. `docs/etapas/10-etapa-login-permissoes.md`
+11. `docs/etapas/10.1-etapa-cicd-docker-deploy-final.md`
+12. `docs/etapas/11-etapa-importacao-relatorios.md`
+13. `docs/etapas/12-etapa-fechamento-demonstracao.md`
+14. `docs/etapas/13-etapa-deploy-publico-final.md`
+15. `docs/etapas/14-etapa-recursos-futuros.md`

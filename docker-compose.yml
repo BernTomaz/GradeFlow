@@ -1,5 +1,6 @@
 services:
   gradeflow-api:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: src/GradeFlow.Api/Dockerfile
@@ -24,6 +25,7 @@ services:
       retries: 6
 
   gradeflow-web:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: src/GradeFlow.Web/Dockerfile
@@ -39,6 +41,7 @@ services:
       retries: 6
 
   sqlserver:
+    restart: unless-stopped
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
@@ -63,7 +66,15 @@ services:
     volumes:
       - ./docker/sqlserver/init.sql:/init.sql:ro
       - ./artifacts/database/gradeflow-migrations.sql:/migrations.sql:ro
-    command: /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -v APP_DB_PASSWORD="$$APP_DB_PASSWORD" -i /init.sql && /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /migrations.sql'
+    command: >
+      /bin/sh -c 'test -f /migrations.sql ||
+      { echo "Missing /migrations.sql. Run ./scripts/database/generate-migration-script.ps1 before docker compose up."; exit 1; };
+      /opt/mssql-tools18/bin/sqlcmd -b -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -v APP_DB_PASSWORD="$$APP_DB_PASSWORD" -i /init.sql &&
+      /opt/mssql-tools18/bin/sqlcmd -b -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /migrations.sql'
 
 volumes:
   sqlserver-data:
+
+networks:
+  default:
+    name: gradeflow-network

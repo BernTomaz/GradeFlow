@@ -1,5 +1,5 @@
 param(
-    [string]$Output = "artifacts/database/gradeflow-migrations.sql"
+    [string]$Output = "docker/sqlserver/gradeflow-migrations.sql"
 )
 
 $outputDirectory = Split-Path -Parent $Output

@@ -65,10 +65,10 @@ services:
       APP_DB_PASSWORD: ${APP_DB_PASSWORD}
     volumes:
       - ./docker/sqlserver/init.sql:/init.sql:ro
-      - ./artifacts/database/gradeflow-migrations.sql:/migrations.sql:ro
+      - ./docker/sqlserver/gradeflow-migrations.sql:/migrations.sql:ro
     command: >
       /bin/sh -c 'test -f /migrations.sql ||
-      { echo "Missing /migrations.sql. Run ./scripts/database/generate-migration-script.ps1 before docker compose up."; exit 1; };
+      { echo "Missing /migrations.sql. Run ./scripts/database/generate-migration-script.ps1 and commit docker/sqlserver/gradeflow-migrations.sql."; exit 1; };
       /opt/mssql-tools18/bin/sqlcmd -b -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -v APP_DB_PASSWORD="$$APP_DB_PASSWORD" -i /init.sql &&
       /opt/mssql-tools18/bin/sqlcmd -b -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /migrations.sql'
 

@@ -17,32 +17,35 @@ Na raiz do repositório:
 Saida padrao:
 
 ```txt
-artifacts/database/gradeflow-migrations.sql
+docker/sqlserver/gradeflow-migrations.sql
 ```
 
-O diretório `artifacts/` é ignorado pelo Git.
-
-Como o script gerado não é versionado, clones limpos precisam executar esse comando antes do primeiro `docker compose up`.
+Esse arquivo é versionado para permitir que clones limpos subam com Docker sem etapa manual de banco.
 
 ## Docker local
 
-No Docker local, o serviço `sqlserver-init` aplica `artifacts/database/gradeflow-migrations.sql` ao iniciar o Compose.
+No Docker local, o serviço `sqlserver-init` aplica `docker/sqlserver/gradeflow-migrations.sql` ao iniciar o Compose.
 
-Ao criar uma migration nova ou iniciar o projeto em um clone limpo, gere o script antes de subir os containers:
+Em clone limpo, o fluxo local é:
+
+```powershell
+docker compose up -d --build
+```
+
+Ao criar uma migration nova, gere novamente o script SQL e versione o arquivo atualizado:
 
 ```powershell
 .\scripts\database\generate-migration-script.ps1
-docker compose up -d --build
 ```
 
 O mesmo script pode ser executado novamente. Como é idempotente, migrations já aplicadas são ignoradas.
 
-Se `artifacts/database/gradeflow-migrations.sql` não existir, o `sqlserver-init` falha e a API não sobe.
+Se `docker/sqlserver/gradeflow-migrations.sql` não existir, o `sqlserver-init` falha e a API não sobe.
 
 Para aplicar manualmente com o SQL Server do `docker-compose.yml` em execução:
 
 ```powershell
-docker compose cp artifacts/database/gradeflow-migrations.sql sqlserver:/tmp/gradeflow-migrations.sql
+docker compose cp docker/sqlserver/gradeflow-migrations.sql sqlserver:/tmp/gradeflow-migrations.sql
 docker compose exec sqlserver /bin/sh -c '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -d GradeFlow -i /tmp/gradeflow-migrations.sql'
 ```
 

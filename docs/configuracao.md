@@ -203,11 +203,12 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker
 
-O Compose prepara o banco local e aplica `artifacts/database/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Veja [operacao/migrations.md](operacao/migrations.md). Como `artifacts/` não é versionado, gere o script antes do primeiro Docker em um clone limpo ou ao criar uma migration nova:
+O Compose prepara o banco local e aplica `docker/sqlserver/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Veja [operacao/migrations.md](operacao/migrations.md).
+
+Ao criar uma migration nova, atualize o script SQL versionado antes de subir o Docker ou abrir PR:
 
 ```powershell
 .\scripts\database\generate-migration-script.ps1
-docker compose up -d --build
 ```
 
 Para parar os containers mantendo o banco local:

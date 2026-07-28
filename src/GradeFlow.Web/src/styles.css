@@ -146,6 +146,7 @@ small {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   min-height: 100vh;
+  width: 100%;
   transition: grid-template-columns 0.22s ease;
 }
 
@@ -215,6 +216,7 @@ small {
   align-items: center;
   gap: 12px;
   min-width: 0;
+  max-width: 100%;
   color: inherit;
   font-size: 23px;
   font-weight: 800;
@@ -230,6 +232,8 @@ small {
 
 .brand span,
 .side-nav span {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   transition: opacity 0.16s ease;
 }
@@ -247,7 +251,7 @@ small {
 
 .sidebar-collapsed .sidebar-head {
   gap: 8px;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .sidebar-collapsed .sidebar-body {
@@ -580,6 +584,7 @@ small {
   align-items: center;
   justify-content: center;
   min-height: 38px;
+  min-width: max-content;
   border: 1px solid rgba(36, 87, 166, 0.42);
   border-radius: 8px;
   padding: 0 15px;
@@ -816,10 +821,6 @@ small {
 
 .narrow-form-shell {
   width: min(380px, 100%);
-}
-
-.narrow-form-shell .page-header {
-  align-items: flex-end;
 }
 
 .narrow-card.card {
@@ -1651,13 +1652,13 @@ small {
   color: var(--brand);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) and (min-width: 1025px) {
   .app-layout {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: 232px minmax(0, 1fr);
   }
 
   .app-layout.sidebar-collapsed {
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 112px minmax(0, 1fr);
   }
 
   .sidebar {
@@ -1674,7 +1675,7 @@ small {
   }
 
   .shell {
-    width: min(100% - 28px, 980px);
+    width: min(100% - 28px, 940px);
     margin: 24px auto;
   }
 
@@ -1687,7 +1688,7 @@ small {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
   h1 {
     font-size: 26px;
   }
@@ -1702,28 +1703,54 @@ small {
 
   .sidebar {
     position: static;
+    z-index: 5;
     min-height: 0;
-    padding: 16px;
+    padding: 12px 14px 14px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
   }
 
   .sidebar-head {
-    justify-content: space-between;
+    min-width: 0;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .brand {
+    flex: 0 1 auto;
+    gap: 10px;
+    font-size: 20px;
+  }
+
+  .sidebar-toggle {
+    display: inline-grid;
+    margin-left: auto;
   }
 
   .sidebar-body {
-    min-height: 0;
+    display: block !important;
+    min-height: 0 !important;
   }
 
   .side-nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding-bottom: 2px;
   }
 
   .side-nav a {
+    flex: 1 1 calc(50% - 4px);
     justify-content: center;
-    min-height: 40px;
-    padding: 0 8px;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
     font-size: 13px;
+  }
+
+  .side-nav-bottom {
+    margin-top: 8px;
   }
 
   .sidebar-collapsed .brand span,
@@ -1732,8 +1759,12 @@ small {
     opacity: 1;
   }
 
+  .sidebar-collapsed .sidebar {
+    padding-inline: 14px;
+  }
+
   .sidebar-collapsed .sidebar-body {
-    display: flex;
+    display: none !important;
   }
 
   .sidebar-collapsed .sidebar-toggle {
@@ -1742,7 +1773,8 @@ small {
 
   .topbar {
     min-height: 0;
-    padding: 14px 18px;
+    padding: 10px 14px;
+    background: var(--surface);
   }
 
   .topbar,
@@ -1754,14 +1786,16 @@ small {
 
   .topbar nav {
     margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
   }
 
   .topbar nav {
-    gap: 10px 14px;
+    gap: 10px;
   }
 
   .theme-switch {
-    width: 100%;
+    flex: 1 1 240px;
     justify-content: space-between;
   }
 
@@ -1770,8 +1804,8 @@ small {
   }
 
   .shell {
-    width: min(100% - 20px, 1120px);
-    margin: 20px auto;
+    width: min(100% - 24px, 680px);
+    margin: 16px auto;
   }
 
   .assignments-table {
@@ -1801,11 +1835,18 @@ small {
   }
 
   .button {
-    flex: 0 1 auto;
+    flex: 1 1 150px;
+    min-width: 0;
+  }
+
+  .page-header > .button {
+    flex: 0 0 auto;
+    width: auto;
+    align-self: flex-start;
   }
 
   .card {
-    padding: 16px;
+    padding: 18px;
   }
 
   .card:not(.add-card) {
@@ -1849,6 +1890,30 @@ small {
   .result {
     align-self: flex-start;
   }
+
+  .chart-header,
+  .pie-chart {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-switch {
+    justify-self: stretch;
+  }
+
+  .chart-switch button {
+    flex: 1;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .chart-row {
+    grid-template-columns: minmax(0, 1fr) 72px;
+  }
+
+  .pie {
+    width: min(220px, 70vw);
+    justify-self: center;
+  }
 }
 
 @media (max-width: 460px) {
@@ -1861,12 +1926,12 @@ small {
   }
 
   .brand {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .brand img {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .auth-heading {
@@ -1890,13 +1955,18 @@ small {
     bottom: 6px;
   }
 
-  .side-nav {
-    grid-template-columns: 1fr;
+  .topbar nav {
+    width: 100%;
   }
 
-  .topbar nav,
-  .topbar nav a {
-    min-height: 42px;
+  .theme-switch {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .nav-button {
+    min-height: 38px;
+    padding: 0 10px;
   }
 
   .button {
@@ -1926,6 +1996,17 @@ small {
     grid-template-columns: 1fr;
   }
 
+  .chart-switch {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .chart-switch button {
+    min-width: 0;
+    font-size: 12px;
+  }
+
   .topbar nav a {
     display: inline-flex;
     align-items: center;
@@ -1938,6 +2019,51 @@ small {
   .alert-modal,
   .confirm-modal {
     padding: 22px 42px 22px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chart-header,
+  .dashboard-chart .chart-header {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-switch,
+  .dashboard-chart .chart-switch {
+    justify-self: stretch;
+  }
+
+  .dashboard-chart h2 {
+    max-width: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand span {
+    display: none;
+  }
+
+  .dashboard-chart.card {
+    padding: 14px;
+  }
+
+  .dashboard-chart h2 {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .chart-switch button {
+    gap: 4px;
+    padding: 0 4px;
+    font-size: 11px;
+  }
+
+  .chart-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chart-row strong {
+    text-align: left;
   }
 }
 
@@ -1983,4 +2109,14 @@ small {
 
 .dashboard-chart .chart-switch {
   justify-self: end;
+}
+
+@media (max-width: 640px) {
+  .dashboard-chart .chart-header {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-chart .chart-switch {
+    justify-self: stretch;
+  }
 }

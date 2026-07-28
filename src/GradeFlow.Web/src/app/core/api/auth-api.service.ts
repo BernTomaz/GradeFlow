@@ -45,6 +45,11 @@ export class AuthApiService {
   private load() {
     const value = sessionStorage.getItem(this.storageKey);
     localStorage.removeItem(this.storageKey);
-    return value ? (JSON.parse(value) as AuthResponse) : null;
+    try {
+      return value ? (JSON.parse(value) as AuthResponse) : null;
+    } catch {
+      sessionStorage.removeItem(this.storageKey);
+      return null;
+    }
   }
 }

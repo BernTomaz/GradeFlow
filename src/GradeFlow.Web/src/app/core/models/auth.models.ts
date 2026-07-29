@@ -11,6 +11,16 @@ export interface RegisterRequest {
   role?: UserRole;
 }
 
+export interface SetupAdminRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface SetupStatusResponse {
+  available: boolean;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -19,6 +29,10 @@ export interface LoginRequest {
 export interface ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
+}
+
+export interface ChangeNameRequest {
+  name: string;
 }
 
 export interface AuthResponse {

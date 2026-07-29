@@ -18,5 +18,5 @@ export interface AssignmentResponse {
 export interface SaveAssignmentRequest {
   title: string;
   description?: string | null;
-  subject?: string | null;
+  subject: string;
 }

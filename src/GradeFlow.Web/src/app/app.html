@@ -12,32 +12,66 @@
       </div>
 
       <div class="sidebar-body">
-        <nav class="side-nav" aria-label="Principal">
-          <a routerLink="/dashboard" routerLinkActive="active" class="nav-dashboard">
+        <nav class="side-nav side-nav-main" aria-label="Principal">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-dashboard" title="Dashboard" aria-label="Dashboard">
+            <i class="pi pi-chart-line"></i>
             <span>Dashboard</span>
           </a>
-          <a routerLink="/assignments" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-assessments">
+          <a routerLink="/assignments" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-assessments" title="Avaliações" aria-label="Avaliações">
+            <i class="pi pi-book"></i>
             <span>Avaliações</span>
           </a>
-          <a routerLink="/assignments/new" routerLinkActive="active" class="nav-new">
+          <a routerLink="/assignments/new" routerLinkActive="active" class="nav-new" title="Nova avaliação" aria-label="Nova avaliação">
+            <i class="pi pi-plus-circle"></i>
             <span>Nova avaliação</span>
           </a>
-          <a routerLink="/change-password" routerLinkActive="active" class="nav-settings">
-            <span>Configuração</span>
-          </a>
+        </nav>
+        <nav class="side-nav side-nav-bottom" aria-label="Conta">
+          <div class="side-nav-group" [class.open]="settingsOpen">
+            <button class="side-nav-button side-nav-label" type="button" title="Configuração" aria-label="Configuração" [attr.aria-expanded]="settingsOpen" (click)="toggleSettings()">
+              <i class="pi pi-cog"></i>
+              <span>Configuração</span>
+            </button>
+            <div class="side-nav-submenu" [class.open]="settingsOpen" [attr.aria-hidden]="!settingsOpen">
+              <a routerLink="/change-password" routerLinkActive="active" class="nav-password" title="Alterar senha" aria-label="Alterar senha">
+                <i class="pi pi-key"></i>
+                <span>Alterar senha</span>
+              </a>
+            <a routerLink="/change-name" routerLinkActive="active" class="nav-profile" title="Alterar nome" aria-label="Alterar nome">
+              <i class="pi pi-user-edit"></i>
+              <span>Alterar nome</span>
+            </a>
+            @if (auth.current()?.user?.role === 0) {
+              <a routerLink="/users/new" routerLinkActive="active" class="nav-users" title="Novo usuário" aria-label="Novo usuário">
+                <i class="pi pi-user-plus"></i>
+                <span>Novo usuário</span>
+              </a>
+            }
+            <a routerLink="/about" routerLinkActive="active" class="nav-about" title="Sobre" aria-label="Sobre">
+              <i class="pi pi-info-circle"></i>
+              <span>Sobre</span>
+              </a>
+            </div>
+          </div>
+          <button class="side-nav-button nav-logout" type="button" title="Sair" aria-label="Sair" (click)="logout()">
+            <i class="pi pi-sign-out"></i>
+            <span>Sair</span>
+          </button>
         </nav>
       </div>
     </aside>
 
     <div class="workspace">
       <header class="topbar">
+        <div class="welcome">
+          <strong>Bem-vindo, {{ auth.current()?.user?.name }}</strong>
+        </div>
         <nav>
           <div class="theme-switch" aria-label="Tema">
             <button type="button" [class.active]="theme === 'system'" (click)="setTheme('system')"><i class="pi pi-desktop"></i>Sistema</button>
             <button type="button" [class.active]="theme === 'light'" (click)="setTheme('light')"><i class="pi pi-sun"></i>Claro</button>
             <button type="button" [class.active]="theme === 'dark'" (click)="setTheme('dark')"><i class="pi pi-moon"></i>Escuro</button>
           </div>
-          <button class="nav-button" type="button" (click)="logout()"><i class="pi pi-sign-out"></i>Sair</button>
         </nav>
       </header>
 
@@ -47,7 +81,7 @@
         </div>
       }
 
-      <main class="shell">
+      <main class="shell route-shell" [class.animating]="routeAnimating">
         <router-outlet />
       </main>
 
@@ -62,7 +96,9 @@
   }
 
   <main class="shell public-shell">
-    <router-outlet />
+    <div class="public-content route-shell" [class.animating]="routeAnimating">
+      <router-outlet />
+    </div>
     <footer class="footer public-footer">Developed by Bernardo Tomaz</footer>
   </main>
 }

@@ -78,6 +78,22 @@ public sealed class AuthServiceTests
     }
 
     [Fact]
+    public async Task Setup_should_create_only_first_admin()
+    {
+        var repository = new FakeUserRepository();
+        var service = new AuthService(repository, new PasswordHasher(), new FakeTokenService());
+
+        var created = await service.CreateSetupAdminAsync(new SetupAdminRequest(" Root ", " ROOT@EMAIL.COM ", "Nado1994@"));
+        var second = () => service.CreateSetupAdminAsync(new SetupAdminRequest("Outro", "outro@email.com", "Nado1994@"));
+
+        created.User.Role.Should().Be(UserRole.Admin);
+        created.User.Email.Should().Be("root@email.com");
+        (await service.IsSetupAvailableAsync()).Should().BeFalse();
+        await second.Should().ThrowAsync<ValidationException>()
+            .WithMessage("A configuracao inicial ja foi realizada.");
+    }
+
+    [Fact]
     public async Task Register_should_require_strong_password()
     {
         var service = new AuthService(new FakeUserRepository(), new PasswordHasher(), new FakeTokenService());
@@ -114,6 +130,19 @@ public sealed class AuthServiceTests
         hasher.Verify(user.PasswordHash, "Senha1995@").Should().BeTrue();
     }
 
+    [Fact]
+    public async Task ChangeName_should_update_name_and_return_new_auth_response()
+    {
+        var user = new User { Id = Guid.NewGuid(), Name = "Ana", Email = "ana@email.com" };
+        var service = new AuthService(new FakeUserRepository(user), new PasswordHasher(), new FakeTokenService());
+
+        var response = await service.ChangeNameAsync(user.Id, new ChangeNameRequest(" Ana Maria "));
+
+        response!.User.Name.Should().Be("Ana Maria");
+        user.Name.Should().Be("Ana Maria");
+        user.UpdatedAt.Should().NotBeNull();
+    }
+
     private sealed class FakeUserRepository(params User[] users) : IUserRepository
     {
         public List<User> Users { get; } = users.ToList();
@@ -123,6 +152,9 @@ public sealed class AuthServiceTests
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(Users.FirstOrDefault(x => x.Email == email));
+
+        public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(Users.Any());
 
         public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(Users.Any(x => x.Email == email));

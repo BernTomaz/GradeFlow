@@ -20,7 +20,7 @@ public sealed class AuthController(
     private const int MaxLoginAttempts = 5;
     private static readonly TimeSpan LoginAttemptWindow = TimeSpan.FromMinutes(1);
 
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
@@ -69,6 +69,25 @@ public sealed class AuthController(
             return await authService.ChangePasswordAsync(id, request, cancellationToken)
                 ? NoContent()
                 : BadRequest(new { error = "Senha atual invalida." });
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
+    [Authorize]
+    [HttpPost("change-name")]
+    public async Task<ActionResult<AuthResponse>> ChangeName(ChangeNameRequest request, CancellationToken cancellationToken)
+    {
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id))
+            return Unauthorized(new { error = "Token invalido." });
+
+        try
+        {
+            return await authService.ChangeNameAsync(id, request, cancellationToken) is { } response
+                ? Ok(response)
+                : Unauthorized(new { error = "Token invalido." });
         }
         catch (ValidationException exception)
         {

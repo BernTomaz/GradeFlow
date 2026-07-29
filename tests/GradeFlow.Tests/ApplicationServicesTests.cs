@@ -31,18 +31,49 @@ public sealed class ApplicationServicesTests
     [Fact]
     public async Task Assignment_service_should_update_and_delete_existing_assignment()
     {
-        var assignment = new Assignment { Id = Guid.NewGuid(), Title = "Old" };
+        var assignment = new Assignment { Id = Guid.NewGuid(), Title = "Old", Subject = "Old" };
         var repository = new FakeAssignmentRepository(assignment);
         var service = new AssignmentService(repository);
 
-        var updated = await service.UpdateAsync(assignment.Id, new UpdateAssignmentRequest(" New ", null, null));
+        var updated = await service.UpdateAsync(assignment.Id, new UpdateAssignmentRequest(" New ", null, " Mat "));
         var deleted = await service.DeleteAsync(assignment.Id);
 
         updated.Should().BeTrue();
         deleted.Should().BeTrue();
         assignment.Title.Should().Be("New");
+        assignment.Subject.Should().Be("Mat");
         repository.Assignments.Should().BeEmpty();
         repository.SaveChangesCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Assignment_service_should_require_title_and_subject()
+    {
+        var service = new AssignmentService(new FakeAssignmentRepository());
+
+        var missingTitle = () => service.CreateAsync(new CreateAssignmentRequest(" ", null, "Mat"));
+        var missingSubject = () => service.CreateAsync(new CreateAssignmentRequest("Prova", null, " "));
+
+        await missingTitle.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Titulo e obrigatorio.");
+        await missingSubject.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Disciplina e obrigatoria.");
+    }
+
+    [Fact]
+    public async Task Assignment_service_should_reject_duplicate_title()
+    {
+        var existing = new Assignment { Id = Guid.NewGuid(), Title = "Prova", Subject = "Mat" };
+        var other = new Assignment { Id = Guid.NewGuid(), Title = "Outra", Subject = "Mat" };
+        var service = new AssignmentService(new FakeAssignmentRepository(existing, other));
+
+        var create = () => service.CreateAsync(new CreateAssignmentRequest(" prova ", null, "Mat"));
+        var update = () => service.UpdateAsync(other.Id, new UpdateAssignmentRequest(" PROVA ", null, "Mat"));
+
+        await create.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Esse nome já está sendo usado.");
+        await update.Should().ThrowAsync<ValidationException>()
+            .WithMessage("Esse nome já está sendo usado.");
     }
 
     [Fact]
@@ -60,7 +91,7 @@ public sealed class ApplicationServicesTests
         var all = await service.GetAllAsync();
         var found = await service.GetByIdAsync(assignment.Id);
         var missing = await service.GetByIdAsync(Guid.NewGuid());
-        var updated = await service.UpdateAsync(Guid.NewGuid(), new UpdateAssignmentRequest("X", null, null));
+        var updated = await service.UpdateAsync(Guid.NewGuid(), new UpdateAssignmentRequest("X", null, "Mat"));
         var deleted = await service.DeleteAsync(Guid.NewGuid());
 
         all.Should().ContainSingle(x => x.TotalPoints == 5);
@@ -540,6 +571,11 @@ public sealed class ApplicationServicesTests
 
         public Task<Assignment?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
             => GetByIdAsync(id, cancellationToken);
+
+        public Task<bool> TitleExistsAsync(string title, Guid? exceptId = null, CancellationToken cancellationToken = default)
+            => Task.FromResult(Assignments.Any(x =>
+                x.Id != exceptId
+                && string.Equals(x.Title.Trim(), title.Trim(), StringComparison.OrdinalIgnoreCase)));
 
         public void Add(Assignment assignment)
             => Assignments.Add(assignment);

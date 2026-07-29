@@ -1,0 +1,57 @@
+<section class="auth-shell setup-shell">
+  <div class="auth-heading">
+    <img class="auth-logo" src="favicon.svg" width="54" height="54" alt="" />
+    <strong>GradeFlow</strong>
+  </div>
+  <p class="auth-subtitle">Crie o primeiro administrador do sistema.</p>
+
+  <form class="form card auth-card" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Nome
+      <input formControlName="name" autocomplete="name" />
+    </label>
+
+    <label>
+      Email
+      <input formControlName="email" type="email" autocomplete="email" />
+    </label>
+
+    <label>
+      Senha
+      <input formControlName="password" type="password" autocomplete="new-password" />
+    </label>
+
+    <div
+      class="password-meter"
+      [class.weak]="passwordStrength().level === 'weak'"
+      [class.medium]="passwordStrength().level === 'medium'"
+      [class.strong]="passwordStrength().level === 'strong'">
+      <span></span>
+      <small>{{ passwordStrength().label }}</small>
+    </div>
+    <ul class="password-rules">
+      @for (rule of passwordRules(); track rule.label) {
+        <li [class.ok]="rule.ok">{{ rule.label }}</li>
+      }
+    </ul>
+
+    <label>
+      Confirmar senha
+      <input formControlName="confirmPassword" type="password" autocomplete="new-password" />
+    </label>
+
+    @if (error) {
+      <div class="error">{{ error }}</div>
+    }
+
+    <div class="actions form-actions">
+      <button class="button primary" type="submit" [disabled]="form.invalid || loading">
+        @if (loading) {
+          Aguarde...
+        } @else {
+          Criar administrador
+        }
+      </button>
+    </div>
+  </form>
+</section>

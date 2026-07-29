@@ -102,9 +102,9 @@ public sealed class JwtAuthenticationIntegrationTests
         var client = factory.CreateClient();
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Student, DateTime.UtcNow.AddMinutes(10)));
-        var forbidden = await client.PostAsJsonAsync("/api/assignments", new CreateAssignmentRequest("Prova", null, null));
+        var forbidden = await client.PostAsJsonAsync("/api/assignments", new CreateAssignmentRequest("Prova", null, "Mat"));
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Teacher, DateTime.UtcNow.AddMinutes(10)));
-        var allowed = await client.PostAsJsonAsync("/api/assignments", new CreateAssignmentRequest("Prova", null, null));
+        var allowed = await client.PostAsJsonAsync("/api/assignments", new CreateAssignmentRequest("Prova", null, "Mat"));
 
         forbidden.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         allowed.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -125,6 +125,25 @@ public sealed class JwtAuthenticationIntegrationTests
         invalid.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         valid.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
+
+    [Fact]
+    public async Task Register_requires_admin()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+        var request = new RegisterRequest("Professor", "novo@gradeflow.test", "Senha1995@", UserRole.Teacher);
+
+        var anonymous = await client.PostAsJsonAsync("/api/auth/register", request);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Teacher, DateTime.UtcNow.AddMinutes(10)));
+        var teacher = await client.PostAsJsonAsync("/api/auth/register", request);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Admin, DateTime.UtcNow.AddMinutes(10)));
+        var admin = await client.PostAsJsonAsync("/api/auth/register", request);
+
+        anonymous.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        teacher.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        admin.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
 
     [Fact]
     public async Task Health_returns_ok()
@@ -222,6 +241,15 @@ public sealed class JwtAuthenticationIntegrationTests
             Role = UserRole.Teacher
         };
 
+        public static readonly User Admin = new()
+        {
+            Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+            Name = "Admin",
+            Email = "admin@gradeflow.test",
+            PasswordHash = Hasher.Hash("secret1"),
+            Role = UserRole.Admin
+        };
+
         public static readonly User Student = new()
         {
             Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
@@ -248,6 +276,9 @@ public sealed class JwtAuthenticationIntegrationTests
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(users.FirstOrDefault(x => x.Email == email));
+
+        public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(users.Any());
 
         public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
             => Task.FromResult(users.Any(x => x.Email == email));

@@ -11,11 +11,11 @@
   <form [formGroup]="form" (ngSubmit)="save()" class="form form-shell">
     <label>
       Título
-      <input formControlName="title" maxlength="200" />
+      <input formControlName="title" maxlength="200" required />
     </label>
     <label>
       Disciplina
-      <input formControlName="subject" maxlength="200" />
+      <input formControlName="subject" maxlength="200" required />
     </label>
     <label>
       Descrição
@@ -26,5 +26,15 @@
       <button class="button primary" type="submit" [disabled]="form.invalid">Salvar</button>
     </div>
   </form>
+}
+
+@if (error) {
+  <div class="modal-backdrop">
+    <div class="alert-modal" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" aria-label="Fechar" (click)="error = ''">×</button>
+      <strong>Atenção</strong>
+      <p>{{ error }}</p>
+    </div>
+  </div>
 }
 

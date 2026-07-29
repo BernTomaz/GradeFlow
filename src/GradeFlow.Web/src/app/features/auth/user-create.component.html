@@ -1,0 +1,60 @@
+<section class="form-shell narrow-form-shell">
+  <div class="page-header">
+    <div>
+      <h1>Novo usuário</h1>
+      <p>Crie acessos para professores e alunos.</p>
+    </div>
+    <a class="button" routerLink="/dashboard">Voltar</a>
+  </div>
+
+  <form class="form card narrow-card" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Nome
+      <input formControlName="name" autocomplete="name" />
+    </label>
+
+    <label>
+      Email
+      <input formControlName="email" type="email" autocomplete="email" />
+    </label>
+
+    <label>
+      Senha temporária
+      <input formControlName="password" type="password" autocomplete="new-password" />
+    </label>
+
+    <div
+      class="password-meter"
+      [class.weak]="passwordStrength().level === 'weak'"
+      [class.medium]="passwordStrength().level === 'medium'"
+      [class.strong]="passwordStrength().level === 'strong'">
+      <span></span>
+      <small>{{ passwordStrength().label }}</small>
+    </div>
+    <ul class="password-rules">
+      @for (rule of passwordRules(); track rule.label) {
+        <li [class.ok]="rule.ok">{{ rule.label }}</li>
+      }
+    </ul>
+
+    <label>
+      Perfil
+      <select formControlName="role">
+        <option [ngValue]="roles.Teacher">Professor</option>
+        <option [ngValue]="roles.Student">Aluno</option>
+      </select>
+    </label>
+
+    @if (error) {
+      <div class="error">{{ error }}</div>
+    }
+
+    @if (success) {
+      <div class="success">{{ success }}</div>
+    }
+
+    <div class="actions form-actions">
+      <button class="button primary" type="submit" [disabled]="form.invalid">Criar usuário</button>
+    </div>
+  </form>
+</section>

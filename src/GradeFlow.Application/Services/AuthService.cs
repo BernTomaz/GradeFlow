@@ -10,8 +10,11 @@ namespace GradeFlow.Application.Services;
 public interface IAuthService
 {
     Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
+    Task<bool> IsSetupAvailableAsync(CancellationToken cancellationToken = default);
+    Task<AuthResponse> CreateSetupAdminAsync(SetupAdminRequest request, CancellationToken cancellationToken = default);
     Task<AuthResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
     Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default);
+    Task<AuthResponse?> ChangeNameAsync(Guid userId, ChangeNameRequest request, CancellationToken cancellationToken = default);
 }
 
 public interface ITokenService
@@ -24,27 +27,55 @@ public sealed class AuthService(
     IPasswordHasher passwordHasher,
     ITokenService tokenService) : IAuthService
 {
+    // ponytail: process-local setup lock; use a DB lock if setup can run on multiple API instances.
+    private static readonly SemaphoreSlim SetupLock = new(1, 1);
+
+    public async Task<bool> IsSetupAvailableAsync(CancellationToken cancellationToken = default)
+        => !await userRepository.AnyAsync(cancellationToken);
+
+    public async Task<AuthResponse> CreateSetupAdminAsync(SetupAdminRequest request, CancellationToken cancellationToken = default)
+    {
+        await SetupLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (!await IsSetupAvailableAsync(cancellationToken))
+                throw new ValidationException("A configuracao inicial ja foi realizada.");
+
+            return await CreateUserAsync(request.Name, request.Email, request.Password, UserRole.Admin, cancellationToken);
+        }
+        finally
+        {
+            SetupLock.Release();
+        }
+    }
+
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ValidationException("Nome e obrigatorio.");
-        if (string.IsNullOrWhiteSpace(request.Email))
-            throw new ValidationException("Email e obrigatorio.");
-        ValidatePassword(request.Password, "Senha");
         if (request.Role == UserRole.Admin)
             throw new ValidationException("Perfil Admin nao pode ser criado pelo registro publico.");
 
-        var email = request.Email.Trim().ToLowerInvariant();
+        return await CreateUserAsync(request.Name, request.Email, request.Password, request.Role, cancellationToken);
+    }
+
+    private async Task<AuthResponse> CreateUserAsync(string name, string rawEmail, string password, UserRole role, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ValidationException("Nome e obrigatorio.");
+        if (string.IsNullOrWhiteSpace(rawEmail))
+            throw new ValidationException("Email e obrigatorio.");
+        ValidatePassword(password, "Senha");
+
+        var email = rawEmail.Trim().ToLowerInvariant();
         if (await userRepository.ExistsByEmailAsync(email, cancellationToken))
             throw new ValidationException("Email ja cadastrado.");
 
         var user = new User
         {
-            Name = request.Name.Trim(),
+            Name = name.Trim(),
             Email = email,
-            Role = request.Role
+            Role = role
         };
-        user.PasswordHash = passwordHasher.Hash(request.Password);
+        user.PasswordHash = passwordHasher.Hash(password);
 
         userRepository.Add(user);
         await userRepository.SaveChangesAsync(cancellationToken);
@@ -73,6 +104,21 @@ public sealed class AuthService(
         user.PasswordHash = passwordHasher.Hash(request.NewPassword);
         await userRepository.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public async Task<AuthResponse?> ChangeNameAsync(Guid userId, ChangeNameRequest request, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ValidationException("Nome e obrigatorio.");
+
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        if (user is null)
+            return null;
+
+        user.Name = request.Name.Trim();
+        user.UpdatedAt = DateTime.UtcNow;
+        await userRepository.SaveChangesAsync(cancellationToken);
+        return tokenService.Create(user);
     }
 
     private static void ValidatePassword(string password, string fieldName)

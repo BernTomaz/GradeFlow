@@ -9,8 +9,9 @@ public sealed record CreateAssignmentRequest(
     string Title,
     [MaxLength(2000)]
     string? Description,
+    [Required]
     [MaxLength(200)]
-    string? Subject);
+    string Subject);
 
 public sealed record UpdateAssignmentRequest(
     [Required]
@@ -18,8 +19,9 @@ public sealed record UpdateAssignmentRequest(
     string Title,
     [MaxLength(2000)]
     string? Description,
+    [Required]
     [MaxLength(200)]
-    string? Subject);
+    string Subject);
 
 public sealed record AssignmentResponse(
     Guid Id,

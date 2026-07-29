@@ -23,6 +23,11 @@ public sealed class AssignmentRepository(GradeFlowDbContext dbContext) : IAssign
     public async Task<Assignment?> GetForUpdateAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Assignments.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+    public Task<bool> TitleExistsAsync(string title, Guid? exceptId = null, CancellationToken cancellationToken = default)
+        => dbContext.Assignments.AnyAsync(
+            x => x.Title == title && (exceptId == null || x.Id != exceptId),
+            cancellationToken);
+
     public void Add(Assignment assignment) => dbContext.Assignments.Add(assignment);
 
     public void Remove(Assignment assignment) => dbContext.Assignments.Remove(assignment);

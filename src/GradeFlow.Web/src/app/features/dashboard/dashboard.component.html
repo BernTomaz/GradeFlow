@@ -10,35 +10,35 @@
 
 @if (vm$ | async; as vm) {
   @if (selectedItem(vm); as selected) {
-  <section class="card dashboard-filter" aria-label="Filtro do dashboard">
-    <label>
-      Avaliação
-      <select [value]="selected.assignment.id" (change)="setAssignment($any($event.target).value)">
-        @for (assignment of vm.assignments; track assignment.id) {
-          <option [value]="assignment.id">{{ assignment.title }}</option>
-        }
-      </select>
-    </label>
-  </section>
+    <section class="card dashboard-filter" aria-label="Filtro do dashboard">
+      <label>
+        Avaliação
+        <select [value]="selected.assignment.id" (change)="setAssignment($any($event.target).value)">
+          @for (assignment of vm.assignments; track assignment.id) {
+            <option [value]="assignment.id">{{ assignment.title }}</option>
+          }
+        </select>
+      </label>
+    </section>
 
-  <section class="dashboard-grid" aria-label="Indicadores do MVP">
-    <article class="card metric-card">
-      <span>Questões</span>
-      <strong>{{ selected.questionCount }}</strong>
-    </article>
-    <article class="card metric-card">
-      <span>Alunos avaliados</span>
-      <strong>{{ selected.submissionCount }}</strong>
-    </article>
-    <article class="card metric-card">
-      <span>Média da avaliação</span>
-      <strong>{{ selected.averageScore | number: '1.1-1' }}</strong>
-    </article>
-    <article class="card metric-card">
-      <span>Respostas em revisão</span>
-      <strong>{{ selected.pendingReviews }}</strong>
-    </article>
-  </section>
+    <section class="dashboard-grid" aria-label="Indicadores do MVP">
+      <article class="card metric-card">
+        <span>Questões</span>
+        <strong>{{ selected.questionCount }}</strong>
+      </article>
+      <article class="card metric-card">
+        <span>Alunos avaliados</span>
+        <strong>{{ selected.submissionCount }}</strong>
+      </article>
+      <article class="card metric-card">
+        <span>Média da avaliação</span>
+        <strong>{{ selected.averageScore | number: '1.1-1' }}</strong>
+      </article>
+      <article class="card metric-card">
+        <span>Respostas em revisão</span>
+        <strong>{{ selected.pendingReviews }}</strong>
+      </article>
+    </section>
 
   @if (selected.chart.length) {
     <section class="card dashboard-chart" aria-label="Acertos por questão">
@@ -97,20 +97,22 @@
     </section>
   }
 
-  <section class="quick-actions" aria-label="Atalhos">
-    <a routerLink="/assignments" class="card card-link">
-      <strong>Avaliações</strong>
-      <p>Gerenciar avaliações, questões, importações e relatórios.</p>
-    </a>
-    <a routerLink="/assignments/new" class="card card-link">
-      <strong>Nova avaliação</strong>
-      <p>Criar uma avaliação para a demonstração.</p>
-    </a>
-    <a [routerLink]="['/assignments', selected.assignment.id]" class="card card-link">
-      <strong>Avaliação selecionada</strong>
-      <p>{{ selected.assignment.title }}</p>
-    </a>
-  </section>
+    <section class="quick-actions" aria-label="Atalhos">
+      <a routerLink="/assignments" class="card card-link">
+        <strong>Avaliações</strong>
+        <p>Gerenciar avaliações, questões, importações e relatórios.</p>
+      </a>
+      <a routerLink="/assignments/new" class="card card-link">
+        <strong>Nova avaliação</strong>
+        <p>Criar uma avaliação para a demonstração.</p>
+      </a>
+      <a [routerLink]="['/assignments', selected.assignment.id]" class="card card-link">
+        <strong>Avaliação selecionada</strong>
+        <p>{{ selected.assignment.title }}</p>
+      </a>
+    </section>
+  } @else {
+    <p class="empty">Nenhuma avaliação cadastrada.</p>
   }
 } @else {
   <p class="loading"></p>

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using GradeFlow.Application.DTOs.Assignments;
 using GradeFlow.Application.Repositories;
 using GradeFlow.Domain.Entities;
@@ -25,12 +26,17 @@ public sealed class AssignmentService(
 
     public async Task<AssignmentResponse> CreateAsync(CreateAssignmentRequest request, CancellationToken cancellationToken = default)
     {
+        Validate(request.Title, request.Subject);
+        var title = request.Title.Trim();
+        if (await assignmentRepository.TitleExistsAsync(title, cancellationToken: cancellationToken))
+            throw new ValidationException("Esse nome já está sendo usado.");
+
         var assignment = new Assignment
         {
             Id = Guid.NewGuid(),
-            Title = request.Title.Trim(),
-            Description = request.Description?.Trim(),
-            Subject = request.Subject?.Trim(),
+            Title = title,
+            Description = TrimOrNull(request.Description),
+            Subject = request.Subject.Trim(),
             Status = AssignmentStatus.Draft,
             TeacherUserId = currentUser.IsTeacher ? currentUser.Id : null,
             CreatedAt = DateTime.UtcNow
@@ -43,12 +49,17 @@ public sealed class AssignmentService(
 
     public async Task<bool> UpdateAsync(Guid id, UpdateAssignmentRequest request, CancellationToken cancellationToken = default)
     {
+        Validate(request.Title, request.Subject);
+        var title = request.Title.Trim();
+        if (await assignmentRepository.TitleExistsAsync(title, id, cancellationToken))
+            throw new ValidationException("Esse nome já está sendo usado.");
+
         var assignment = await assignmentRepository.GetForUpdateAsync(id, cancellationToken);
         if (assignment is null || !CanManage(assignment)) return false;
 
-        assignment.Title = request.Title.Trim();
-        assignment.Description = request.Description?.Trim();
-        assignment.Subject = request.Subject?.Trim();
+        assignment.Title = title;
+        assignment.Description = TrimOrNull(request.Description);
+        assignment.Subject = request.Subject.Trim();
         assignment.UpdatedAt = DateTime.UtcNow;
         await assignmentRepository.SaveChangesAsync(cancellationToken);
         return true;
@@ -74,6 +85,17 @@ public sealed class AssignmentService(
             assignment.Status,
             assignment.CreatedAt,
             assignment.UpdatedAt);
+
+    private static void Validate(string title, string subject)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            throw new ValidationException("Titulo e obrigatorio.");
+        if (string.IsNullOrWhiteSpace(subject))
+            throw new ValidationException("Disciplina e obrigatoria.");
+    }
+
+    private static string? TrimOrNull(string? value)
+        => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private bool CanRead(Assignment assignment)
         => currentUser.IsAdmin

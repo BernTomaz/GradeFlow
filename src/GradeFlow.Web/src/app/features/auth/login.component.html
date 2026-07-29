@@ -6,13 +6,6 @@
   <p class="auth-subtitle">Use seu email e senha para acessar o GradeFlow.</p>
 
   <form class="form card auth-card" [formGroup]="form" (ngSubmit)="submit()">
-    @if (registering) {
-      <label>
-        Nome
-        <input formControlName="name" autocomplete="name" />
-      </label>
-    }
-
     <label>
       Email
       <input formControlName="email" type="email" autocomplete="email" />
@@ -23,49 +16,16 @@
       <input formControlName="password" type="password" autocomplete="current-password" />
     </label>
 
-    @if (registering) {
-      <div
-        class="password-meter"
-        [class.weak]="passwordStrength().level === 'weak'"
-        [class.medium]="passwordStrength().level === 'medium'"
-        [class.strong]="passwordStrength().level === 'strong'">
-        <span></span>
-        <small>{{ passwordStrength().label }}</small>
-      </div>
-      <ul class="password-rules">
-        @for (rule of passwordRules(); track rule.label) {
-          <li [class.ok]="rule.ok">{{ rule.label }}</li>
-        }
-      </ul>
-    }
-
-    @if (registering) {
-      <label>
-        Perfil
-        <select formControlName="role">
-          <option [ngValue]="roles.Teacher">Teacher</option>
-          <option [ngValue]="roles.Student">Student</option>
-        </select>
-      </label>
-    }
-
     @if (error) {
       <div class="error">{{ error }}</div>
     }
 
-    @if (success) {
-      <div class="success">{{ success }}</div>
-    }
-
     <div class="actions form-actions">
-      <button class="button" type="button" (click)="toggleRegistering()" [disabled]="loading">
-        {{ registering ? 'Ja tenho acesso' : 'Criar acesso' }}
-      </button>
       <button class="button primary" type="submit" [disabled]="form.invalid || loading">
         @if (loading) {
           Aguarde...
         } @else {
-          {{ registering ? 'Registrar' : 'Entrar' }}
+          Entrar
         }
       </button>
     </div>

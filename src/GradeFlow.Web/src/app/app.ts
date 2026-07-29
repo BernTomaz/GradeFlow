@@ -16,9 +16,13 @@ export class App implements OnDestroy {
   private readonly mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   private readonly mediaListener = () => this.applyTheme();
   private loadingTimer: ReturnType<typeof setTimeout> | null = null;
+  private loadingDelay: ReturnType<typeof setTimeout> | null = null;
+  private routeAnimationTimer: ReturnType<typeof setTimeout> | null = null;
   protected loading = false;
+  protected routeAnimating = false;
   protected theme = localStorage.getItem('gradeflow-theme') ?? 'system';
   protected sidebarCollapsed = localStorage.getItem('gradeflow-sidebar') === 'collapsed';
+  protected settingsOpen = false;
 
   constructor() {
     this.applyTheme();
@@ -26,12 +30,20 @@ export class App implements OnDestroy {
     this.events = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         if (this.loadingTimer) clearTimeout(this.loadingTimer);
-        this.loading = true;
+        if (this.loadingDelay) clearTimeout(this.loadingDelay);
+        this.loadingDelay = setTimeout(() => (this.loading = true), 250);
         return;
       }
 
       if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
-        this.loadingTimer = setTimeout(() => (this.loading = false), 200);
+        if (this.loadingDelay) clearTimeout(this.loadingDelay);
+        this.loading = false;
+        this.routeAnimating = false;
+        requestAnimationFrame(() => {
+          this.routeAnimating = true;
+          if (this.routeAnimationTimer) clearTimeout(this.routeAnimationTimer);
+          this.routeAnimationTimer = setTimeout(() => (this.routeAnimating = false), 220);
+        });
       }
     });
   }
@@ -40,6 +52,8 @@ export class App implements OnDestroy {
     this.events.unsubscribe();
     this.mediaQuery.removeEventListener('change', this.mediaListener);
     if (this.loadingTimer) clearTimeout(this.loadingTimer);
+    if (this.loadingDelay) clearTimeout(this.loadingDelay);
+    if (this.routeAnimationTimer) clearTimeout(this.routeAnimationTimer);
   }
 
   protected setTheme(theme: string) {
@@ -53,6 +67,10 @@ export class App implements OnDestroy {
     localStorage.setItem('gradeflow-sidebar', this.sidebarCollapsed ? 'collapsed' : 'open');
   }
 
+  protected toggleSettings() {
+    this.settingsOpen = !this.settingsOpen;
+  }
+
   protected logout() {
     this.auth.logout();
     this.router.navigateByUrl('/login');
@@ -64,4 +82,5 @@ export class App implements OnDestroy {
       : this.theme;
     document.documentElement.dataset['theme'] = theme;
   }
+
 }

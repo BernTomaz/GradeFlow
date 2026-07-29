@@ -13,6 +13,9 @@ public sealed class UserRepository(GradeFlowDbContext dbContext) : IUserReposito
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         => dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
 
+    public Task<bool> AnyAsync(CancellationToken cancellationToken = default)
+        => dbContext.Users.AnyAsync(cancellationToken);
+
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
         => dbContext.Users.AnyAsync(x => x.Email == email, cancellationToken);
 

@@ -1,0 +1,28 @@
+<section class="form-shell narrow-form-shell">
+  <div class="page-header">
+    <div>
+      <h1>Alterar nome</h1>
+      <p>Atualize o nome exibido no sistema.</p>
+    </div>
+    <a class="button" routerLink="/dashboard">Voltar</a>
+  </div>
+
+  <form class="form card narrow-card" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Nome
+      <input formControlName="name" autocomplete="name" />
+    </label>
+
+    @if (error) {
+      <div class="error">{{ error }}</div>
+    }
+
+    @if (success) {
+      <div class="success">{{ success }}</div>
+    }
+
+    <div class="actions form-actions">
+      <button class="button primary" type="submit" [disabled]="form.invalid">Salvar nome</button>
+    </div>
+  </form>
+</section>

@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { AboutComponent } from './features/about/about.component';
 import { AssignmentCreateComponent } from './features/assignments/assignment-create.component';
 import { AssignmentDetailComponent } from './features/assignments/assignment-detail.component';
 import { AssignmentListComponent } from './features/assignments/assignment-list.component';
+import { ChangeNameComponent } from './features/auth/change-name.component';
 import { ChangePasswordComponent } from './features/auth/change-password.component';
+import { UserCreateComponent } from './features/auth/user-create.component';
 import { LoginComponent } from './features/auth/login.component';
+import { SetupComponent } from './features/auth/setup.component';
 import { CorrectionResultComponent } from './features/correction/correction-result.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { UserRole } from './core/models/auth.models';
@@ -15,7 +19,11 @@ import { SubmissionDetailComponent } from './features/submissions/submission-det
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'setup', component: SetupComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'about', component: AboutComponent, canActivate: [authGuard] },
+  { path: 'users/new', component: UserCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin] } },
+  { path: 'change-name', component: ChangeNameComponent, canActivate: [authGuard] },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
   { path: 'assignments', component: AssignmentListComponent, canActivate: [authGuard] },
   { path: 'assignments/new', component: AssignmentCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin, UserRole.Teacher] } },

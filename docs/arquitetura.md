@@ -7,19 +7,19 @@ src/
 │
 ├── GradeFlow.Api/
 │   ├── Controllers
-│   ├── Middlewares
+│   ├── Services
 │   └── Program.cs
 │
 ├── GradeFlow.Application/
 │   ├── Services
 │   ├── DTOs
-│   ├── Interfaces
-│   └── Strategies
+│   ├── Repositories
+│   └── Corrections
 │
 ├── GradeFlow.Domain/
 │   ├── Entities
 │   ├── Enums
-│   └── Contracts
+│   └── Corrections
 │
 ├── GradeFlow.Infrastructure/
 │   ├── Data

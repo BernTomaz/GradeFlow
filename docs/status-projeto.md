@@ -49,7 +49,8 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - SQL Server
 - JWT Authentication
 - Endpoint autenticado para reemissão de token
-- Senha forte obrigatória no cadastro e na alteração de senha
+- Senha forte obrigatória na configuração inicial, criação de usuário pelo Admin e alteração de senha
+- Cadastro público fechado; novos usuários são criados pelo Admin
 - Limite temporário de tentativas inválidas de login
 - Controle de acesso baseado em perfis:
   - Admin
@@ -78,7 +79,7 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - Gráfico de acertos por questão com visualização em barras, colunas ou pizza
 - Página própria de relatório por avaliação
 - Exportação do dashboard em PDF via impressão do navegador
-- Login e Cadastro
+- Login, configuração inicial do primeiro Admin e criação controlada de usuários
 - Alteração de senha autenticada
 - CRUD de avaliações
 - CRUD de questões

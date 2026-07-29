@@ -34,7 +34,8 @@ POST /api/auth/change-password
 POST /api/auth/refresh-token
 
 Regras de senha
-- Cadastro e alteração de senha exigem no mínimo 8 caracteres.
+- Configuração inicial, criação de usuário pelo Admin e alteração de senha exigem no mínimo 8 caracteres.
+- Cadastro público fica fechado depois da criação do primeiro Admin.
 - A senha precisa ter pelo menos uma letra maiúscula, um número e um caractere especial.
 - Login invalido retorna mensagem com tentativas restantes.
 - Depois de 5 tentativas invalidas por email e IP em 1 minuto, o login fica temporariamente bloqueado.

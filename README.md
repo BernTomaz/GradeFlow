@@ -25,7 +25,7 @@ A documentação detalhada está dividida por assunto, etapa, fluxo e operação
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
+O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, configuração inicial do primeiro administrador, importação CSV, relatórios e exportações.
 
 Etapas 01 a 12 concluídas. O próximo trabalho operacional é o deploy público final; recursos futuros ficam para depois do MVP publicado.
 
@@ -165,6 +165,8 @@ Use `-d` para executar os containers em segundo plano e liberar o terminal.
 Serviços locais:
 
 - Frontend: `http://localhost:4200`
+
+No primeiro acesso com banco vazio, o sistema libera a criação do primeiro administrador. Depois disso, o cadastro público fica fechado e novos usuários são criados por um Admin dentro do painel.
 - API: `http://localhost:8080`
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker

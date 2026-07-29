@@ -17,9 +17,12 @@
 | Correção de Questão | POST `/api/submissions/{id}/questions/{questionId}/correct` |
 | Revisão Manual | PUT `/api/student-answers/{answerId}/review` |
 | Auditoria | GET `/api/submissions/{id}/correction-logs` |
-| Auth | POST `/api/auth/register` |
+| Status da configuração inicial | GET `/api/setup/status` |
+| Criação do primeiro Admin | POST `/api/setup/admin` |
+| Criação de usuário pelo Admin | POST `/api/auth/register` |
 | Login | POST `/api/auth/login` |
 | Alteração de senha | POST `/api/auth/change-password` |
+| Alteração de nome | POST `/api/auth/change-name` |
 | Reemissão de token | POST `/api/auth/refresh-token` |
 
 Rotas protegidas retornam `401` quando o token está ausente, inválido ou expirado, e `403` quando o usuário autenticado não possui o perfil exigido.

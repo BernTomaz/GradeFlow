@@ -23,8 +23,9 @@ Fluxo de login
 8. Depois de 5 tentativas invalidas por email e IP em 1 minuto, o acesso fica temporariamente bloqueado.
 
 Regra de senha
-- Cadastro e alteração de senha exigem no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial.
+- Configuração inicial, criação de usuário pelo Admin e alteração de senha exigem no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial.
 - Login apenas valida a senha cadastrada; a regra de força não é reaplicada ao entrar.
+- Cadastro público fica fechado. Depois do primeiro Admin, novos usuários são criados no painel administrativo.
 
 Entidade principal
 User:
@@ -37,9 +38,12 @@ User:
 - UpdatedAt
 
 Endpoints recomendados
+GET /api/setup/status
+POST /api/setup/admin
 POST /api/auth/register
 POST /api/auth/login
 POST /api/auth/change-password
+POST /api/auth/change-name
 POST /api/auth/refresh-token
 
 DTOs sugeridos

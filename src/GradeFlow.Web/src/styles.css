@@ -565,7 +565,8 @@ small {
   width: 100%;
   position: relative;
   overflow: hidden;
-  min-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   margin-top: 0;
@@ -2045,6 +2046,24 @@ small {
 
   .public-shell .auth-shell {
     width: min(340px, calc(100% - 24px));
+  }
+
+  .public-shell .auth-shell:not(.setup-shell) {
+    transform: none;
+  }
+
+  .public-shell {
+    overflow: auto;
+    background: #edf2f7;
+  }
+
+  .public-shell::before {
+    display: none;
+  }
+
+  .auth-card.card,
+  .auth-card.card:hover {
+    box-shadow: var(--soft-shadow);
   }
 
   .public-footer {

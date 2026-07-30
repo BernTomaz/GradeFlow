@@ -15,6 +15,10 @@ export class UserCreateComponent {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthApiService);
   protected readonly roles = UserRole;
+  protected readonly roleOptions = [
+    { value: UserRole.Teacher, label: 'Professor' },
+    { value: UserRole.Student, label: 'Aluno' }
+  ];
   protected error = '';
   protected success = '';
   protected form = this.fb.nonNullable.group({
@@ -46,5 +50,14 @@ export class UserCreateComponent {
 
   protected passwordRules() {
     return passwordRules(this.form.controls.password.value);
+  }
+
+  protected roleLabel() {
+    return this.roleOptions.find((role) => role.value === this.form.controls.role.value)?.label ?? 'Professor';
+  }
+
+  protected setRole(role: UserRole, menu: HTMLDetailsElement) {
+    this.form.controls.role.setValue(role);
+    menu.removeAttribute('open');
   }
 }

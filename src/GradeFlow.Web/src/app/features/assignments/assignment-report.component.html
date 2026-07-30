@@ -3,13 +3,16 @@
     <div>
       <h1>Relatório</h1>
       <p>{{ vm.assignment.title }}</p>
+      <div class="actions page-export-actions">
+        <button class="button" type="button" (click)="exportCsv(vm.assignment.id)">CSV</button>
+        <button class="button" type="button" (click)="exportExcel(vm.assignment.id)">Excel</button>
+        <button class="button" type="button" (click)="exportPdf(vm.assignment.id)">PDF</button>
+      </div>
     </div>
-    <div class="actions">
-      <a [routerLink]="['/assignments', vm.assignment.id]" class="button">Voltar</a>
-      <button class="button" type="button" (click)="exportCsv(vm.assignment.id)">CSV</button>
-      <button class="button" type="button" (click)="exportExcel(vm.assignment.id)">Excel</button>
-      <button class="button" type="button" (click)="exportPdf(vm.assignment.id)">PDF</button>
-    </div>
+  </section>
+
+  <section class="export-actions actions">
+    <a routerLink="/assignments" class="button">Voltar</a>
   </section>
 
   <div class="report-grid">

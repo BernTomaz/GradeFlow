@@ -39,10 +39,16 @@
 
     <label>
       Perfil
-      <select formControlName="role">
-        <option [ngValue]="roles.Teacher">Professor</option>
-        <option [ngValue]="roles.Student">Aluno</option>
-      </select>
+      <details class="select-menu" #roleMenu>
+        <summary>{{ roleLabel() }}</summary>
+        <div class="select-menu-options">
+          @for (role of roleOptions; track role.value) {
+            <button type="button" [class.active]="form.controls.role.value === role.value" (click)="setRole(role.value, roleMenu)">
+              {{ role.label }}
+            </button>
+          }
+        </div>
+      </details>
     </label>
 
     @if (error) {

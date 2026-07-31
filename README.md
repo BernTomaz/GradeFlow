@@ -16,6 +16,7 @@ A documentação detalhada está dividida por assunto, etapa, fluxo e operação
 - [Endpoints principais](docs/endpoints.md)
 - [Testes](docs/testes.md)
 - [Integração contínua](docs/ci.md)
+- [Revisão técnica de infraestrutura](docs/revisao-tecnica-infra.md)
 - [Roadmap](docs/roadmap.md)
 - [Roadmap de implementação](docs/fluxos/10-roadmap-implementacao.md)
 - [Tecnologias e arquitetura](docs/fluxos/00-visao-geral-tecnologias.md)

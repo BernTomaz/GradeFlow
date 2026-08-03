@@ -42,7 +42,7 @@ public sealed class SubmissionService(
     public async Task<SubmissionResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var submission = await submissionRepository.GetByIdAsync(id, cancellationToken);
-        return submission is null || !CanRead(submission) ? null : Map(submission);
+        return submission is null || submission.DeletedAt is not null || !CanRead(submission) ? null : Map(submission);
     }
 
     public async Task<IReadOnlyCollection<CorrectionLogResponse>?> GetCorrectionLogsAsync(

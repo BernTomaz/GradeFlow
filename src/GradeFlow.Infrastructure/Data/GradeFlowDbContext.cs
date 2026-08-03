@@ -77,6 +77,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
             entity.Property(x => x.SubmittedAt).IsRequired();
             entity.Property(x => x.CorrectedAt);
             entity.Property(x => x.ReviewedAt);
+            entity.Property(x => x.DeletedAt);
             entity.HasOne(x => x.Assignment)
                 .WithMany(x => x.Submissions)
                 .HasForeignKey(x => x.AssignmentId)

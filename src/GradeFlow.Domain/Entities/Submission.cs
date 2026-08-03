@@ -14,6 +14,7 @@ public sealed class Submission
     public DateTime SubmittedAt { get; set; }
     public DateTime? CorrectedAt { get; set; }
     public DateTime? ReviewedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
     public Assignment? Assignment { get; set; }
     public User? StudentUser { get; set; }

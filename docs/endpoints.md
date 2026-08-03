@@ -26,3 +26,5 @@
 | Reemissão de token | POST `/api/auth/refresh-token` |
 
 Rotas protegidas retornam `401` quando o token está ausente, inválido ou expirado, e `403` quando o usuário autenticado não possui o perfil exigido.
+
+`DELETE /api/submissions/{id}` usa exclusão lógica: a submissão recebe `DeletedAt`, sai das listas operacionais e mantém os registros de auditoria vinculados.

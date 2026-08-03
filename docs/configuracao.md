@@ -93,6 +93,7 @@ Detalhes da estratégia: [operacao/migrations.md](operacao/migrations.md).
 - AddCorrectionLogs
 - AddUsers
 - AddUserOwnership
+- AddSubmissionDeletedAt
 
 ## Backend
 

@@ -298,6 +298,16 @@ public sealed class ApplicationServicesTests
             Questions = [question],
             Submissions = [submission]
         };
+        repository.CorrectionLogs.Add(new CorrectionLog
+        {
+            Id = Guid.NewGuid(),
+            SubmissionId = submission.Id,
+            QuestionId = question.Id,
+            CorrectionType = "Manual",
+            OriginalAnswer = "B",
+            Score = 0,
+            CreatedAt = DateTime.UtcNow
+        });
         var service = new SubmissionService(repository);
 
         var listed = await service.GetByAssignmentIdAsync(assignmentId);
@@ -320,7 +330,9 @@ public sealed class ApplicationServicesTests
         infoUpdated.Should().BeTrue();
         submission.StudentName.Should().Be("Carla");
         deleted.Should().BeTrue();
-        repository.Submissions.Should().BeEmpty();
+        submission.DeletedAt.Should().NotBeNull();
+        (await service.GetByIdAsync(submission.Id)).Should().BeNull();
+        (await service.GetCorrectionLogsAsync(submission.Id)).Should().ContainSingle();
     }
 
     [Fact]
@@ -647,7 +659,7 @@ public sealed class ApplicationServicesTests
             => Task.FromResult<IReadOnlyCollection<Question>>(Questions.Where(x => x.AssignmentId == assignmentId).ToList());
 
         public Task<IReadOnlyCollection<Submission>> GetByAssignmentIdAsync(Guid assignmentId, CancellationToken cancellationToken = default)
-            => Task.FromResult<IReadOnlyCollection<Submission>>(Submissions.Where(x => x.AssignmentId == assignmentId).ToList());
+            => Task.FromResult<IReadOnlyCollection<Submission>>(Submissions.Where(x => x.AssignmentId == assignmentId && x.DeletedAt is null).ToList());
 
         public Task<Submission?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => Task.FromResult(Submissions.FirstOrDefault(x => x.Id == id));
@@ -696,7 +708,7 @@ public sealed class ApplicationServicesTests
             => Submissions.Single(x => x.Id == answer.SubmissionId).StudentAnswers.Add(answer);
 
         public void Remove(Submission submission)
-            => Submissions.Remove(submission);
+            => submission.DeletedAt = DateTime.UtcNow;
 
         public void AddCorrectionResult(CorrectionResult correctionResult)
         {

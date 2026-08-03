@@ -344,3 +344,24 @@ END;
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260803173508_AddSubmissionDeletedAt'
+)
+BEGIN
+    ALTER TABLE [Submissions] ADD [DeletedAt] datetime2 NULL;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260803173508_AddSubmissionDeletedAt'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20260803173508_AddSubmissionDeletedAt', N'10.0.0');
+END;
+
+COMMIT;
+GO
+

@@ -25,7 +25,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
             .AsNoTracking()
             .Include(x => x.Assignment)
             .Include(x => x.StudentAnswers)
-            .Where(x => x.AssignmentId == assignmentId)
+            .Where(x => x.AssignmentId == assignmentId && x.DeletedAt == null)
             .OrderByDescending(x => x.SubmittedAt)
             .ToListAsync(cancellationToken);
 
@@ -40,7 +40,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
         => await dbContext.Submissions
             .Include(x => x.Assignment)
             .Include(x => x.StudentAnswers)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == id && x.DeletedAt == null, cancellationToken);
 
     public async Task<Submission?> GetForCorrectionAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Submissions
@@ -51,7 +51,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
                     .ThenInclude(x => x!.AnswerKey)
             .Include(x => x.StudentAnswers)
                 .ThenInclude(x => x.CorrectionResult)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == id && x.DeletedAt == null, cancellationToken);
 
     public async Task<StudentAnswer?> GetAnswerAsync(
         Guid submissionId,
@@ -123,7 +123,7 @@ public sealed class SubmissionRepository(GradeFlowDbContext dbContext) : ISubmis
 
     public void AddAnswer(StudentAnswer answer) => dbContext.StudentAnswers.Add(answer);
 
-    public void Remove(Submission submission) => dbContext.Submissions.Remove(submission);
+    public void Remove(Submission submission) => submission.DeletedAt = DateTime.UtcNow;
 
     public void AddCorrectionResult(CorrectionResult correctionResult)
         => dbContext.CorrectionResults.Add(correctionResult);

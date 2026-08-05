@@ -21,6 +21,8 @@ A documentação detalhada está dividida por assunto, etapa, fluxo e operação
 - [Roadmap de implementação](docs/fluxos/10-roadmap-implementacao.md)
 - [Tecnologias e arquitetura](docs/fluxos/00-visao-geral-tecnologias.md)
 - [Estratégia de migrations](docs/operacao/migrations.md)
+- [Checklist de deploy público](docs/operacao/deploy-checklist.md)
+- [Rollback de produção](docs/operacao/rollback.md)
 
 ## Status
 

@@ -76,6 +76,8 @@ Fluxo recomendado:
 
 O usuário da aplicação (`gradeflow_app`) não deve aplicar migrations em produção. Ele deve permanecer restrito às permissões necessárias para operar a aplicação.
 
+Antes da Etapa 13, valide este fluxo junto com o [checklist de deploy publico](deploy-checklist.md).
+
 ## Rollback
 
 Rollback de schema não deve ser automático. Em caso de falha:
@@ -84,3 +86,5 @@ Rollback de schema não deve ser automático. Em caso de falha:
 2. Restaurar backup quando a alteração for destrutiva ou incompatibilidade impedir operação.
 3. Corrigir a migration em novo commit.
 4. Gerar novo script idempotente e repetir o processo.
+
+Detalhes operacionais: [rollback de producao](rollback.md).

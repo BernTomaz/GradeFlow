@@ -204,6 +204,18 @@ Serviços locais:
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker
 
+No primeiro acesso com banco vazio, o sistema libera a criação do primeiro administrador. Depois disso, novos usuários são criados por um Admin dentro do painel.
+
+Conta local de demonstração usada para validação manual e screenshots:
+
+```txt
+Email: teste@gradeflow.local
+Senha: Teste@123
+Perfil: Admin
+```
+
+Essa conta é apenas para o ambiente local/Docker.
+
 O Compose prepara o banco local e aplica `docker/sqlserver/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Veja [operacao/migrations.md](operacao/migrations.md).
 
 Ao criar uma migration nova, atualize o script SQL versionado antes de subir o Docker ou abrir PR:
@@ -230,4 +242,10 @@ Para gerar backup do banco Docker:
 
 ```powershell
 .\scripts\database\backup-docker.ps1
+```
+
+Para atualizar os screenshots e a demo animada versionados no README com o Docker Compose em execução:
+
+```powershell
+.\scripts\capture-screenshots.ps1
 ```

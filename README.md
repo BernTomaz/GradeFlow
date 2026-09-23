@@ -174,6 +174,16 @@ No primeiro acesso com banco vazio, o sistema libera a criação do primeiro adm
 - Health check: `http://localhost:8080/health`
 - SQL Server: acessível apenas pela rede interna do Docker
 
+Conta local de demonstração usada para prints e validação manual:
+
+```txt
+Email: teste@gradeflow.local
+Senha: Teste@123
+Perfil: Admin
+```
+
+Essa conta é apenas para o ambiente local/Docker.
+
 O Compose prepara o banco local e aplica `docker/sqlserver/gradeflow-migrations.sql` pelo serviço `sqlserver-init`. Veja [estratégia de migrations](docs/operacao/migrations.md).
 
 Ao criar uma migration nova, atualize o script SQL versionado antes de subir o Docker ou abrir PR:
@@ -200,6 +210,49 @@ Para gerar backup do banco Docker:
 
 ```powershell
 .\scripts\database\backup-docker.ps1
+```
+
+## Demo
+
+![Demo animada do GradeFlow](docs/screenshots/gradeflow-demo.gif)
+
+## Screenshots
+
+### Telas principais
+
+<details>
+<summary>Ver prints estáticos</summary>
+
+#### Login
+
+![Login](docs/screenshots/login.png)
+
+#### Dashboard
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+#### Avaliações
+
+![Avaliações](docs/screenshots/avaliacoes.png)
+
+#### Nova avaliação
+
+![Nova avaliação](docs/screenshots/nova-avaliacao.png)
+
+#### Novo usuário
+
+![Novo usuário](docs/screenshots/novo-usuario.png)
+
+#### Sobre
+
+![Sobre](docs/screenshots/sobre.png)
+
+</details>
+
+Para atualizar os prints locais com o Docker Compose em execução:
+
+```powershell
+.\scripts\capture-screenshots.ps1
 ```
 
 ## Referências Rápidas

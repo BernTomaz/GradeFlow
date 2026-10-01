@@ -185,6 +185,27 @@ GO
 BEGIN TRANSACTION;
 IF NOT EXISTS (
     SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261001183000_AddUserMustChangePassword'
+)
+BEGIN
+    ALTER TABLE [Users] ADD [MustChangePassword] bit NOT NULL DEFAULT CAST(0 AS bit);
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261001183000_AddUserMustChangePassword'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261001183000_AddUserMustChangePassword', N'10.0.0');
+END;
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
     WHERE [MigrationId] = N'20260629130900_RequireStudentAnswerAnswer'
 )
 BEGIN

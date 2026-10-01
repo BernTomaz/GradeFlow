@@ -128,6 +128,25 @@ public sealed class AuthServiceTests
         valid.Should().BeTrue();
         hasher.Verify(user.PasswordHash, "Nado1994@").Should().BeFalse();
         hasher.Verify(user.PasswordHash, "Senha1995@").Should().BeTrue();
+        user.MustChangePassword.Should().BeFalse();
+        user.UpdatedAt.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ResetPassword_should_set_temporary_password_and_force_change()
+    {
+        var hasher = new PasswordHasher();
+        var user = new User { Id = Guid.NewGuid(), Email = "ana@email.com", PasswordHash = hasher.Hash("Nado1994@") };
+        var repository = new FakeUserRepository(user);
+        var service = new AuthService(repository, hasher, new FakeTokenService());
+
+        var missing = await service.ResetPasswordAsync(Guid.NewGuid(), new ResetPasswordRequest("Senha1995@"));
+        var valid = await service.ResetPasswordAsync(user.Id, new ResetPasswordRequest("Senha1995@"));
+
+        missing.Should().BeFalse();
+        valid.Should().BeTrue();
+        user.MustChangePassword.Should().BeTrue();
+        hasher.Verify(user.PasswordHash, "Senha1995@").Should().BeTrue();
     }
 
     [Fact]
@@ -146,6 +165,9 @@ public sealed class AuthServiceTests
     private sealed class FakeUserRepository(params User[] users) : IUserRepository
     {
         public List<User> Users { get; } = users.ToList();
+
+        public Task<IReadOnlyCollection<User>> ListAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyCollection<User>>(Users);
 
         public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => Task.FromResult(Users.FirstOrDefault(x => x.Id == id));
@@ -167,6 +189,6 @@ public sealed class AuthServiceTests
     private sealed class FakeTokenService : ITokenService
     {
         public AuthResponse Create(User user)
-            => new("token", DateTime.UtcNow.AddHours(1), new UserResponse(user.Id, user.Name, user.Email, user.Role));
+            => new("token", DateTime.UtcNow.AddHours(1), new UserResponse(user.Id, user.Name, user.Email, user.Role, user.MustChangePassword));
     }
 }

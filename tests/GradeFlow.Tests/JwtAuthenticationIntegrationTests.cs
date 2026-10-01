@@ -268,8 +268,12 @@ public sealed class JwtAuthenticationIntegrationTests
             Name = user.Name,
             Email = user.Email,
             PasswordHash = user.PasswordHash,
-            Role = user.Role
+            Role = user.Role,
+            MustChangePassword = user.MustChangePassword
         }).ToList();
+
+        public Task<IReadOnlyCollection<User>> ListAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyCollection<User>>(users);
 
         public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => Task.FromResult(users.FirstOrDefault(x => x.Id == id));

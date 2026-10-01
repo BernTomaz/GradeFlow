@@ -28,7 +28,7 @@ A documentação detalhada está dividida por assunto, etapa, fluxo e operação
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, configuração inicial do primeiro administrador, importação CSV, relatórios e exportações.
+O MVP principal já possui backend, frontend Angular, dashboard inicial, assistente Flow para ajuda contextual, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, configuração inicial do primeiro administrador, importação CSV, relatórios e exportações.
 
 Etapas 01 a 12 concluídas. O próximo trabalho operacional é o deploy público final; recursos futuros ficam para depois do MVP publicado.
 

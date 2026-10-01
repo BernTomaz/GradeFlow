@@ -2,7 +2,7 @@
 
 Projeto em desenvolvimento ativo.
 
-O MVP principal já possui backend, frontend Angular, dashboard inicial, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
+O MVP principal já possui backend, frontend Angular, dashboard inicial, assistente Flow para ajuda contextual, correção automática, revisão manual, auditoria, testes automatizados, autenticação baseada em perfis, importação CSV, relatórios e exportações.
 
 ## Etapa Atual
 
@@ -87,6 +87,7 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, correç
 - Visualização de resultados de correção
 - Importação de submissões via CSV
 - Exportação de relatórios em CSV, Excel e PDF
+- Assistente Flow com mascote e ajuda contextual sobre avaliações, gabaritos, respostas, correção, revisão e relatórios
 - Layout administrativo responsivo com sidebar recolhível
 - Temas claro, escuro e conforme o sistema
 

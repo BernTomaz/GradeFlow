@@ -29,7 +29,14 @@ export class App implements OnDestroy {
   protected assistantClosing = false;
   protected assistantQuestion = '';
   protected assistantAnswer = 'Oi, sou o Flow. Pergunte sobre avaliações, gabaritos, respostas, correção, revisão ou relatórios.';
-  protected assistantSuggestions = ['Criar avaliação', 'Montar gabarito', 'Corrigir respostas'];
+  protected assistantSuggestions = [
+    'Criar avaliação',
+    'Montar gabarito',
+    'Registrar respostas',
+    'Corrigir respostas',
+    'Revisar nota',
+    'Gerar relatório'
+  ];
 
   constructor() {
     this.applyTheme();
@@ -110,7 +117,6 @@ export class App implements OnDestroy {
 
   protected askAssistantSuggestion(question: string) {
     this.assistantQuestion = question;
-    this.askAssistant();
   }
 
   protected askAssistant() {

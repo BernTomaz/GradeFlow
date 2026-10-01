@@ -8,6 +8,9 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router);
   const current = auth.current();
   if (!current) return router.createUrlTree(['/login']);
+  if (current.user.mustChangePassword && route.routeConfig?.path !== 'change-password') {
+    return router.createUrlTree(['/change-password']);
+  }
 
   const roles = route.data['roles'] as UserRole[] | undefined;
   return !roles || roles.includes(current.user.role) ? true : router.createUrlTree(['/assignments']);

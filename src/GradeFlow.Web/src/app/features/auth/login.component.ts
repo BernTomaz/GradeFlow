@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         this.loginFailures = 0;
         this.auth.save(response);
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigateByUrl(response.user.mustChangePassword ? '/change-password' : '/dashboard');
       },
       error: (error) => {
         const message = error.error?.error ?? 'Nao foi possivel entrar.';

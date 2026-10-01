@@ -7,6 +7,7 @@ import { AssignmentListComponent } from './features/assignments/assignment-list.
 import { ChangeNameComponent } from './features/auth/change-name.component';
 import { ChangePasswordComponent } from './features/auth/change-password.component';
 import { UserCreateComponent } from './features/auth/user-create.component';
+import { UserResetPasswordComponent } from './features/auth/user-reset-password.component';
 import { LoginComponent } from './features/auth/login.component';
 import { SetupComponent } from './features/auth/setup.component';
 import { CorrectionResultComponent } from './features/correction/correction-result.component';
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'about', component: AboutComponent, canActivate: [authGuard] },
   { path: 'users/new', component: UserCreateComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin] } },
+  { path: 'users/reset-password', component: UserResetPasswordComponent, canActivate: [authGuard], data: { roles: [UserRole.Admin] } },
   { path: 'change-name', component: ChangeNameComponent, canActivate: [authGuard] },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard] },
   { path: 'assignments', component: AssignmentListComponent, canActivate: [authGuard] },

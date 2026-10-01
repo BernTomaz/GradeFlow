@@ -27,7 +27,7 @@
 html[data-theme="dark"] {
   --ink: #e7edf5;
   --muted: #aab8ca;
-  --line: #2b3a4f;
+  --line: #243247;
   --surface: #111827;
   --surface-soft: #172033;
   --topbar: rgba(17, 24, 39, 0.82);
@@ -325,7 +325,7 @@ small {
 }
 
 .side-nav-submenu.open {
-  max-height: 184px;
+  max-height: 230px;
   opacity: 1;
   transform: translateY(0);
 }
@@ -1438,6 +1438,10 @@ small {
   transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
+html[data-theme="dark"] .card {
+  border-color: var(--line);
+}
+
 .auth-card.card {
   display: grid;
   width: 100%;
@@ -1484,15 +1488,133 @@ small {
   background: transparent;
   color: var(--muted);
   cursor: pointer;
+  opacity: 1;
+  transition: color 0.16s ease, opacity 0.16s ease;
 }
 
 .password-input button:hover {
   color: var(--brand);
 }
 
+.password-input .password-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.password-input .password-toggle.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .auth-card .form-actions {
   justify-content: space-between;
   margin-top: 2px;
+}
+
+.user-reset-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.user-reset-row > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.user-reset-form {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.user-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.selected-user {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: start;
+  width: min(340px, 100%);
+  justify-self: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.selected-user > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.selected-user strong,
+.selected-user small {
+  overflow-wrap: anywhere;
+}
+
+.user-picker-modal {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  width: min(520px, 100%);
+  max-height: min(560px, calc(100dvh - 48px));
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 70px rgba(12, 28, 48, 0.28);
+}
+
+html[data-theme="dark"] .user-picker-modal {
+  border-color: rgba(96, 165, 250, 0.42);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.12);
+}
+
+.user-picker-modal strong {
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.user-picker-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.user-picker-list button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.user-picker-list button:hover,
+.user-picker-list button.active {
+  border-color: var(--brand);
+  background: rgba(37, 99, 235, 0.08);
 }
 
 .card strong,
@@ -1849,6 +1971,16 @@ small {
   backdrop-filter: blur(3px);
 }
 
+html[data-theme="dark"] .modal-backdrop {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+html[data-theme="dark"] .route-shell:has(.user-picker-modal) .form-shell {
+  filter: blur(2px);
+  opacity: 0.56;
+}
+
 .alert-modal {
   position: relative;
   width: min(420px, 100%);
@@ -2086,10 +2218,16 @@ html[data-theme="dark"] .assistant-form input {
 
 .mascot-cap,
 .mascot-cap-band {
-  fill: #facc15;
+  fill: #0f172a;
+}
+
+html[data-theme="dark"] .mascot-cap,
+html[data-theme="dark"] .mascot-cap-band {
+  fill: #ffffff;
 }
 
 .mascot-tassel,
+.mascot-tassel-shadow,
 .mascot-glasses,
 .mascot-book-line {
   fill: none;
@@ -2097,12 +2235,21 @@ html[data-theme="dark"] .assistant-form input {
   stroke-linejoin: round;
 }
 
+.mascot-tassel-shadow {
+  stroke: rgba(15, 23, 42, 0.72);
+  stroke-width: 6;
+}
+
 .mascot-tassel {
   stroke: #facc15;
-  stroke-width: 3;
+  stroke-width: 4;
   animation: mascot-tassel-sway 1.8s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: top center;
+}
+
+.mascot-tassel-dot-shadow {
+  fill: rgba(15, 23, 42, 0.72);
 }
 
 .mascot-tassel-dot {
@@ -2764,6 +2911,14 @@ html[data-theme="dark"] .assistant-form input {
   .chart-row strong {
     text-align: left;
   }
+}
+
+.reset-password-actions {
+  justify-content: flex-end;
+}
+
+.reset-password-actions .button {
+  flex: 0 0 auto;
 }
 
 @media print {

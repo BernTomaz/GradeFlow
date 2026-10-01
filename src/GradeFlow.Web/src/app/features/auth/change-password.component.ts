@@ -15,6 +15,11 @@ export class ChangePasswordComponent {
   private readonly auth = inject(AuthApiService);
   protected error = '';
   protected success = '';
+  protected passwordVisible = {
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false
+  };
   protected form = this.fb.nonNullable.group({
     currentPassword: ['', [Validators.required]],
     newPassword: ['', [
@@ -41,6 +46,8 @@ export class ChangePasswordComponent {
     }).subscribe({
       next: () => {
         this.success = 'Senha alterada com sucesso.';
+        const current = this.auth.current();
+        if (current) this.auth.save({ ...current, user: { ...current.user, mustChangePassword: false } });
         this.form.reset();
       },
       error: (error) => (this.error = apiErrorMessage(error, 'Nao foi possivel alterar a senha.'))
@@ -53,5 +60,9 @@ export class ChangePasswordComponent {
 
   protected passwordRules() {
     return passwordRules(this.form.controls.newPassword.value);
+  }
+
+  protected togglePassword(field: keyof typeof this.passwordVisible) {
+    this.passwordVisible[field] = !this.passwordVisible[field];
   }
 }

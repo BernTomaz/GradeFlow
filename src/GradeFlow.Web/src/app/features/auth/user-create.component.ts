@@ -53,11 +53,16 @@ export class UserCreateComponent {
   }
 
   protected roleLabel() {
-    return this.roleOptions.find((role) => role.value === this.form.controls.role.value)?.label ?? 'Professor';
+    return this.roleName(this.form.controls.role.value);
   }
 
   protected setRole(role: UserRole, menu: HTMLDetailsElement) {
     this.form.controls.role.setValue(role);
     menu.removeAttribute('open');
   }
+
+  protected roleName(role: UserRole) {
+    return this.roleOptions.find((option) => option.value === role)?.label ?? 'Admin';
+  }
+
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { AuthResponse, ChangeNameRequest, ChangePasswordRequest, LoginRequest, RegisterRequest, SetupAdminRequest, SetupStatusResponse } from '../models/auth.models';
+import { AuthResponse, ChangeNameRequest, ChangePasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, SetupAdminRequest, SetupStatusResponse, UserResponse } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -21,6 +21,14 @@ export class AuthApiService {
 
   register(request: RegisterRequest) {
     return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request);
+  }
+
+  listUsers() {
+    return this.http.get<UserResponse[]>(`${this.baseUrl}/users`);
+  }
+
+  resetPassword(id: string, request: ResetPasswordRequest) {
+    return this.http.post<void>(`${this.baseUrl}/users/${id}/reset-password`, request);
   }
 
   setupStatus() {

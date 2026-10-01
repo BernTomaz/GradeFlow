@@ -31,6 +31,10 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
+export interface ResetPasswordRequest {
+  temporaryPassword: string;
+}
+
 export interface ChangeNameRequest {
   name: string;
 }
@@ -46,4 +50,5 @@ export interface UserResponse {
   name: string;
   email: string;
   role: UserRole;
+  mustChangePassword: boolean;
 }

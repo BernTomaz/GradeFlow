@@ -19,9 +19,12 @@
           [type]="passwordVisible ? 'text' : 'password'"
           autocomplete="current-password" />
         <button
+          class="password-toggle"
           type="button"
+          [class.visible]="form.controls.password.value.length > 0"
           [attr.aria-label]="passwordVisible ? 'Ocultar senha' : 'Mostrar senha'"
           [title]="passwordVisible ? 'Ocultar senha' : 'Mostrar senha'"
+          [disabled]="form.controls.password.value.length === 0"
           (click)="togglePassword()">
           <i [class]="passwordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
         </button>

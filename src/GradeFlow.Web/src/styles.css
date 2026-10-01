@@ -1461,6 +1461,35 @@ small {
   min-height: 46px;
 }
 
+.password-input {
+  position: relative;
+  display: block;
+}
+
+.password-input input {
+  padding-right: 48px;
+}
+
+.password-input button {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  transform: translateY(-50%);
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.password-input button:hover {
+  color: var(--brand);
+}
+
 .auth-card .form-actions {
   justify-content: space-between;
   margin-top: 2px;
@@ -1862,6 +1891,309 @@ small {
   background: var(--surface-soft);
   color: var(--ink);
   font-size: 13px;
+}
+
+.assistant-widget {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 7;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
+.assistant-panel {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  width: min(340px, calc(100vw - 36px));
+  padding: 16px;
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.18), transparent 42%),
+    var(--sidebar);
+  color: #f8fafc;
+  box-shadow: 0 24px 70px rgba(12, 28, 48, 0.28);
+  animation: assistant-panel-in 0.22s ease-out both;
+  transform-origin: right bottom;
+}
+
+html[data-theme="dark"] .assistant-panel {
+  border-color: rgba(226, 232, 240, 0.92);
+  background: #ffffff;
+  color: #111827;
+}
+
+html[data-theme="dark"] .assistant-panel::after {
+  border-top-color: #ffffff;
+}
+
+html[data-theme="dark"] .assistant-head small,
+html[data-theme="dark"] .assistant-panel p {
+  color: #475569;
+}
+
+html[data-theme="dark"] .assistant-suggestions button {
+  border-color: #d8e1ea;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+html[data-theme="dark"] .assistant-suggestions button:hover {
+  background: #e2e8f0;
+}
+
+html[data-theme="dark"] .assistant-form input {
+  border-color: #d8e1ea;
+  background: #ffffff;
+  color: #111827;
+}
+
+.assistant-panel.closing {
+  animation: assistant-panel-out 0.18s ease-in both;
+}
+
+.assistant-panel::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -16px;
+  border: 8px solid transparent;
+  border-top-color: var(--sidebar);
+}
+
+.assistant-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.assistant-mini {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #34d399 0%, #14b8a6 52%, #22c55e 100%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(24, 199, 189, 0.34);
+}
+
+.assistant-head span:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.assistant-head strong {
+  font-size: 16px;
+}
+
+.assistant-head small {
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.assistant-panel p {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.assistant-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.assistant-suggestions button {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #dbeafe;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.assistant-suggestions button:hover {
+  background: rgba(96, 165, 250, 0.22);
+}
+
+.assistant-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.assistant-form input {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.86);
+  color: #f8fafc;
+}
+
+.assistant-form button,
+.assistant-button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.assistant-form button {
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--accent);
+  color: #052e16;
+}
+
+.assistant-button {
+  position: relative;
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+}
+
+.assistant-button:hover {
+  transform: translateY(-1px);
+}
+
+.mascot {
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 10px 14px rgba(15, 23, 42, 0.28));
+  animation: mascot-float 2.8s ease-in-out infinite;
+  transform-origin: 50% 70%;
+}
+
+.mascot-wing,
+.mascot-body {
+  fill: #9a5a25;
+}
+
+.mascot-face {
+  fill: #fde7bf;
+}
+
+.mascot-cap,
+.mascot-cap-band {
+  fill: #facc15;
+}
+
+.mascot-tassel,
+.mascot-glasses,
+.mascot-book-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mascot-tassel {
+  stroke: #facc15;
+  stroke-width: 3;
+  animation: mascot-tassel-sway 1.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.mascot-tassel-dot {
+  fill: #facc15;
+}
+
+.mascot-eye-bg {
+  fill: #fff7ed;
+}
+
+.mascot-glasses {
+  stroke: #111827;
+  stroke-width: 4;
+}
+
+.mascot-eye {
+  fill: #111827;
+  animation: mascot-blink 4.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mascot-beak {
+  fill: #f59e0b;
+}
+
+.mascot-book {
+  fill: #2563eb;
+}
+
+.mascot-book-line {
+  stroke: #dbeafe;
+  stroke-width: 2;
+}
+
+@keyframes mascot-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-4px) rotate(-1deg);
+  }
+}
+
+@keyframes mascot-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  95% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes mascot-tassel-sway {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes assistant-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes assistant-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
 }
 
 .alert-modal strong {

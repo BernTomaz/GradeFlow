@@ -44,4 +44,32 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.brand')?.textContent).toContain('GradeFlow');
   });
+
+  it('should answer assistant questions about correction', () => {
+    sessionStorage.setItem(storageKey, JSON.stringify({
+      token: 'test-token',
+      expiresAt: new Date(Date.now() + 60000).toISOString(),
+      user: {
+        id: 'user-id',
+        name: 'Test User',
+        email: 'test@example.com',
+        role: UserRole.Teacher
+      }
+    }));
+
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('.assistant-button') as HTMLButtonElement;
+    button.click();
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('.assistant-form input') as HTMLInputElement;
+    input.value = 'Como funciona a correção?';
+    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.assistant-panel')?.textContent).toContain('motor de correção');
+  });
 });

@@ -13,7 +13,19 @@
 
     <label>
       Senha
-      <input formControlName="password" type="password" autocomplete="current-password" />
+      <span class="password-input">
+        <input
+          formControlName="password"
+          [type]="passwordVisible ? 'text' : 'password'"
+          autocomplete="current-password" />
+        <button
+          type="button"
+          [attr.aria-label]="passwordVisible ? 'Ocultar senha' : 'Mostrar senha'"
+          [title]="passwordVisible ? 'Ocultar senha' : 'Mostrar senha'"
+          (click)="togglePassword()">
+          <i [class]="passwordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+        </button>
+      </span>
     </label>
 
     @if (error) {

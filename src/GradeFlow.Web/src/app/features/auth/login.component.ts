@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   private readonly router = inject(Router);
   protected loading = false;
   protected error = '';
+  protected passwordVisible = false;
   private loginFailures = 0;
   private readonly maxLoginAttempts = 5;
   protected form = this.fb.nonNullable.group({
@@ -55,5 +56,9 @@ export class LoginComponent implements OnInit {
         this.error = `${message} Restam ${remaining} tentativa(s).`;
       }
     });
+  }
+
+  protected togglePassword() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

@@ -14,6 +14,8 @@ public sealed record ChangePasswordRequest(string CurrentPassword, string NewPas
 
 public sealed record ChangeNameRequest(string Name);
 
+public sealed record ResetPasswordRequest(string TemporaryPassword);
+
 public sealed record AuthResponse(string Token, DateTime ExpiresAt, UserResponse User);
 
-public sealed record UserResponse(Guid Id, string Name, string Email, UserRole Role);
+public sealed record UserResponse(Guid Id, string Name, string Email, UserRole Role, bool MustChangePassword);

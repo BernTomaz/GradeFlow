@@ -28,7 +28,8 @@ public sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenServic
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim("must_change_password", user.MustChangePassword.ToString())
             ]),
             Expires = expiresAt,
             SigningCredentials = credentials
@@ -37,6 +38,6 @@ public sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenServic
         return new AuthResponse(
             new JsonWebTokenHandler().CreateToken(descriptor),
             expiresAt,
-            new UserResponse(user.Id, user.Name, user.Email, user.Role));
+            new UserResponse(user.Id, user.Name, user.Email, user.Role, user.MustChangePassword));
     }
 }

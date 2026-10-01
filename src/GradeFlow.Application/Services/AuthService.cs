@@ -10,11 +10,13 @@ namespace GradeFlow.Application.Services;
 public interface IAuthService
 {
     Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<UserResponse>> ListUsersAsync(CancellationToken cancellationToken = default);
     Task<bool> IsSetupAvailableAsync(CancellationToken cancellationToken = default);
     Task<AuthResponse> CreateSetupAdminAsync(SetupAdminRequest request, CancellationToken cancellationToken = default);
     Task<AuthResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
     Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default);
     Task<AuthResponse?> ChangeNameAsync(Guid userId, ChangeNameRequest request, CancellationToken cancellationToken = default);
+    Task<bool> ResetPasswordAsync(Guid userId, ResetPasswordRequest request, CancellationToken cancellationToken = default);
 }
 
 public interface ITokenService
@@ -54,10 +56,13 @@ public sealed class AuthService(
         if (request.Role == UserRole.Admin)
             throw new ValidationException("Perfil Admin nao pode ser criado pelo registro publico.");
 
-        return await CreateUserAsync(request.Name, request.Email, request.Password, request.Role, cancellationToken);
+        return await CreateUserAsync(request.Name, request.Email, request.Password, request.Role, cancellationToken, mustChangePassword: true);
     }
 
-    private async Task<AuthResponse> CreateUserAsync(string name, string rawEmail, string password, UserRole role, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<UserResponse>> ListUsersAsync(CancellationToken cancellationToken = default)
+        => (await userRepository.ListAsync(cancellationToken)).Select(Map).ToList();
+
+    private async Task<AuthResponse> CreateUserAsync(string name, string rawEmail, string password, UserRole role, CancellationToken cancellationToken, bool mustChangePassword = false)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ValidationException("Nome e obrigatorio.");
@@ -73,7 +78,8 @@ public sealed class AuthService(
         {
             Name = name.Trim(),
             Email = email,
-            Role = role
+            Role = role,
+            MustChangePassword = mustChangePassword
         };
         user.PasswordHash = passwordHasher.Hash(password);
 
@@ -102,6 +108,8 @@ public sealed class AuthService(
             return false;
 
         user.PasswordHash = passwordHasher.Hash(request.NewPassword);
+        user.MustChangePassword = false;
+        user.UpdatedAt = DateTime.UtcNow;
         await userRepository.SaveChangesAsync(cancellationToken);
         return true;
     }
@@ -120,6 +128,24 @@ public sealed class AuthService(
         await userRepository.SaveChangesAsync(cancellationToken);
         return tokenService.Create(user);
     }
+
+    public async Task<bool> ResetPasswordAsync(Guid userId, ResetPasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        ValidatePassword(request.TemporaryPassword, "Senha temporaria");
+
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
+        if (user is null)
+            return false;
+
+        user.PasswordHash = passwordHasher.Hash(request.TemporaryPassword);
+        user.MustChangePassword = true;
+        user.UpdatedAt = DateTime.UtcNow;
+        await userRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    private static UserResponse Map(User user)
+        => new(user.Id, user.Name, user.Email, user.Role, user.MustChangePassword);
 
     private static void ValidatePassword(string password, string fieldName)
     {

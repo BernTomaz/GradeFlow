@@ -144,6 +144,7 @@ public sealed class GradeFlowDbContext(DbContextOptions<GradeFlowDbContext> opti
             entity.HasIndex(x => x.Email).IsUnique();
             entity.Property(x => x.PasswordHash).IsRequired().HasMaxLength(1000);
             entity.Property(x => x.Role).IsRequired();
+            entity.Property(x => x.MustChangePassword).IsRequired();
             entity.Property(x => x.CreatedAt).IsRequired();
             entity.Property(x => x.UpdatedAt);
         });

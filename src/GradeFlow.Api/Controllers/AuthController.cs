@@ -34,6 +34,27 @@ public sealed class AuthController(
         }
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("users")]
+    public async Task<ActionResult<IReadOnlyCollection<UserResponse>>> ListUsers(CancellationToken cancellationToken)
+        => Ok(await authService.ListUsersAsync(cancellationToken));
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("users/{id:guid}/reset-password")]
+    public async Task<IActionResult> ResetPassword(Guid id, ResetPasswordRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await authService.ResetPasswordAsync(id, request, cancellationToken)
+                ? NoContent()
+                : NotFound(new { error = "Usuario nao encontrado." });
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+    }
+
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponse>> Login(LoginRequest request, CancellationToken cancellationToken)
@@ -110,7 +131,8 @@ public sealed class AuthController(
             Id = id,
             Name = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty,
             Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
-            Role = role
+            Role = role,
+            MustChangePassword = bool.TryParse(User.FindFirstValue("must_change_password"), out var mustChangePassword) && mustChangePassword
         }));
     }
 

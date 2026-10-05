@@ -2277,12 +2277,17 @@ html[data-theme="dark"] .mascot-cap-band {
 }
 
 .mascot-book {
-  fill: #2563eb;
+  fill: #a855f7;
 }
 
+.mascot-book-pages,
 .mascot-book-line {
-  stroke: #dbeafe;
+  stroke: #f3e8ff;
   stroke-width: 2;
+}
+
+.mascot-book-pages {
+  fill: none;
 }
 
 @keyframes mascot-float {

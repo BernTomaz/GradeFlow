@@ -40,4 +40,4 @@ tests/
 - Controllers devem ser finos.
 - Regras de negócio devem ficar em services, domain ou no motor de correção.
 - O motor de correção deve usar Strategy Pattern.
-- IA, OCR, upload, relatórios e login complexo não devem ser prioridade antes do MVP.
+- IA, OCR, upload e recursos futuros só devem entrar depois do deploy público final do MVP.

@@ -13,6 +13,7 @@ New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 $login = @{ email = $Email; password = $Password } | ConvertTo-Json
 $auth = Invoke-RestMethod -Method Post -Uri "$ApiUrl/api/auth/login" -ContentType "application/json" -Body $login
 $authJson = $auth | ConvertTo-Json -Depth 8 -Compress
+$authHeader = @{ Authorization = "Bearer $($auth.token)" }
 
 $chrome = @(
     "$env:ProgramFiles\Google\Chrome\Application\chrome.exe",
@@ -69,9 +70,14 @@ try {
         $socket.SendAsync([ArraySegment[byte]]::new($bytes), [Net.WebSockets.WebSocketMessageType]::Text, $true, [Threading.CancellationToken]::None).GetAwaiter().GetResult()
 
         do {
-            $buffer = [byte[]]::new(1048576)
-            $result = $socket.ReceiveAsync([ArraySegment[byte]]::new($buffer), [Threading.CancellationToken]::None).GetAwaiter().GetResult()
-            $response = [Text.Encoding]::UTF8.GetString($buffer, 0, $result.Count) | ConvertFrom-Json
+            $chunks = [Collections.Generic.List[byte]]::new()
+            do {
+                $buffer = [byte[]]::new(1048576)
+                $result = $socket.ReceiveAsync([ArraySegment[byte]]::new($buffer), [Threading.CancellationToken]::None).GetAwaiter().GetResult()
+                $chunks.AddRange([ArraySegment[byte]]::new($buffer, 0, $result.Count))
+            } until ($result.EndOfMessage)
+
+            $response = [Text.Encoding]::UTF8.GetString($chunks.ToArray()) | ConvertFrom-Json
         } until ($response.id -eq $script:nextId)
 
         if ($response.error) {
@@ -112,8 +118,17 @@ try {
     Save-Screenshot "login.png" "login" $false
     Save-Screenshot "dashboard.png" "dashboard"
     Save-Screenshot "avaliacoes.png" "assignments"
+    $assignments = Invoke-RestMethod -Method Get -Uri "$ApiUrl/api/assignments" -Headers $authHeader
+    $firstAssignment = @($assignments)[0]
+    if ($firstAssignment) {
+        Save-Screenshot "detalhe-avaliacao.png" "assignments/$($firstAssignment.id)"
+        Save-Screenshot "relatorio.png" "assignments/$($firstAssignment.id)/report"
+    }
     Save-Screenshot "nova-avaliacao.png" "assignments/new"
     Save-Screenshot "novo-usuario.png" "users/new"
+    Save-Screenshot "redefinir-senha.png" "users/reset-password"
+    Save-Screenshot "alterar-nome.png" "change-name"
+    Save-Screenshot "alterar-senha.png" "change-password"
     Save-Screenshot "sobre.png" "about"
 
     $repoRoot = Split-Path -Parent $PSScriptRoot

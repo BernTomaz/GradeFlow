@@ -11,8 +11,13 @@ SLIDES = [
     ("Login", "login.png"),
     ("Dashboard", "dashboard.png"),
     ("Avaliacoes", "avaliacoes.png"),
+    ("Detalhe da avaliacao", "detalhe-avaliacao.png"),
+    ("Relatorio", "relatorio.png"),
     ("Nova avaliacao", "nova-avaliacao.png"),
     ("Novo usuario", "novo-usuario.png"),
+    ("Redefinir senha", "redefinir-senha.png"),
+    ("Alterar nome", "alterar-nome.png"),
+    ("Alterar senha", "alterar-senha.png"),
     ("Sobre", "sobre.png"),
 ]
 
@@ -32,7 +37,7 @@ def main() -> None:
     frames: list[Image.Image] = []
     durations: list[int] = []
 
-    images = [(title, fit(Image.open(SCREENSHOTS / name), base_size)) for title, name in SLIDES]
+    images = [(title, fit(Image.open(SCREENSHOTS / name), base_size)) for title, name in SLIDES if (SCREENSHOTS / name).exists()]
     for index, (title, image) in enumerate(images):
         frames.append(image)
         durations.append(1100)

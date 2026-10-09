@@ -1,8 +1,16 @@
 # Roadmap
 
-## Curto Prazo
+## Concluído
 
+- Importação de submissões por CSV
+- Relatórios básicos por avaliação
+- Exportação de notas em CSV, Excel e PDF
+- Dashboard administrativo simples com indicadores e gráfico
+- Layout administrativo responsivo com tema claro, escuro e conforme o sistema
 - Fechamento para demonstração do MVP
+
+## Próxima Etapa Operacional
+
 - Deploy público final
 
 ## Médio Prazo
@@ -17,11 +25,3 @@
 - Integração com plataformas educacionais
 - Correção assistida por IA
 - Análise estatística de desempenho
-
-## Concluído
-
-- Importação de submissões por CSV
-- Relatórios básicos por avaliação
-- Exportação de notas em CSV, Excel e PDF
-- Dashboard administrativo simples com indicadores e gráfico
-- Layout administrativo responsivo com tema claro, escuro e conforme o sistema

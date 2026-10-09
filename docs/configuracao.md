@@ -94,6 +94,7 @@ Detalhes da estratégia: [operacao/migrations.md](operacao/migrations.md).
 - AddUsers
 - AddUserOwnership
 - AddSubmissionDeletedAt
+- AddUserMustChangePassword
 
 ## Backend
 
@@ -249,3 +250,5 @@ Para atualizar os screenshots e a demo animada versionados no README com o Docke
 ```powershell
 .\scripts\capture-screenshots.ps1
 ```
+
+O script captura login, dashboard, avaliações, detalhe/relatório da primeira avaliação disponível, formulários de avaliação e usuário, alteração de perfil/senha e a tela Sobre.

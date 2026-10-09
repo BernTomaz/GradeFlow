@@ -235,6 +235,14 @@ Para gerar backup do banco Docker:
 
 ![Avaliações](docs/screenshots/avaliacoes.png)
 
+#### Detalhe da avaliação
+
+![Detalhe da avaliação](docs/screenshots/detalhe-avaliacao.png)
+
+#### Relatório
+
+![Relatório](docs/screenshots/relatorio.png)
+
 #### Nova avaliação
 
 ![Nova avaliação](docs/screenshots/nova-avaliacao.png)
@@ -242,6 +250,18 @@ Para gerar backup do banco Docker:
 #### Novo usuário
 
 ![Novo usuário](docs/screenshots/novo-usuario.png)
+
+#### Redefinir senha
+
+![Redefinir senha](docs/screenshots/redefinir-senha.png)
+
+#### Alterar nome
+
+![Alterar nome](docs/screenshots/alterar-nome.png)
+
+#### Alterar senha
+
+![Alterar senha](docs/screenshots/alterar-senha.png)
 
 #### Sobre
 

@@ -10,7 +10,7 @@ Esta etapa existe para polir o que já está pronto, reduzir riscos e deixar o p
 
 ## Pré-requisitos
 
-- Etapas 01 a 11 concluídas.
+- Etapas 01 a 11 concluídas antes do início desta etapa.
 - Backend compilando e testes passando.
 - Frontend compilando.
 - Fluxo principal funcionando:

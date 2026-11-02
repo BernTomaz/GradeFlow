@@ -28,3 +28,4 @@ Os testes cobrem:
 - Regras de negócio
 - Estratégias de correção
 - Fluxos de autenticação
+- Mensagens de erro no frontend, incluindo validação por campo e falhas de conexão

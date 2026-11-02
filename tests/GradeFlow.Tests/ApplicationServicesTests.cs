@@ -554,6 +554,66 @@ public sealed class ApplicationServicesTests
         pdf.Should().NotBeNullOrEmpty();
     }
 
+    [Theory]
+    [InlineData(",")]
+    [InlineData(";")]
+    [InlineData("|")]
+    [InlineData("\t")]
+    public async Task Submission_service_should_import_quoted_csv_fields(string separator)
+    {
+        var assignmentId = Guid.NewGuid();
+        var question = new Question
+        {
+            Id = Guid.NewGuid(), AssignmentId = assignmentId,
+            Text = "Q1", Type = QuestionType.ShortText, Order = 1
+        };
+        var repository = new FakeSubmissionRepositoryForService
+        {
+            ExistingAssignmentId = assignmentId, Questions = [question]
+        };
+        var service = new SubmissionService(repository);
+        var csv = $"student_name{separator}student_email{separator}q1\r\n"
+            + $"\"Silva{separator} Ana\"{separator}ana@email.com{separator}"
+            + $"\"Primeira linha\r\nDisse \"\"olá\"\"{separator} sim\"\r\n";
+
+        var result = await service.ImportCsvAsync(assignmentId, csv);
+
+        result!.ImportedCount.Should().Be(1);
+        var submission = repository.Submissions.Should().ContainSingle().Subject;
+        submission.StudentName.Should().Be($"Silva{separator} Ana");
+        submission.StudentEmail.Should().Be("ana@email.com");
+        submission.StudentAnswers.Should().ContainSingle()
+            .Which.Answer.Should().Be($"Primeira linha\r\nDisse \"olá\"{separator} sim");
+        repository.SaveChangesCount.Should().Be(1);
+    }
+
+    [Theory]
+    [InlineData("\"Bia,bia@email.com,B")]
+    [InlineData("\"Bia\"extra,bia@email.com,B")]
+    [InlineData("Bia,bia@email.com,B,coluna extra")]
+    [InlineData("Bia,bia@email.com")]
+    public async Task Submission_service_should_reject_malformed_csv_before_adding_submissions(string invalidRow)
+    {
+        var assignmentId = Guid.NewGuid();
+        var repository = new FakeSubmissionRepositoryForService
+        {
+            ExistingAssignmentId = assignmentId,
+            Questions = [new Question
+            {
+                Id = Guid.NewGuid(), AssignmentId = assignmentId,
+                Text = "Q1", Type = QuestionType.ShortText, Order = 1
+            }]
+        };
+        var service = new SubmissionService(repository);
+        var csv = $"student_name,student_email,q1\nAna,ana@email.com,A\n{invalidRow}";
+
+        var action = () => service.ImportCsvAsync(assignmentId, csv);
+
+        await action.Should().ThrowAsync<ValidationException>();
+        repository.Submissions.Should().BeEmpty();
+        repository.SaveChangesCount.Should().Be(0);
+    }
+
     private static CreateQuestionRequest QuestionRequest(int order, decimal points)
         => new(
             " Quanto e 2 + 2? ",

@@ -28,5 +28,6 @@ Os testes cobrem:
 - Regras de negócio
 - Estratégias de correção
 - Fluxos de autenticação
+- Importação CSV com quatro separadores, campos entre aspas, aspas escapadas, quebras de linha e rejeição de estrutura inválida
 - Mensagens de erro no frontend, incluindo validação por campo e falhas de conexão
 - Tratamento de datas da API com e sem fuso horário explícito

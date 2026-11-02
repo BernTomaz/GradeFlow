@@ -26,6 +26,17 @@ student_name | student_email | q1 | q2 | q3 | q4
 Joao         | joao@email.com | B  | 10 | fotossintese | C
 Maria        | maria@email.com| A  | 9.8| fotossintese | C
 
+Separadores aceitos: vírgula, ponto e vírgula, tabulação e `|`, identificados pelo cabeçalho.
+Campos entre aspas podem conter o separador e quebras de linha. Uma aspa dentro do campo deve ser duplicada (`""`).
+Todas as linhas devem ter a mesma quantidade de colunas do cabeçalho, incluindo campos vazios.
+Aspas malformadas e colunas desalinhadas interrompem a importação antes de preparar as submissões.
+
+Exemplo com vírgula dentro do nome e aspas na resposta:
+```csv
+student_name,student_email,q1
+"Silva, Ana",ana@email.com,"Disse ""olá"""
+```
+
 Endpoint recomendado
 POST /api/assignments/{assignmentId}/submissions/import
 
@@ -52,8 +63,9 @@ Backend:
 - validação de arquivo
 
 Leitura de CSV:
-- Parser simples no service de submissão
-- CsvHelper deve ser considerado apenas se o formato passar a exigir separadores escapados, aspas complexas ou mais variacoes
+- Leitor nativo do .NET (`Microsoft.VisualBasic.FileIO.TextFieldParser`) no service de submissão
+- Suporte a campos entre aspas, separadores dentro dos campos, aspas duplicadas e respostas em várias linhas
+- Validação da estrutura completa antes de preparar submissões; nenhuma alteração é salva se houver erro
 
 Leitura de Excel:
 - Não implementada no fluxo atual

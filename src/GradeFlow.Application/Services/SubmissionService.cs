@@ -7,6 +7,7 @@ using GradeFlow.Application.DTOs.Submissions;
 using GradeFlow.Application.Repositories;
 using GradeFlow.Domain.Entities;
 using GradeFlow.Domain.Enums;
+using Microsoft.VisualBasic.FileIO;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -355,17 +356,13 @@ public sealed class SubmissionService(
             : await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
         if (assignmentRepository is not null && (assignment is null || !CanCreateSubmission(assignment))) return null;
 
-        var rows = csv.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => x.TrimEnd('\r'))
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .ToList();
+        var rows = ReadCsv(csv);
         if (rows.Count < 2)
         {
             throw new ValidationException("File must contain a header and at least one student row.");
         }
 
-        var separator = DetectSeparator(rows[0]);
-        var header = SplitCsvLine(rows[0], separator).Select(NormalizeHeader).ToList();
+        var header = rows[0].Select(NormalizeHeader).ToList();
         var nameIndex = header.IndexOf("student_name");
         var emailIndex = header.IndexOf("student_email");
         if (nameIndex < 0)
@@ -384,9 +381,8 @@ public sealed class SubmissionService(
 
         var seenStudents = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var imported = new List<SubmissionResponse>();
-        foreach (var row in rows.Skip(1))
+        foreach (var values in rows.Skip(1))
         {
-            var values = SplitCsvLine(row, separator);
             var studentName = GetValue(values, nameIndex);
             var studentEmail = emailIndex < 0 ? null : GetValue(values, emailIndex);
             var duplicateKey = string.IsNullOrWhiteSpace(studentEmail) ? studentName : studentEmail;
@@ -681,9 +677,39 @@ public sealed class SubmissionService(
     private static char DetectSeparator(string header)
         => new[] { ';', ',', '|', '\t' }.OrderByDescending(separator => header.Count(x => x == separator)).First();
 
-    // ponytail: CSV simples sem escape de separador entre aspas; trocar por CsvHelper se aparecer CSV real de planilha.
-    private static IReadOnlyList<string> SplitCsvLine(string line, char separator)
-        => line.Split(separator).Select(x => x.Trim().Trim('"')).ToList();
+    private static List<string[]> ReadCsv(string csv)
+    {
+        using var headerReader = new StringReader(csv);
+        string? headerLine;
+        do { headerLine = headerReader.ReadLine(); }
+        while (headerLine is not null && string.IsNullOrWhiteSpace(headerLine));
+
+        using var parser = new TextFieldParser(new StringReader(csv))
+        {
+            TextFieldType = FieldType.Delimited,
+            Delimiters = [DetectSeparator(headerLine ?? string.Empty).ToString()],
+            HasFieldsEnclosedInQuotes = true,
+            TrimWhiteSpace = true
+        };
+        var rows = new List<string[]>();
+        try
+        {
+            while (!parser.EndOfData)
+            {
+                var lineNumber = parser.LineNumber;
+                var values = parser.ReadFields();
+                if (values is null) break;
+                if (rows.Count > 0 && values.Length != rows[0].Length)
+                    throw new ValidationException($"Linha {lineNumber}: quantidade de colunas diferente do cabeçalho.");
+                rows.Add(values);
+            }
+        }
+        catch (MalformedLineException exception)
+        {
+            throw new ValidationException($"CSV inválido na linha {exception.LineNumber}: confira as aspas e os separadores.");
+        }
+        return rows;
+    }
 
     private static string NormalizeHeader(string value)
         => value.Trim().ToLower(CultureInfo.InvariantCulture);

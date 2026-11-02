@@ -4,6 +4,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class LocalDatePipe implements PipeTransform {
   transform(value: string | null | undefined) {
     if (!value) return value;
-    return value.endsWith('Z') ? value : `${value}Z`;
+    return /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value) ? value : `${value}Z`;
   }
 }

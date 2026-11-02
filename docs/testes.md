@@ -29,3 +29,4 @@ Os testes cobrem:
 - Estratégias de correção
 - Fluxos de autenticação
 - Mensagens de erro no frontend, incluindo validação por campo e falhas de conexão
+- Tratamento de datas da API com e sem fuso horário explícito

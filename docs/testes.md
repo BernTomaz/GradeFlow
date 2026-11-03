@@ -31,3 +31,6 @@ Os testes cobrem:
 - Importação CSV com quatro separadores, campos entre aspas, aspas escapadas, quebras de linha e rejeição de estrutura inválida
 - Mensagens de erro no frontend, incluindo validação por campo e falhas de conexão
 - Tratamento de datas da API com e sem fuso horário explícito
+- Envio do gabarito numérico como texto na criação e edição de questões
+
+Validação pela interface no Docker: [resultados de 03/11/2026](operacao/validacao-local-2026-11-03.md).

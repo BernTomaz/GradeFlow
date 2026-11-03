@@ -82,7 +82,7 @@ export class QuestionCreateComponent {
       points: Number(value.points),
       order: Number(value.order),
       answerKey: {
-        correctAnswer: value.correctAnswer,
+        correctAnswer: String(value.correctAnswer),
         acceptedAnswers: value.type === QuestionType.ShortText ? splitCsv(value.acceptedAnswers) : null,
         tolerance: value.type === QuestionType.Numeric ? Number(value.tolerance || 0) : null,
         feedbackCorrect: value.feedbackCorrect || null,

@@ -27,4 +27,8 @@
 
 Rotas protegidas retornam `401` quando o token está ausente, inválido ou expirado, e `403` quando o usuário autenticado não possui o perfil exigido.
 
+Tokens também retornam `401` após mudança de senha, redefinição, remoção do usuário ou mudança de perfil. Tokens anteriores à introdução da validação de sessão precisam ser substituídos por um novo login.
+
+Quando há troca obrigatória de senha, as rotas protegidas retornam `403`, exceto `POST /api/auth/change-password`. A alteração de senha retorna `200` com `AuthResponse` (token novo, validade e usuário), substituindo o antigo retorno `204`. O frontend deve salvar a nova sessão; o token anterior fica inválido.
+
 `DELETE /api/submissions/{id}` usa exclusão lógica: a submissão recebe `DeletedAt`, sai das listas operacionais e mantém os registros de auditoria vinculados.

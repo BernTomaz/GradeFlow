@@ -70,3 +70,8 @@ Regra importante
 Relatório só deve vir depois da correção funcionar.
 Dashboard bonito antes do motor de correção e desperdício.
 Adicionar bibliotecas de exportação apenas quando a exportação for implementada.
+
+Proteção da exportação CSV
+- Nome e email que começam com indicadores de fórmula (`=`, `+`, `-`, `@` e variantes de largura completa), mesmo após espaços ou quebras de linha, são exportados com tabulação inicial dentro de um campo entre aspas.
+- Aspas e separadores continuam escapados. Os dados armazenados não são alterados.
+- A tabulação faz parte do campo exportado e pode ser percebida por consumidores programáticos. Esta proteção é destinada à abertura em planilhas; o comportamento após regravar o arquivo depende do aplicativo utilizado.

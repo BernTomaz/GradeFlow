@@ -93,6 +93,15 @@ Observação
 O endpoint atual `refresh-token` reemite access token.
 Refresh token persistente, revogável e rotacionado fica para etapa futura.
 
+Validação atual de sessão
+- Cada requisição autenticada consulta o usuário atual no banco e confere o perfil e a marca da senha presentes no token.
+- A marca da senha é um resumo SHA-256 de `PasswordHash`; o próprio `PasswordHash` não é enviado ao cliente.
+- Trocar ou redefinir a senha invalida os tokens anteriores, inclusive para reemissão. Remover o usuário ou mudar seu perfil também invalida o acesso anterior.
+- A reemissão usa o usuário validado naquela requisição, sem promover uma sessão antiga para uma senha redefinida durante o pedido.
+- A troca obrigatória é aplicada pela API, permitindo somente a alteração de senha entre os endpoints protegidos. Endpoints públicos continuam disponíveis.
+- Após a alteração de senha, a API retorna uma nova sessão em `AuthResponse` e o frontend a salva integralmente.
+- Após a implantação desta validação, usuários com tokens antigos precisam entrar novamente. Não há alteração de esquema nem perda de dados.
+
 Cuidados
 - Nunca salvar senha pura.
 - Nunca confiar apenas no frontend.

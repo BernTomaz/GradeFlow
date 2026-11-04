@@ -44,10 +44,9 @@ export class ChangePasswordComponent {
       currentPassword: request.currentPassword,
       newPassword: request.newPassword
     }).subscribe({
-      next: () => {
+      next: (response) => {
         this.success = 'Senha alterada com sucesso.';
-        const current = this.auth.current();
-        if (current) this.auth.save({ ...current, user: { ...current.user, mustChangePassword: false } });
+        this.auth.save(response);
         this.form.reset();
       },
       error: (error) => (this.error = apiErrorMessage(error, 'Nao foi possivel alterar a senha.'))

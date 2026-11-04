@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using GradeFlow.Application.DTOs.Auth;
 using GradeFlow.Application.Services;
+using GradeFlow.Application.Repositories;
 using GradeFlow.Domain.Entities;
-using GradeFlow.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,7 @@ namespace GradeFlow.Api.Controllers;
 public sealed class AuthController(
     IAuthService authService,
     ITokenService tokenService,
+    IUserRepository userRepository,
     IMemoryCache memoryCache) : ControllerBase
 {
     private const int MaxLoginAttempts = 5;
@@ -87,9 +88,11 @@ public sealed class AuthController(
 
         try
         {
-            return await authService.ChangePasswordAsync(id, request, cancellationToken)
-                ? NoContent()
-                : BadRequest(new { error = "Senha atual invalida." });
+            if (!await authService.ChangePasswordAsync(id, request, cancellationToken))
+                return BadRequest(new { error = "Senha atual invalida." });
+
+            var user = await userRepository.GetByIdAsync(id, cancellationToken);
+            return user is null ? Unauthorized() : Ok(tokenService.Create(user));
         }
         catch (ValidationException exception)
         {
@@ -120,20 +123,12 @@ public sealed class AuthController(
     [HttpPost("refresh-token")]
     public ActionResult<AuthResponse> RefreshToken()
     {
-        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id)
-            || !Enum.TryParse<UserRole>(User.FindFirstValue(ClaimTypes.Role), out var role))
+        if (HttpContext.Items[typeof(User)] is not User user)
         {
             return Unauthorized(new { error = "Token invalido." });
         }
 
-        return Ok(tokenService.Create(new User
-        {
-            Id = id,
-            Name = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty,
-            Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
-            Role = role,
-            MustChangePassword = bool.TryParse(User.FindFirstValue("must_change_password"), out var mustChangePassword) && mustChangePassword
-        }));
+        return Ok(tokenService.Create(user));
     }
 
     private string LoginAttemptKey(string email)

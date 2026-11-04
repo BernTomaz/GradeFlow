@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using FluentAssertions;
 using GradeFlow.Application.DTOs.Assignments;
@@ -123,7 +124,7 @@ public sealed class JwtAuthenticationIntegrationTests
 
         withoutToken.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         invalid.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        valid.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        valid.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -166,13 +167,119 @@ public sealed class JwtAuthenticationIntegrationTests
         act.Should().Throw<OptionsValidationException>();
     }
 
+    [Fact]
+    public async Task Password_change_required_is_enforced_by_api_and_change_replaces_session()
+    {
+        await using var factory = CreateFactory();
+        var repository = factory.Services.GetRequiredService<IUserRepository>();
+        (await repository.GetByIdAsync(TestUsers.Teacher.Id))!.MustChangePassword = true;
+        var client = factory.CreateClient();
+        var oldToken = await LoginToken(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oldToken);
+
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await client.PostAsJsonAsync("/api/assignments", new CreateAssignmentRequest("Bloqueada", null, "QA"))).StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await client.PostAsJsonAsync("/api/auth/refresh-token", new { })).StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        var changed = await client.PostAsJsonAsync("/API/AUTH/CHANGE-PASSWORD/", new ChangePasswordRequest("secret1", "Senha1995@"));
+        changed.StatusCode.Should().Be(HttpStatusCode.OK);
+        var auth = await changed.Content.ReadFromJsonAsync<AuthResponse>();
+        auth!.User.MustChangePassword.Should().BeFalse();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.Token);
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.OK);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oldToken);
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await client.PostAsJsonAsync("/api/auth/refresh-token", new { })).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task Password_reset_revokes_existing_sessions_and_refresh()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+        var oldToken = await LoginToken(client);
+        using var admin = factory.CreateClient();
+        admin.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Admin, DateTime.UtcNow.AddMinutes(10)));
+
+        var reset = await admin.PostAsJsonAsync($"/api/auth/users/{TestUsers.Teacher.Id}/reset-password", new ResetPasswordRequest("Temporaria123!"));
+        reset.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oldToken);
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await client.PostAsJsonAsync("/api/auth/refresh-token", new { })).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        var login = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("teacher@gradeflow.test", "Temporaria123!"));
+        var auth = await login.Content.ReadFromJsonAsync<AuthResponse>();
+        auth!.User.MustChangePassword.Should().BeTrue();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.Token);
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task Password_requirement_uses_current_database_state_not_old_claim()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
+        var repository = factory.Services.GetRequiredService<IUserRepository>();
+        (await repository.GetByIdAsync(TestUsers.Teacher.Id))!.MustChangePassword = true;
+
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await client.GetAsync("/health")).StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Refresh_uses_current_user_and_rejects_legacy_tokens()
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
+        var repository = factory.Services.GetRequiredService<IUserRepository>();
+        (await repository.GetByIdAsync(TestUsers.Teacher.Id))!.Name = "Nome atualizado";
+
+        var refresh = await client.PostAsJsonAsync("/api/auth/refresh-token", new { });
+        var auth = await refresh.Content.ReadFromJsonAsync<AuthResponse>();
+        auth!.User.Name.Should().Be("Nome atualizado");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.Token);
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.OK);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CreateToken(TestUsers.Teacher, DateTime.UtcNow.AddMinutes(10), false));
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Sessions_are_rejected_when_user_is_removed_or_role_changes(bool removed)
+    {
+        await using var factory = CreateFactory();
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
+        var repository = (FakeUserRepository)factory.Services.GetRequiredService<IUserRepository>();
+        if (removed) repository.Remove(TestUsers.Teacher.Id);
+        else (await repository.GetByIdAsync(TestUsers.Teacher.Id))!.Role = UserRole.Student;
+
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        (await client.PostAsJsonAsync("/api/auth/refresh-token", new { })).StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task Cleared_password_requirement_overrides_stale_true_claim()
+    {
+        await using var factory = CreateFactory();
+        var repository = factory.Services.GetRequiredService<IUserRepository>();
+        var user = (await repository.GetByIdAsync(TestUsers.Teacher.Id))!;
+        user.MustChangePassword = true;
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", await LoginToken(client));
+        user.MustChangePassword = false;
+
+        (await client.GetAsync("/api/assignments")).StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
     private static async Task<string> LoginToken(HttpClient client)
     {
         var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest("teacher@gradeflow.test", "secret1"));
         return (await response.Content.ReadFromJsonAsync<AuthResponse>())!.Token;
     }
 
-    private static string CreateToken(User user, DateTime expires)
+    private static string CreateToken(User user, DateTime expires, bool includePasswordStamp = true)
     {
         var descriptor = new SecurityTokenDescriptor
         {
@@ -192,6 +299,8 @@ public sealed class JwtAuthenticationIntegrationTests
                 SecurityAlgorithms.HmacSha256)
         };
 
+        if (includePasswordStamp)
+            descriptor.Subject.AddClaim(new Claim("password_stamp", Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(user.PasswordHash)))));
         return new JsonWebTokenHandler().CreateToken(descriptor);
     }
 
@@ -223,7 +332,7 @@ public sealed class JwtAuthenticationIntegrationTests
             {
                 services.RemoveAll<IUserRepository>();
                 services.RemoveAll<IAssignmentService>();
-                services.AddSingleton<IUserRepository>(new FakeUserRepository(TestUsers.Teacher, TestUsers.Student));
+                services.AddSingleton<IUserRepository>(new FakeUserRepository(TestUsers.Teacher, TestUsers.Student, TestUsers.Admin));
                 services.AddScoped<IAssignmentService, FakeAssignmentService>();
             });
         });
@@ -271,6 +380,8 @@ public sealed class JwtAuthenticationIntegrationTests
             Role = user.Role,
             MustChangePassword = user.MustChangePassword
         }).ToList();
+
+        public void Remove(Guid id) => users.RemoveAll(user => user.Id == id);
 
         public Task<IReadOnlyCollection<User>> ListAsync(CancellationToken cancellationToken = default)
             => Task.FromResult<IReadOnlyCollection<User>>(users);

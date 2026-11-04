@@ -124,6 +124,7 @@ app.UseCors(FrontendCorsPolicy);
 app.UseHttpsRedirection();
 app.UseRateLimiter();
 app.UseAuthentication();
+app.UseMiddleware<PasswordChangeRequiredMiddleware>();
 app.UseAuthorization();
 app.MapHealthChecks("/health");
 app.MapControllers();

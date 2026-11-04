@@ -44,7 +44,7 @@ export class AuthApiService {
   }
 
   changePassword(request: ChangePasswordRequest) {
-    return this.http.post<void>(`${this.baseUrl}/change-password`, request);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/change-password`, request);
   }
 
   changeName(request: ChangeNameRequest) {

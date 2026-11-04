@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using GradeFlow.Application.DTOs.Auth;
 using GradeFlow.Application.Services;
@@ -29,7 +30,8 @@ public sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenServic
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
-                new Claim("must_change_password", user.MustChangePassword.ToString())
+                new Claim("must_change_password", user.MustChangePassword.ToString()),
+                new Claim("password_stamp", PasswordStamp(user))
             ]),
             Expires = expiresAt,
             SigningCredentials = credentials
@@ -40,4 +42,7 @@ public sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenServic
             expiresAt,
             new UserResponse(user.Id, user.Name, user.Email, user.Role, user.MustChangePassword));
     }
+
+    internal static string PasswordStamp(User user)
+        => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(user.PasswordHash)));
 }

@@ -718,9 +718,15 @@ public sealed class SubmissionService(
         => index >= 0 && index < values.Count ? values[index] : string.Empty;
 
     private static string EscapeCsv(string value)
-        => value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r')
+    {
+        var trimmed = value.AsSpan().TrimStart();
+        if (!trimmed.IsEmpty && "=+-@＝＋－＠".Contains(trimmed[0]))
+            value = "\t" + value;
+
+        return value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r') || value.Contains('\t')
             ? $"\"{value.Replace("\"", "\"\"")}\""
             : value;
+    }
 
     private static SubmissionResponse Map(Submission submission)
         => new(

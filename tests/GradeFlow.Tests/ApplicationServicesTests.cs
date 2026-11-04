@@ -614,6 +614,37 @@ public sealed class ApplicationServicesTests
         repository.SaveChangesCount.Should().Be(0);
     }
 
+    [Theory]
+    [InlineData("=1+1")]
+    [InlineData("+1+1")]
+    [InlineData("-1+1")]
+    [InlineData("@SUM(1)")]
+    [InlineData("  =1+1")]
+    [InlineData("\t=1+1")]
+    [InlineData("＝1+1")]
+    [InlineData("＋1+1")]
+    [InlineData("－1+1")]
+    [InlineData("＠SUM(1)")]
+    [InlineData("=HYPERLINK(\"https://example.test\",\"QA\")")]
+    [InlineData("\r\n=1+1")]
+    public async Task Csv_export_should_neutralize_spreadsheet_formulas(string name)
+    {
+        var assignmentId = Guid.NewGuid();
+        var repository = new FakeSubmissionRepositoryForService
+        {
+            ExistingAssignmentId = assignmentId,
+            Submissions = [new Submission
+            {
+                AssignmentId = assignmentId, StudentName = name,
+                StudentEmail = "=1+1", Status = SubmissionStatus.Corrected, FinalScore = 1
+            }]
+        };
+
+        var csv = await new SubmissionService(repository).ExportCsvAsync(assignmentId);
+
+        csv.Should().Contain($"\"\t{name.Replace("\"", "\"\"")}\",\"\t=1+1\",1,Corrected");
+    }
+
     private static CreateQuestionRequest QuestionRequest(int order, decimal points)
         => new(
             " Quanto e 2 + 2? ",

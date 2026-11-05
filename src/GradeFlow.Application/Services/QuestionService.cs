@@ -143,7 +143,7 @@ public sealed class QuestionService(
 
         var assignment = await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
         return assignment is not null
-            && (this.currentUser.IsAdmin || (this.currentUser.IsTeacher && (assignment.TeacherUserId is null || assignment.TeacherUserId == this.currentUser.Id)));
+            && (this.currentUser.IsAdmin || (this.currentUser.IsTeacher && (assignment.TeacherUserId == this.currentUser.Id)));
     }
 
     private Task<bool> CanManageAssignmentAsync(Guid assignmentId, CancellationToken cancellationToken)

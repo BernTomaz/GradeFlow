@@ -773,7 +773,7 @@ public sealed class SubmissionService(
             || (currentUser.IsTeacher && CanTeacherUseSubmission(submission));
 
     private bool CanTeacherUseAssignment(Assignment assignment)
-        => assignment.TeacherUserId is null || assignment.TeacherUserId == currentUser.Id;
+        => assignment.TeacherUserId == currentUser.Id;
 
     private bool CanTeacherUseSubmission(Submission submission)
         => submission.Assignment is not null && CanTeacherUseAssignment(submission.Assignment);

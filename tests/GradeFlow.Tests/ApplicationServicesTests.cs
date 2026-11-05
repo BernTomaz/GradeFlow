@@ -12,6 +12,46 @@ namespace GradeFlow.Tests;
 
 public sealed class ApplicationServicesTests
 {
+    [Theory]
+    [InlineData(UserRole.Admin, false, true)]
+    [InlineData(UserRole.Teacher, false, false)]
+    [InlineData(UserRole.Teacher, true, true)]
+    [InlineData(UserRole.Student, false, false)]
+    public async Task Assignment_access_should_require_teacher_ownership(UserRole role, bool owned, bool allowed)
+    {
+        var userId = Guid.NewGuid();
+        var assignment = new Assignment { Id = Guid.NewGuid(), Title = "Preservada", Subject = "QA", TeacherUserId = owned ? userId : null };
+        var repository = new FakeAssignmentRepository(assignment);
+        var user = new FakeCurrentUser(userId, role);
+        var service = new AssignmentService(repository, user);
+        var question = new Question { Id = Guid.NewGuid(), AssignmentId = assignment.Id };
+        var questions = new FakeQuestionRepository();
+        questions.Questions.Add(question);
+        var questionService = new QuestionService(questions, repository, user);
+        var submission = new Submission { Id = Guid.NewGuid(), AssignmentId = assignment.Id, Assignment = assignment };
+        var submissions = new FakeSubmissionRepositoryForService { Submissions = [submission] };
+        var submissionService = new SubmissionService(submissions, repository, user);
+        var correctionService = new CorrectionService(submissions, [], user);
+
+        (await service.GetByIdAsync(assignment.Id) is not null).Should().Be(allowed);
+        (await service.GetAllAsync()).Count.Should().Be(allowed ? 1 : 0);
+        (await service.UpdateAsync(assignment.Id, new UpdateAssignmentRequest("Preservada", null, "QA"))).Should().Be(allowed);
+        (await questionService.GetByIdAsync(question.Id) is not null).Should().Be(allowed);
+        if (role != UserRole.Student)
+        {
+            (await submissionService.GetByIdAsync(submission.Id) is not null).Should().Be(allowed);
+            (await correctionService.CorrectAsync(submission.Id) is not null).Should().Be(allowed);
+        }
+        if (!allowed)
+        {
+            (await service.DeleteAsync(assignment.Id)).Should().BeFalse();
+            (await questionService.DeleteAsync(question.Id)).Should().BeFalse();
+            (await submissionService.DeleteAsync(submission.Id)).Should().BeFalse();
+        }
+        repository.Assignments.Should().ContainSingle();
+        assignment.TeacherUserId.Should().Be(owned ? userId : null);
+    }
+
     [Fact]
     public async Task Assignment_service_should_create_trim_and_save_assignment()
     {

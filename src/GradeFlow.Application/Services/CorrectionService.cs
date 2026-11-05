@@ -130,5 +130,5 @@ public sealed class CorrectionService(
         => currentUser.IsAdmin
             || (currentUser.IsTeacher
                 && submission.Assignment is not null
-                && (submission.Assignment.TeacherUserId is null || submission.Assignment.TeacherUserId == currentUser.Id));
+                && (submission.Assignment.TeacherUserId == currentUser.Id));
 }

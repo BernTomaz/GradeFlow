@@ -1,3 +1,10 @@
+@if (loadError) {
+  <section role="alert" class="card">
+    <p>{{ loadError }}</p>
+    <a routerLink="/assignments" class="button">Voltar para avaliações</a>
+  </section>
+}
+
 @if (vm$ | async; as vm) {
   <section class="page-header">
     <div>
@@ -60,7 +67,7 @@
     </article>
   </div>
 } @else {
-  <p class="loading"></p>
+  @if (!loadError) { <p class="loading">Carregando...</p> }
 }
 
 @if (errorMessage) {

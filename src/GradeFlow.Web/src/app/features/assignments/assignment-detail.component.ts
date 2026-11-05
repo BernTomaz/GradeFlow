@@ -1,7 +1,7 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { combineLatest, map, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, map, startWith, Subject, switchMap, catchError, of } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
@@ -23,6 +23,7 @@ export class AssignmentDetailComponent {
   private readonly refresh$ = new Subject<void>();
   protected pendingDelete: { type: 'question' | 'submission'; id: string } | null = null;
   protected errorMessage: string | null = null;
+  protected loadError: string | null = null;
   protected showCsvHelp = false;
 
   protected readonly vm$ = this.assignmentId$.pipe(
@@ -37,7 +38,11 @@ export class AssignmentDetailComponent {
           })
         )
       )
-    )
+    ),
+    catchError((error) => {
+      this.loadError = apiErrorMessage(error, 'Não foi possível carregar os dados.');
+      return of(null);
+    })
   );
 
   protected readonly questionTitle = questionTitle;

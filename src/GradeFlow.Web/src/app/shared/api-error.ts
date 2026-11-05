@@ -16,7 +16,11 @@ export function apiErrorMessage(error: unknown, fallback: string): string {
     }
   }
 
-  if (error instanceof HttpErrorResponse) return fallback;
+  if (error instanceof HttpErrorResponse) {
+    if (error.status === 403) return 'Você não tem permissão para acessar este recurso.';
+    if (error.status === 404) return 'Recurso não encontrado ou você não tem permissão para acessá-lo.';
+    return fallback;
+  }
   return 'message' in error && typeof error.message === 'string' && error.message.trim()
     ? error.message
     : fallback;

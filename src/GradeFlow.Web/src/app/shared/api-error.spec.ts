@@ -27,4 +27,11 @@ describe('apiErrorMessage', () => {
   it('preserves ordinary error messages', () => {
     expect(apiErrorMessage(new Error('Falha local.'), fallback)).toBe('Falha local.');
   });
+
+  it('explains forbidden and unavailable resources without exposing technical errors', () => {
+    expect(apiErrorMessage(new HttpErrorResponse({ status: 403 }), fallback))
+      .toBe('Você não tem permissão para acessar este recurso.');
+    expect(apiErrorMessage(new HttpErrorResponse({ status: 404 }), fallback))
+      .toBe('Recurso não encontrado ou você não tem permissão para acessá-lo.');
+  });
 });

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { AuthResponse, ChangeNameRequest, ChangePasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, SetupAdminRequest, SetupStatusResponse, UserResponse } from '../models/auth.models';
+import { AuthResponse, ChangeNameRequest, ChangePasswordRequest, LoginRequest, RegisterRequest, ResetPasswordRequest, SetupAdminRequest, SetupStatusResponse, UserResponse, UserRole } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
@@ -10,6 +10,11 @@ export class AuthApiService {
   readonly current = signal<AuthResponse | null>(this.load());
 
   constructor(private readonly http: HttpClient) {}
+
+  get canManageAssignments() {
+    const role = this.current()?.user.role;
+    return role === UserRole.Admin || role === UserRole.Teacher;
+  }
 
   get token() {
     return this.current()?.token ?? null;

@@ -1,5 +1,6 @@
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { AuthApiService } from '../../core/api/auth-api.service';
 import { RouterLink } from '@angular/router';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
@@ -12,6 +13,7 @@ import { SubmissionStatus } from '../../core/models/submission.models';
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
+  protected readonly auth = inject(AuthApiService);
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly submissionApi = inject(SubmissionApiService);
   protected chartType: 'bar' | 'column' | 'pie' = 'bar';

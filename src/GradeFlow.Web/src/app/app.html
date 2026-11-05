@@ -21,10 +21,12 @@
             <i class="pi pi-book"></i>
             <span>Avaliações</span>
           </a>
-          <a routerLink="/assignments/new" routerLinkActive="active" class="nav-new" title="Nova avaliação" aria-label="Nova avaliação">
+          @if (auth.canManageAssignments) {
+<a routerLink="/assignments/new" routerLinkActive="active" class="nav-new" title="Nova avaliação" aria-label="Nova avaliação">
             <i class="pi pi-plus-circle"></i>
             <span>Nova avaliação</span>
           </a>
+}
         </nav>
         <nav class="side-nav side-nav-bottom" aria-label="Conta">
           <div class="side-nav-group" [class.open]="settingsOpen">

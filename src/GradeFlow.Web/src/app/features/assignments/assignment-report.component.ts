@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, map, switchMap, catchError, of } from 'rxjs';
 import { AssignmentApiService } from '../../core/api/assignment-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
 import { apiErrorMessage } from '../../shared/api-error';
@@ -17,6 +17,7 @@ export class AssignmentReportComponent {
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly submissionApi = inject(SubmissionApiService);
   protected errorMessage: string | null = null;
+  protected loadError: string | null = null;
   protected readonly questionTitle = questionTitle;
 
   protected readonly vm$ = this.route.paramMap.pipe(
@@ -26,7 +27,11 @@ export class AssignmentReportComponent {
         assignment: this.assignmentApi.getById(id),
         report: this.submissionApi.getReport(id)
       })
-    )
+    ),
+    catchError((error) => {
+      this.loadError = apiErrorMessage(error, 'Não foi possível carregar os dados.');
+      return of(null);
+    })
   );
 
   exportCsv(assignmentId: string) {

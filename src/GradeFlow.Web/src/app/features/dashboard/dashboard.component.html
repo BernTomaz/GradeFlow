@@ -4,7 +4,9 @@
   </div>
   <div class="actions">
     <button class="button" type="button" (click)="exportPdf()">Exportar PDF</button>
-    <a routerLink="/assignments/new" class="button primary">Nova avaliação</a>
+    @if (auth.canManageAssignments) {
+<a routerLink="/assignments/new" class="button primary">Nova avaliação</a>
+}
   </div>
 </section>
 
@@ -102,10 +104,12 @@
         <strong>Avaliações</strong>
         <p>Gerenciar avaliações, questões, importações e relatórios.</p>
       </a>
-      <a routerLink="/assignments/new" class="card card-link">
+      @if (auth.canManageAssignments) {
+<a routerLink="/assignments/new" class="card card-link">
         <strong>Nova avaliação</strong>
         <p>Criar uma avaliação para a demonstração.</p>
       </a>
+}
       <a [routerLink]="['/assignments', selected.assignment.id]" class="card card-link">
         <strong>Avaliação selecionada</strong>
         <p>{{ selected.assignment.title }}</p>

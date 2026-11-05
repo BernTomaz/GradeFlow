@@ -1,3 +1,10 @@
+@if (errorMessage) {
+  <section role="alert" class="card">
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/assignments" class="button">Voltar para avaliações</a>
+  </section>
+}
+
 @if (vm$ | async; as vm) {
   <section class="page-header">
     <div>
@@ -9,11 +16,13 @@
     </div>
     <div class="actions">
       <a [routerLink]="['/assignments', vm.submission.assignmentId]" class="button">Voltar</a>
+      @if (auth.canManageAssignments) {
       <a [routerLink]="['/submissions', vm.submission.id, 'edit']" [queryParams]="{ info: 'student' }" class="button">Editar</a>
       <button class="button primary" type="button" (click)="correct(vm.submission.id)">Corrigir</button>
       <button class="button danger" type="button" (click)="askDelete(vm.submission.id, vm.submission.assignmentId)">
         Excluir
       </button>
+      }
     </div>
   </section>
 
@@ -49,7 +58,7 @@
     }
   </div>
 } @else {
-  <p class="loading"></p>
+  @if (!errorMessage) { <p class="loading">Carregando...</p> }
 }
 
 @if (pendingDelete) {

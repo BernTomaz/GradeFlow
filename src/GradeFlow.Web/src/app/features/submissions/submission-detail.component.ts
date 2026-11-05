@@ -1,7 +1,9 @@
+import { apiErrorMessage } from '../../shared/api-error';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { AuthApiService } from '../../core/api/auth-api.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, catchError, of } from 'rxjs';
 import { CorrectionApiService } from '../../core/api/correction-api.service';
 import { QuestionApiService } from '../../core/api/question-api.service';
 import { SubmissionApiService } from '../../core/api/submission-api.service';
@@ -14,6 +16,7 @@ import { questionTitle } from '../../shared/question-text';
   templateUrl: './submission-detail.component.html'
 })
 export class SubmissionDetailComponent {
+  protected readonly auth = inject(AuthApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly submissionApi = inject(SubmissionApiService);
@@ -21,6 +24,7 @@ export class SubmissionDetailComponent {
   private readonly correctionApi = inject(CorrectionApiService);
   private readonly submissionId$ = this.route.paramMap.pipe(map((params) => params.get('id')!));
   protected pendingDelete: { submissionId: string; assignmentId: string } | null = null;
+  protected errorMessage: string | null = null;
   protected readonly vm$ = this.submissionId$.pipe(
     switchMap((id) => this.submissionApi.getById(id)),
     switchMap((submission) =>
@@ -33,7 +37,11 @@ export class SubmissionDetailComponent {
           }))
         }))
       )
-    )
+    ),
+    catchError((error) => {
+      this.errorMessage = apiErrorMessage(error, 'Não foi possível carregar os dados.');
+      return of(null);
+    })
   );
 
   protected readonly questionTitle = questionTitle;

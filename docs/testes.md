@@ -39,3 +39,5 @@ Os testes cobrem:
 Validação pela interface no Docker: [resultados de 03/11/2026](operacao/validacao-local-2026-11-03.md).
 
 Validação de segurança e dependências: [ajustes de 04/11/2026](operacao/ajustes-seguranca-2026-11-04.md).
+
+Validação de perfis e tratamento de acesso negado: [resultados de 05/11/2026](operacao/validacao-permissoes-2026-11-05.md), com 90 testes backend e 20 frontend aprovados.

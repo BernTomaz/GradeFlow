@@ -112,3 +112,7 @@ Cuidados
 Regra importante
 Login é importante, mas não prova o valor do projeto.
 O valor é provado pelo motor de correção funcionando.
+
+Avaliações sem responsável
+- Avaliações sem TeacherUserId são acessíveis somente ao Admin. Professor precisa estar explicitamente vinculado, inclusive para questões, submissões e correção.
+- A correção não atribui registros existentes automaticamente nem remove seus dados.

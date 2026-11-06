@@ -60,10 +60,11 @@ public sealed class SubmissionService(
                 log.QuestionId,
                 log.CorrectionType,
                 log.OriginalAnswer,
-                log.ExpectedAnswer,
+                currentUser.IsStudent ? null : log.ExpectedAnswer,
                 log.Score,
                 log.Message,
-                log.CreatedAt))
+                log.CreatedAt,
+                currentUser.IsStudent ? null : log.ReviewedByUserId))
             .ToList();
     }
 
@@ -597,7 +598,8 @@ public sealed class SubmissionService(
             ExpectedAnswer = answer.Question.AnswerKey?.CorrectAnswer,
             Score = answer.ScoreAwarded,
             Message = answer.Feedback,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            ReviewedByUserId = currentUser.Id?.ToString()
         });
 
         await submissionRepository.SaveChangesAsync(cancellationToken);

@@ -55,7 +55,8 @@ public sealed record CorrectionLogResponse(
     string? ExpectedAnswer,
     decimal Score,
     string? Message,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string? ReviewedByUserId = null);
 
 public sealed record ImportSubmissionsResponse(
     int ImportedCount,

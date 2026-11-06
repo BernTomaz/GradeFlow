@@ -95,7 +95,7 @@ public sealed class QuestionService(
         return true;
     }
 
-    private static QuestionResponse Map(Question question)
+    private QuestionResponse Map(Question question)
         => new(
             question.Id,
             question.AssignmentId,
@@ -103,7 +103,7 @@ public sealed class QuestionService(
             question.Type,
             question.Points,
             question.Order,
-            question.AnswerKey is null
+            currentUser.IsStudent || question.AnswerKey is null
                 ? null
                 : new AnswerKeyResponse(
                     question.AnswerKey.Id,
@@ -143,9 +143,9 @@ public sealed class QuestionService(
 
         var assignment = await assignmentRepository.GetByIdAsync(assignmentId, cancellationToken);
         return assignment is not null
-            && (this.currentUser.IsAdmin || (this.currentUser.IsTeacher && (assignment.TeacherUserId == this.currentUser.Id)));
+            && (this.currentUser.IsAdmin || this.currentUser.IsStudent || (this.currentUser.IsTeacher && (assignment.TeacherUserId == this.currentUser.Id)));
     }
 
-    private Task<bool> CanManageAssignmentAsync(Guid assignmentId, CancellationToken cancellationToken)
-        => CanReadAssignmentAsync(assignmentId, cancellationToken);
+    private async Task<bool> CanManageAssignmentAsync(Guid assignmentId, CancellationToken cancellationToken)
+        => !currentUser.IsStudent && await CanReadAssignmentAsync(assignmentId, cancellationToken);
 }

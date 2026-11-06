@@ -33,10 +33,10 @@ public sealed class ApplicationServicesTests
         var submissionService = new SubmissionService(submissions, repository, user);
         var correctionService = new CorrectionService(submissions, [], user);
 
-        (await service.GetByIdAsync(assignment.Id) is not null).Should().Be(allowed);
-        (await service.GetAllAsync()).Count.Should().Be(allowed ? 1 : 0);
+        (await service.GetByIdAsync(assignment.Id) is not null).Should().Be(allowed || role == UserRole.Student);
+        (await service.GetAllAsync()).Count.Should().Be(allowed || role == UserRole.Student ? 1 : 0);
         (await service.UpdateAsync(assignment.Id, new UpdateAssignmentRequest("Preservada", null, "QA"))).Should().Be(allowed);
-        (await questionService.GetByIdAsync(question.Id) is not null).Should().Be(allowed);
+        (await questionService.GetByIdAsync(question.Id) is not null).Should().Be(allowed || role == UserRole.Student);
         if (role != UserRole.Student)
         {
             (await submissionService.GetByIdAsync(submission.Id) is not null).Should().Be(allowed);
@@ -50,6 +50,24 @@ public sealed class ApplicationServicesTests
         }
         repository.Assignments.Should().ContainSingle();
         assignment.TeacherUserId.Should().Be(owned ? userId : null);
+    }
+
+    [Fact]
+    public async Task Student_should_read_questions_without_keys_but_not_modify_them()
+    {
+        var assignment = new Assignment { Id = Guid.NewGuid() };
+        var question = new Question { Id = Guid.NewGuid(), AssignmentId = assignment.Id,
+            AnswerKey = new AnswerKey { CorrectAnswer = "secret" } };
+        var repository = new FakeQuestionRepository();
+        repository.Questions.Add(question);
+        var service = new QuestionService(repository, new FakeAssignmentRepository(assignment),
+            new FakeCurrentUser(Guid.NewGuid(), UserRole.Student));
+        (await service.GetByIdAsync(question.Id))!.AnswerKey.Should().BeNull();
+        (await service.GetByAssignmentIdAsync(assignment.Id)).Should().ContainSingle(x => x.AnswerKey == null);
+        (await service.CreateAsync(assignment.Id, QuestionRequest(1, 1))).Should().BeNull();
+        (await service.UpdateAsync(question.Id, UpdateQuestionRequest(1, 1))).Should().BeFalse();
+        (await service.DeleteAsync(question.Id)).Should().BeFalse();
+        question.AnswerKey.CorrectAnswer.Should().Be("secret");
     }
 
     [Fact]
@@ -495,7 +513,8 @@ public sealed class ApplicationServicesTests
         answer.SubmissionId = submission.Id;
         answer.Submission = submission;
         var repository = new FakeSubmissionRepositoryForService { Submissions = [submission] };
-        var service = new SubmissionService(repository);
+        var reviewerId = Guid.NewGuid();
+        var service = new SubmissionService(repository, currentUser: new FakeCurrentUser(reviewerId, UserRole.Admin));
 
         var response = await service.ReviewAnswerAsync(
             answer.Id,
@@ -505,7 +524,28 @@ public sealed class ApplicationServicesTests
         response!.FinalScore.Should().Be(4);
         response.NeedsReview.Should().BeFalse();
         submission.Status.Should().Be(SubmissionStatus.Reviewed);
-        repository.CorrectionLogs.Should().ContainSingle(x => x.CorrectionType == "ManualReview");
+        repository.CorrectionLogs.Should().ContainSingle(x => x.CorrectionType == "ManualReview" && x.ReviewedByUserId == reviewerId.ToString());
+    }
+
+    [Fact]
+    public async Task Student_should_submit_and_read_own_answers_without_exposing_log_keys()
+    {
+        var studentId = Guid.NewGuid();
+        var assignment = new Assignment { Id = Guid.NewGuid() };
+        var question = new Question { Id = Guid.NewGuid(), AssignmentId = assignment.Id };
+        var repository = new FakeSubmissionRepositoryForService
+        { ExistingAssignmentId = assignment.Id, Questions = [question] };
+        var service = new SubmissionService(repository, new FakeAssignmentRepository(assignment),
+            new FakeCurrentUser(studentId, UserRole.Student));
+        var response = await service.CreateAsync(assignment.Id, new CreateSubmissionRequest("Aluno", null,
+            [new CreateStudentAnswerRequest(question.Id, "A")]));
+        response.Should().NotBeNull();
+        repository.Submissions.Single().StudentUserId.Should().Be(studentId);
+        (await service.GetByIdAsync(response!.Id)).Should().NotBeNull();
+        (await service.UpdateAnswerAsync(response.Id, question.Id, new UpdateStudentAnswerRequest("B"))).Should().BeTrue();
+        repository.CorrectionLogs.Add(new CorrectionLog { SubmissionId = response.Id, ExpectedAnswer = "secret" });
+        (await service.GetCorrectionLogsAsync(response.Id)).Should().ContainSingle(x => x.ExpectedAnswer == null);
+        (await service.DeleteAsync(response.Id)).Should().BeFalse();
     }
 
     [Fact]

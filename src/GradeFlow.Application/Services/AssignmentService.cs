@@ -99,7 +99,8 @@ public sealed class AssignmentService(
 
     private bool CanRead(Assignment assignment)
         => currentUser.IsAdmin
+            || currentUser.IsStudent
             || (currentUser.IsTeacher && (assignment.TeacherUserId == currentUser.Id));
 
-    private bool CanManage(Assignment assignment) => CanRead(assignment);
+    private bool CanManage(Assignment assignment) => !currentUser.IsStudent && CanRead(assignment);
 }

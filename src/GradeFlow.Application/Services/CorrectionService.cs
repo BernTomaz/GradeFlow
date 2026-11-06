@@ -82,11 +82,25 @@ public sealed class CorrectionService(
         Apply(answer, strategy.Correct(answer.Question, answer.Question.AnswerKey, answer), submissionRepository);
     }
 
-    private static void Apply(
+    private void Apply(
         StudentAnswer answer,
         CorrectionOutcome outcome,
         ISubmissionRepository submissionRepository)
     {
+        submissionRepository.AddCorrectionLog(new CorrectionLog
+        {
+            Id = Guid.NewGuid(),
+            SubmissionId = answer.SubmissionId,
+            QuestionId = answer.QuestionId,
+            CorrectionType = "Automatic",
+            OriginalAnswer = answer.Answer,
+            ExpectedAnswer = answer.Question?.AnswerKey?.CorrectAnswer,
+            Score = outcome.ScoreAwarded,
+            Message = outcome.Feedback,
+            CreatedAt = DateTime.UtcNow,
+            ReviewedByUserId = currentUser.Id?.ToString()
+        });
+
         answer.IsCorrect = outcome.IsCorrect;
         answer.ScoreAwarded = outcome.ScoreAwarded;
         answer.Feedback = outcome.Feedback;

@@ -35,9 +35,10 @@ public sealed class CorrectionServiceTests
             ]
         };
         var repository = new FakeSubmissionRepository(submission);
+        var actorId = Guid.NewGuid();
         var service = new CorrectionService(
             repository,
-            [new MultipleChoiceCorrectionStrategy(), new TrueFalseCorrectionStrategy()]);
+            [new MultipleChoiceCorrectionStrategy(), new TrueFalseCorrectionStrategy()], new TestUser(actorId));
 
         var response = await service.CorrectAsync(submissionId);
 
@@ -48,6 +49,11 @@ public sealed class CorrectionServiceTests
         submission.StudentAnswers.Should().OnlyContain(x => x.CorrectionResult != null);
         repository.AddedCorrectionResults.Should().HaveCount(2);
         repository.SaveChangesCount.Should().Be(1);
+        repository.Logs.Should().HaveCount(2);
+        await service.CorrectAsync(submissionId);
+        repository.Logs.Should().HaveCount(4);
+        repository.AddedCorrectionResults.Should().HaveCount(2);
+        repository.Logs.Should().OnlyContain(x => x.CorrectionType == "Automatic" && x.ExpectedAnswer != null && x.ReviewedByUserId == actorId.ToString());
     }
 
     [Fact]
@@ -208,9 +214,15 @@ public sealed class CorrectionServiceTests
         };
     }
 
+    private sealed record TestUser(Guid? Id) : ICurrentUser
+    {
+        public UserRole? Role => UserRole.Admin;
+    }
+
     private sealed class FakeSubmissionRepository(Submission submission) : ISubmissionRepository
     {
         public List<CorrectionResult> AddedCorrectionResults { get; } = [];
+        public List<CorrectionLog> Logs { get; } = [];
         public int SaveChangesCount { get; private set; }
 
         public Task<bool> AssignmentExistsAsync(Guid assignmentId, CancellationToken cancellationToken = default)
@@ -272,9 +284,7 @@ public sealed class CorrectionServiceTests
         public void AddCorrectionResult(CorrectionResult correctionResult)
             => AddedCorrectionResults.Add(correctionResult);
 
-        public void AddCorrectionLog(CorrectionLog correctionLog)
-        {
-        }
+        public void AddCorrectionLog(CorrectionLog correctionLog) => Logs.Add(correctionLog);
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {

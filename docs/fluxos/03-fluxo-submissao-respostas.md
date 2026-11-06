@@ -5,7 +5,8 @@ Permitir inserir respostas de um aluno para uma avaliação.
 
 usuário principal
 No MVP, o professor pode inserir as respostas manualmente.
-Depois, o aluno pode ter login proprio para enviar respostas.
+O Aluno já possui login e pode consultar avaliações e questões sem gabarito, enviar respostas e alterar respostas individuais de suas próprias submissões.
+O catálogo atual não possui distribuição por turma; o acesso às submissões é restrito pelo StudentUserId, não pelo nome ou email informado.
 
 Fluxo funcional
 1. Professor abre uma avaliação.
@@ -90,3 +91,9 @@ Regra importante
 O fluxo manual continua sendo a base do sistema.
 Importação em lote já existe via CSV no fluxo de importação.
 Importação por Excel ainda não foi implementada.
+
+Atualização de respostas
+- PUT /api/submissions/{submissionId}/questions/{questionId}/answer altera uma resposta própria ou gerenciada.
+- PUT /api/submissions/{id}/student altera nome e email informados, sem transferir a propriedade.
+- PUT /api/submissions/{id} substitui todas as respostas e exige Admin ou Professor responsável.
+- Uma resposta alterada perde a pontuação anterior e deixa a submissão pendente de nova correção.

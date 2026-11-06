@@ -87,7 +87,7 @@ Teacher:
 - Pode gerenciar apenas suas avaliações.
 
 Student:
-- Pode ver apenas suas próprias submissões.
+- Consulta o catálogo de avaliações e questões sem gabarito; vê e altera apenas suas próprias submissões.
 
 Observação
 O endpoint atual `refresh-token` reemite access token.
@@ -114,5 +114,9 @@ Login é importante, mas não prova o valor do projeto.
 O valor é provado pelo motor de correção funcionando.
 
 Avaliações sem responsável
-- Avaliações sem TeacherUserId são acessíveis somente ao Admin. Professor precisa estar explicitamente vinculado, inclusive para questões, submissões e correção.
+- Avaliações sem TeacherUserId são gerenciadas somente pelo Admin. Professor precisa estar explicitamente vinculado, inclusive para questões, submissões e correção. Alunos podem consultar o catálogo e criar submissões próprias, sem acesso ao gabarito.
 - A correção não atribui registros existentes automaticamente nem remove seus dados.
+
+Auditoria
+- Cada correção automática gera um CorrectionLog por resposta; recorreções acrescentam registros sem apagar o histórico anterior.
+- Revisões manuais e correções automáticas registram o usuário autenticado em ReviewedByUserId. Registros antigos não são preenchidos retroativamente; chamadas internas sem usuário mantêm esse campo nulo.

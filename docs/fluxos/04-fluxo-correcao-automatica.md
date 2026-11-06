@@ -106,3 +106,6 @@ Controller não deve corrigir resposta.
 Controller deve chamar o service.
 O service deve chamar o motor de correção.
 
+
+Auditoria atual
+Cada resposta corrigida gera um CorrectionLog com resposta original, gabarito, nota, feedback, horário e usuário executor. CorrectionResult guarda o resultado atual; recorreções acrescentam logs.

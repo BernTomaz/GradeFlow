@@ -52,3 +52,7 @@ Tarefas
 Ponto de atenção
 Auditoria é essencial.
 O sistema precisa explicar por que uma nota foi atribuída ou alterada.
+
+## Ajustes de auditoria e acesso (06/11/2026)
+
+Correções automáticas e revisões manuais registram o usuário executor em `ReviewedByUserId`; recorreções acrescentam histórico em `CorrectionLog`. Não há reconstrução do histórico antigo nem migration. Aluno lê questões sem gabarito e opera somente suas submissões. O catálogo ainda não possui distribuição por turma. A validação completa pela interface do Aluno e o deploy público permanecem pendentes.

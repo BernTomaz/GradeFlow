@@ -113,3 +113,9 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, assiste
 - Verdadeiro ou falso
 - Numérica com tolerância
 - Texto curto com normalização
+
+## Ajustes de auditoria e acesso (06/11/2026)
+
+Validação automatizada concluída conforme resultados do terminal fornecidos pelo usuário: 92 testes backend e 21 frontend aprovados, sem falhas. Builds Docker concluídos, API e SQL Server saudáveis e frontend iniciado. Detalhes em [testes](testes.md).
+
+Correções automáticas e revisões manuais registram o usuário executor em `ReviewedByUserId`; recorreções acrescentam histórico em `CorrectionLog`. Não há reconstrução do histórico antigo nem migration. Aluno lê questões sem gabarito e opera somente suas submissões. O catálogo ainda não possui distribuição por turma. A validação completa pela interface do Aluno e o deploy público permanecem pendentes.

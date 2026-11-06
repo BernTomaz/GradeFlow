@@ -32,6 +32,8 @@ O MVP principal já possui backend, frontend Angular, dashboard inicial, assiste
 
 Etapas 01 a 12 concluídas. O próximo trabalho operacional é o deploy público final; recursos futuros ficam para depois do MVP publicado.
 
+Alunos consultam avaliações e questões sem gabarito e enviam respostas em submissões próprias. Correções e revisões registram histórico e usuário executor. O catálogo ainda não possui distribuição por turma.
+
 Detalhes completos: [status do projeto](docs/status-projeto.md).
 
 ## Processos do Sistema

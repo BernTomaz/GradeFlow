@@ -80,3 +80,6 @@ Regra importante
 A IA, se entrar no futuro, deve sugerir.
 A decisão final em questões abertas deve continuar revisavel.
 
+
+Identificação do revisor
+ReviewedByUserId recebe o identificador do usuário autenticado. Registros antigos permanecem sem identificação quando ela não foi capturada originalmente.

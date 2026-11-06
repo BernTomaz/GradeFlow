@@ -31,6 +31,7 @@
               <td>{{ assignment.totalPoints }}</td>
               <td>{{ assignment.createdAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</td>
               <td>
+                @if (auth.canManageAssignments) {
                 <div class="row-actions">
                   <a [routerLink]="['/assignments', assignment.id, 'edit']" class="icon-button" aria-label="Editar avaliação" title="Editar">
                     <i class="pi pi-pencil"></i><span>Editar</span>
@@ -42,6 +43,7 @@
                     <i class="pi pi-trash"></i><span>Excluir</span>
                   </button>
                 </div>
+                }
               </td>
             </tr>
           }

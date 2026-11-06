@@ -38,6 +38,38 @@ describe('Profile permissions', () => {
     });
   }
 
+  it('lets students open questions and submit without administrative actions', async () => {
+    await TestBed.configureTestingModule({
+      imports: [AssignmentDetailComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([]), {
+        provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: 'assignment' })) }
+      }]
+    }).compileComponents();
+    const auth = TestBed.inject(AuthApiService);
+    auth.save({ token: 'test', expiresAt: '2099-01-01', user: {
+      id: 'student', name: 'QA', email: 'qa@example.test', role: UserRole.Student, mustChangePassword: false
+    } });
+    const fixture = TestBed.createComponent(AssignmentDetailComponent);
+    fixture.detectChanges();
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/api/assignments/assignment').flush({ id: 'assignment', title: 'Prova', subject: 'QA' });
+    http.expectOne('/api/assignments/assignment/questions').flush([
+      { id: 'question', text: 'Enunciado', order: 1, answerKey: null }
+    ]);
+    http.expectOne('/api/assignments/assignment/submissions').flush([]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Enunciado');
+    expect(fixture.nativeElement.querySelector('a[href="/assignments/assignment/submissions/new"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('a[href="/assignments/assignment/edit"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('a[href="/assignments/assignment/report"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('input[type="file"]')).toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain('Gabarito:');
+    auth.save({ ...auth.current()!, user: { ...auth.current()!.user, role: UserRole.Teacher } });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('a[href="/assignments/assignment/edit"]')).not.toBeNull();
+    http.verify();
+  });
+
   for (const component of [AssignmentDetailComponent, AssignmentReportComponent, SubmissionDetailComponent]) {
     it(`shows an unavailable message instead of an unhandled error in ${component.name}`, async () => {
       await TestBed.configureTestingModule({

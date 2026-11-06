@@ -1,3 +1,4 @@
+import { AuthApiService } from '../../core/api/auth-api.service';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -15,6 +16,7 @@ import { questionTitle } from '../../shared/question-text';
   templateUrl: './assignment-detail.component.html'
 })
 export class AssignmentDetailComponent {
+  protected readonly auth = inject(AuthApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly assignmentApi = inject(AssignmentApiService);
   private readonly questionApi = inject(QuestionApiService);

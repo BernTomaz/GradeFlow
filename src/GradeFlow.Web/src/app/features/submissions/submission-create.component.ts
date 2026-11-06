@@ -1,3 +1,4 @@
+import { AuthApiService } from '../../core/api/auth-api.service';
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -16,6 +17,7 @@ import { multipleChoiceOptions, questionTitle } from '../../shared/question-text
   templateUrl: './submission-create.component.html'
 })
 export class SubmissionCreateComponent {
+  protected readonly auth = inject(AuthApiService);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

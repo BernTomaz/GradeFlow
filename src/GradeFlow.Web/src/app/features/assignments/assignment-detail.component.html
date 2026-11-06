@@ -13,8 +13,10 @@
     </div>
     <div class="actions">
       <a routerLink="/assignments" class="button">Voltar</a>
+      @if (auth.canManageAssignments) {
       <a [routerLink]="['/assignments', vm.assignment.id, 'report']" class="button">Relatório</a>
       <a [routerLink]="['/assignments', vm.assignment.id, 'edit']" class="button">Editar</a>
+      }
     </div>
   </section>
 
@@ -26,12 +28,17 @@
       <div class="list compact">
         @for (question of vm.questions; track question.id) {
           <article class="card">
+            @if (auth.canManageAssignments) {
             <a
               [routerLink]="['/questions', question.id]"
               class="card-link"
             >
               <strong>{{ question.order }}. {{ questionTitle(question.text) }}</strong>
             </a>
+            } @else {
+              <strong>{{ question.order }}. {{ questionTitle(question.text) }}</strong>
+            }
+            @if (auth.canManageAssignments) {
             <div class="actions">
               <small>Gabarito: {{ question.answerKey?.correctAnswer }}</small>
               <a
@@ -44,20 +51,24 @@
                 Excluir
               </button>
             </div>
+            }
           </article>
         } @empty {
           <p class="empty">Nenhuma questão cadastrada.</p>
         }
+        @if (auth.canManageAssignments) {
         <a [routerLink]="['/assignments', vm.assignment.id, 'questions', 'new']" class="card add-card">
           <span>+</span>
           Nova questão
         </a>
+        }
       </div>
     </div>
 
     <div>
       <div class="section-title">
         <h2>Submissões</h2>
+        @if (auth.canManageAssignments) {
         <div class="actions">
           <label class="button">
             Importar submissões via CSV
@@ -73,6 +84,7 @@
             ?
           </button>
         </div>
+        }
       </div>
       <div class="list compact">
         @for (submission of vm.submissions; track submission.id) {
@@ -83,12 +95,14 @@
                 <small>{{ submission.submittedAt | localDate | date: 'dd/MM/yyyy HH:mm' }}</small>
               </span>
             </a>
+            @if (auth.canManageAssignments) {
             <div class="actions">
               <a [routerLink]="['/submissions', submission.id, 'edit']" class="button">Editar</a>
               <button class="button danger" type="button" (click)="askDeleteSubmission(submission.id)">
                 Excluir
               </button>
             </div>
+            }
           </article>
         } @empty {
           <p class="empty">Nenhuma submissão cadastrada.</p>

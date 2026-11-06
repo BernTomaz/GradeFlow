@@ -66,7 +66,7 @@
       <button class="button primary" type="submit" [disabled]="saving || form.invalid || (!studentInfoOnly && answers.length === 0)">
         {{ studentInfoOnly ? 'Salvar aluno' : answerId || questionId ? 'Salvar resposta' : 'Salvar submissão' }}
       </button>
-      @if (submissionId && (answerId || questionId)) {
+      @if (auth.canManageAssignments && submissionId && (answerId || questionId)) {
         <button class="button primary" type="button" [disabled]="saving || form.invalid" (click)="correctQuestion()">
           {{ saving ? 'Corrigindo...' : 'Corrigir' }}
         </button>

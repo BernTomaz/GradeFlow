@@ -27,7 +27,9 @@ export class DashboardComponent {
 
       return forkJoin(assignments.map((assignment) =>
         forkJoin({
-          report: this.submissionApi.getReport(assignment.id).pipe(catchError(() => of(null))),
+          report: this.auth.canManageAssignments
+            ? this.submissionApi.getReport(assignment.id).pipe(catchError(() => of(null)))
+            : of(null),
           submissions: this.submissionApi.getByAssignmentId(assignment.id).pipe(catchError(() => of([])))
         })
       )).pipe(
